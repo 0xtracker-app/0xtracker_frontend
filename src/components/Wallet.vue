@@ -96,27 +96,29 @@ export default {
         mutations.clearFarmsWithData();
         mutations.clearFarmsWithoutData();
         this.processed = 0;
-        if (!this.selectedFarms || this.selectedFarms.length === 0) throw 'No farms selected, is this a bug?'
+        if (!this.selectedFarms || this.selectedFarms.length === 0) throw 'No farms selected, is this a bug?';
+        // TODO: Move to promise.all with map
         this.selectedFarms.forEach(async farm => {
           const requestBody = {
             wallet : this.wallet,
             farms : [farm.sendValue]
           }
           const response = await axios.post(process.env.VUE_APP_MYFARM_URL_TEST, requestBody);
-          if (!response || !response.data) throw { message: `No data returned for ${farm.name}, you might need to retry.`, farm };
-          const farmData = response.data[farm.sendValue];
-          if (farmData?.total && farmData.total > 0) {
-            mutations.addFarmsWithData(Object.assign({name: farm.name, sendValue: farm.sendValue}, farmData));
-          } else mutations.addFarmsWithoutData(farm);
+          if (!response || !response.data) {
+            mutations.setAlert('error', `No data returned for ${farm.name}, you might need to retry.`);
+            farm.error = true;
+            mutations.addFarmsWithoutData(farm);
+          } else {
+            const farmData = response.data[farm.sendValue];
+            if (farmData?.total && farmData.total > 0) {
+              mutations.addFarmsWithData(Object.assign({name: farm.name, sendValue: farm.sendValue}, farmData));
+            } else mutations.addFarmsWithoutData(farm);
+          }
           this.processed++;
           if (this.processed === this.selectedFarms.length) mutations.setLoadingPortfolio(false);
         });
       } catch (error) {
-        if (error.farm) {
-          error.farm.error = true;
-          mutations.addFarmsWithoutData(error.farm);
-        }
-        mutations.setAlert('error', error.message || error);
+        mutations.setAlert('error', error);
         mutations.setLoadingPortfolio(false);
       }
     },

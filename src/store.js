@@ -6,6 +6,7 @@ export const store = Vue.observable({
     selectedFarms: [],
     wallet: '',
   },
+  // TODO: Change to array for multiple errors
   alert: { type: '', message: '' },
   loadingFarms: false,
   loadingPortfolio: false,
