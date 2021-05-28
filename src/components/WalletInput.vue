@@ -158,7 +158,7 @@ export default {
         mutations.setAlert('', '')
         mutations.setLoadingFarms(true);
         this.$eventHub.$emit("alert", {type: '', message: ''});
-        const response = await axios.get(process.env.VUE_APP_FARM_URL_TEST);
+        const response = await axios.get(process.env.VUE_APP_FARM_URL);
         this.farmsList = response.data;
         mutations.setLoadingFarms(false);
       } catch (error) {

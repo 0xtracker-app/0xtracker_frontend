@@ -103,7 +103,7 @@ export default {
             wallet : this.wallet,
             farms : [farm.sendValue]
           }
-          const response = await axios.post(process.env.VUE_APP_MYFARM_URL_TEST, requestBody);
+          const response = await axios.post(process.env.VUE_APP_MYFARM_URL, requestBody);
           if (!response || !response.data) {
             mutations.setAlert('error', `No data returned for ${farm.name}, you might need to retry.`);
             farm.error = true;
@@ -134,7 +134,7 @@ export default {
           wallet : this.wallet,
           farms : [farm.sendValue]
         }
-        const response = await axios.post(process.env.VUE_APP_MYFARM_URL_TEST, requestBody);
+        const response = await axios.post(process.env.VUE_APP_MYFARM_URL, requestBody);
         if (!response || !response.data) throw `No data returned for ${farm.name}, you might need to retry.`;
         const farmData = response.data[farm.sendValue];
         if (farmData?.total && farmData.total > 0) {
