@@ -61,7 +61,8 @@ export default {
       return store.loadingPortfolio;
     },
     farmsWithData: function() {
-      return store.farmsWithData;
+      let farmsWithData = store.farmsWithData;
+      return farmsWithData.sort((a, b) => (b.total > a.total) ? 1 : -1)
     },
     farmsWithoutData: function() {
       return store.farmsWithoutData;
