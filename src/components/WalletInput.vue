@@ -30,6 +30,7 @@
         label="Select Farms"
         :loading="loading"
         multiple
+        deletable-chips
       >
         <template v-slot:item="data">
           <template>
