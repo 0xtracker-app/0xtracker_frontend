@@ -7,7 +7,7 @@
         v-for="(farm, index) in farmsWithData" :key="index"
       >
         <v-expansion-panel-header>
-          {{ farm.name }} - ${{ farm.total | to2Decimals }} (${{ farm.pendingTotal | to2Decimals }})
+          {{ farm.name }} - {{ farm.total | toCurrency }} ({{ farm.pendingTotal | toCurrency }})
         </v-expansion-panel-header>
         <v-expansion-panel-content>
           <Farm :farm="farm" :accordion="index" />
