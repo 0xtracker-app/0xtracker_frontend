@@ -24,7 +24,7 @@
             </v-progress-linear>
           </p>
           <p><strong>Total Staked:</strong> {{ pool.staked | to2Decimals }}</p>
-          <p><strong>Total LP:</strong> {{ pool.lpTotal | to2Decimals }}</p>
+          <p><strong>Total LP:</strong> {{ pool.lpTotal }} {{ pool.elevenBalance }}</p>
           <div v-if="pool.gambitRewards && pool.gambitRewards.length">
             <p v-for="(gReward, index) in pool.gambitRewards" :key="index"><strong>Pending {{ gReward.symbol }}:</strong> {{ gReward.pending | to2Decimals }} (${{ gReward.pendingAmount | to2Decimals }})</p>
           </div>
