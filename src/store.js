@@ -123,7 +123,6 @@ export const mutations = {
       if (Object.keys(response.data).length) {
         for (const contract in response.data) {
           const farm = response.data[contract];
-          console.log("response.data", response.data)
           if (farm?.total && farm.total > 0) {
             this.addFarmWithData(contract, Object.assign({name: farm.name, sendValue: selectedFarm.sendValue}, farm));
           } else this.addFarmWithoutData(contract, selectedFarm);
