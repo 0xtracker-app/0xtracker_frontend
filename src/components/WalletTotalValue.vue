@@ -15,7 +15,7 @@
         Total Portfolio Value
       </div>
       <p class="display-1 mb-1">
-        ${{ value | toCurrency }}
+        {{ value | toCurrency }}
       </p>
     </v-card-text>
   </v-card>

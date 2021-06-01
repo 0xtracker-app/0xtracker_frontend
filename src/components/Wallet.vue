@@ -12,7 +12,7 @@
             v-for="(farm, key) in farmsWithData" :key="key"
           >
             <v-expansion-panel-header>
-              {{ farm.name }} - ${{ farm.total | toCurrency }} (${{ farm.pendingTotal | toCurrency }})
+              {{ farm.name }} - {{ farm.total | toCurrency }} ({{ farm.pendingTotal | toCurrency }})
             </v-expansion-panel-header>
             <v-expansion-panel-content>
               <Farm :farm="farm" />
@@ -91,6 +91,7 @@ export default {
   },
   methods: {
     loadPortfolio() {
+      this.$router.push({ name: 'Portfolio', params: { wallet: this.wallet, loadPortfolio: true }}).catch(()=>{});
       mutations.getFarmData();
     },
     refreshSingleFarm(key, selectedFarm) {

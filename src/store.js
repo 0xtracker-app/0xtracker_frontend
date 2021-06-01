@@ -64,15 +64,15 @@ export const mutations = {
       this.clearFarmsWithoutData();
       if (!store.userData.selectedFarms || store.userData.selectedFarms.length === 0) throw 'No farms selected, is this a bug?';
       let requestArray = store.userData.selectedFarms.map(async selectedFarm => {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
           const requestBody = {
             wallet : store.userData.wallet,
             farms : [selectedFarm.sendValue]
           };
           axios.post(process.env.VUE_APP_MYFARM_URL, requestBody)
           .then(response => {
-            if (!response || !response.data) {
-              this.setAlert('error', `No data returned for ${selectedFarm.name}, you might need to retry.`);
+            if (!response || !response.data || response.data.error) {
+              this.setAlert('error', `No data returned for some farms, you might need to retry.`);
               selectedFarm.error = true;
               this.addFarmWithoutData(selectedFarm.sendValue, selectedFarm);
             } else if (Object.keys(response.data).length) {
@@ -91,7 +91,7 @@ export const mutations = {
             this.setAlert('error', error);
             selectedFarm.error = true;
             this.addFarmWithoutData(selectedFarm.sendValue, selectedFarm);
-            reject(true);
+            resolve(true);
           });
         }) 
       })
@@ -119,7 +119,7 @@ export const mutations = {
         farms : [key]
       }
       const response = await axios.post(process.env.VUE_APP_MYFARM_URL, requestBody);
-      if (!response || !response.data) throw `No data returned for ${selectedFarm.name}, you might need to retry.`;
+      if (!response || !response.data || response.data.error) throw `No data returned for some farms, you might need to retry.`;
       if (Object.keys(response.data).length) {
         for (const contract in response.data) {
           const farm = response.data[contract];
