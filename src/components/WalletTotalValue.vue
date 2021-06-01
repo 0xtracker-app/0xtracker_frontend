@@ -10,11 +10,11 @@
         indeterminate
       ></v-progress-linear>
     </template>
-    <v-card-text>
+    <v-card-text class="text-center">
       <div>
         Total Portfolio Value
       </div>
-      <p class="display-1">
+      <p class="display-1 mb-1">
         {{ value | toCurrency }}
       </p>
     </v-card-text>

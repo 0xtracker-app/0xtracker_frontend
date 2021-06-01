@@ -38,15 +38,15 @@ export default {
     },
   },
   async created () {
-    this.$eventHub.$on('load-wallet', this.viewWallet);
+    this.$eventHub.$on('load-wallet', this.viewPortfolio);
   },
   methods: {
-    viewWallet() {
-      this.$router.push({ name: 'Portfolio', params: {wallet: this.wallet} })
+    viewPortfolio() {
+      this.$router.push({ name: 'Portfolio', params: { wallet: this.wallet, loadPortfolio: true }})
     }
   },
   beforeDestroy() {
-    this.$eventHub.$off('load-wallet', this.viewWallet);
+    this.$eventHub.$off('load-wallet', this.viewPortfolio);
   }
 };
 </script>

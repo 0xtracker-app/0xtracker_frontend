@@ -1,6 +1,6 @@
 <template>
   <v-card-text>
-    <p class="display-1">
+    <p class="display-1 mb-0 text-center">
       Welcome to 0xTracker
       <v-tooltip bottom>
         <template v-slot:activator="{ on, attrs }">
@@ -40,7 +40,7 @@ export default {
   },
   methods: {
     viewWallet() {
-      this.$router.push({ name: 'Portfolio', params: { wallet: this.store.wallet } });
+      this.$router.push({ name: 'Portfolio', params: { wallet: this.store.wallet, loadPortfolio: true }});
     }
   },
 };

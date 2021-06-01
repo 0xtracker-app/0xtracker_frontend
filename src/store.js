@@ -1,4 +1,10 @@
 import Vue from 'vue';
+import axios from "axios";
+
+// If we get CORS errors we can override them with this
+axios.interceptors.response.use((response) => response, (error) => {
+  if (typeof error.response === 'undefined') 'override undefined error response (cors)';
+});
 
 export const store = Vue.observable({
   userData: {
@@ -10,8 +16,9 @@ export const store = Vue.observable({
   alert: { type: '', message: '' },
   loadingFarms: false,
   loadingPortfolio: false,
-  farmsWithData: [],
-  farmsWithoutData: [],
+  farmsList: [],
+  farmsWithData: {},
+  farmsWithoutData: {},
 });
 
 export const mutations = {
@@ -35,23 +42,128 @@ export const mutations = {
     store.userData.wallet = wallet;
     this.storeUserDataState();
   },
-  addFarmsWithData(farmData) {
-    store.farmsWithData.push(farmData);
+  // GET FARMS
+  async getFarms() {
+    try {
+      this.setAlert('', '')
+      this.setLoadingFarms(true);
+      const response = await axios.get(process.env.VUE_APP_FARMS_URL);
+      store.farmsList = response.data;
+      this.setLoadingFarms(false);
+    } catch (error) {
+      this.setAlert('error', error)
+      this.setLoadingFarms(false);
+    }
   },
-  removeFarmWithData(index) {
-    store.farmsWithData.splice(index, 1);
+  // GET ALL FARM DATA
+  async getFarmData() {
+    try {
+      this.setLoadingPortfolio(true);
+      this.setAlert('', '');
+      this.clearFarmsWithData();
+      this.clearFarmsWithoutData();
+      if (!store.userData.selectedFarms || store.userData.selectedFarms.length === 0) throw 'No farms selected, is this a bug?';
+      let requestArray = store.userData.selectedFarms.map(async selectedFarm => {
+        return new Promise((resolve) => {
+          const requestBody = {
+            wallet : store.userData.wallet,
+            farms : [selectedFarm.sendValue]
+          };
+          axios.post(process.env.VUE_APP_MYFARM_URL, requestBody)
+          .then(response => {
+            if (!response || !response.data || response.data.error) {
+              this.setAlert('error', `No data returned for some farms, you might need to retry.`);
+              const selectedFarmTemp = {};
+              // require the .assign to prevent modifying original state
+              Object.assign(selectedFarmTemp, selectedFarm);
+              selectedFarmTemp.error = true;
+              this.addFarmWithoutData(selectedFarm.sendValue, selectedFarmTemp);
+            } else if (Object.keys(response.data).length) {
+              for (const contract in response.data) {
+                if (Object.hasOwnProperty.call(response.data, contract)) {
+                  const farm = response.data[contract];
+                  if (farm?.total && farm.total > 0) {
+                    this.addFarmWithData(contract, Object.assign({name: farm.name, sendValue: selectedFarm.sendValue}, farm));
+                  } else this.addFarmWithoutData(contract, selectedFarm);
+                }
+              }
+            } else this.addFarmWithoutData(selectedFarm.sendValue, selectedFarm);
+            resolve(true);
+          })
+          .catch(error => {
+            this.setAlert('error', error);
+            const selectedFarmTemp = {};
+            // require the .assign to prevent modifying original state
+            Object.assign(selectedFarmTemp, selectedFarm);
+            selectedFarmTemp.error = true;
+            this.addFarmWithoutData(selectedFarm.sendValue, selectedFarmTemp);
+            resolve(true);
+          });
+        }) 
+      })
+      try {
+        await Promise.all(requestArray);
+      } catch (error) {
+        this.setAlert('error', error);
+      } finally {
+        this.setLoadingPortfolio(false);
+      }
+    } catch (error) {
+      this.setAlert('error', error);
+      this.setLoadingPortfolio(false);
+    }
+  },
+  // REFRESH SINGLE FARM
+  async refreshSingleFarm(key, selectedFarm) {
+    try {
+      this.setAlert('', '');
+      this.setLoadingPortfolio(true);
+      this.removeFarmWithoutData(key);
+      this.removeFarmWithData(key);
+      const requestBody = {
+        wallet : store.userData.wallet,
+        farms : [key]
+      }
+      const response = await axios.post(process.env.VUE_APP_MYFARM_URL, requestBody);
+      if (!response || !response.data || response.data.error) throw `No data returned for some farms, you might need to retry.`;
+      if (Object.keys(response.data).length) {
+        for (const contract in response.data) {
+          const farm = response.data[contract];
+          if (farm?.total && farm.total > 0) {
+            this.addFarmWithData(contract, Object.assign({name: farm.name, sendValue: selectedFarm.sendValue}, farm));
+          } else this.addFarmWithoutData(contract, selectedFarm);
+        }
+      } else this.addFarmWithoutData(key, selectedFarm);
+      this.setLoadingPortfolio(false);
+    } catch (error) {
+      this.setAlert('error', error);
+      this.setLoadingPortfolio(false);
+      const selectedFarmTemp = {};
+      // require the .assign to prevent modifying original state
+      Object.assign(selectedFarmTemp, selectedFarm);
+      selectedFarmTemp.error = true;
+      this.addFarmWithoutData(key, selectedFarmTemp);
+    }
+  },
+  // FARMS WITH DATA
+  addFarmWithData(key, farmData) {
+    Vue.set(store.farmsWithData, key, farmData);
+  },
+  removeFarmWithData(key) {
+    Vue.delete(store.farmsWithData, key);
   },
   clearFarmsWithData() {
-    store.farmsWithData = [];
+    Vue.set(store, 'farmsWithData', {});
   },
-  addFarmsWithoutData(farm) {
-    store.farmsWithoutData.push(farm);
+  // FARMS WITHOUT DATA
+  addFarmWithoutData(key, farm) {
+    Vue.set(store.farmsWithoutData, key, farm);
   },
-  removeFarmWithoutData(index) {
-    store.farmsWithoutData.splice(index, 1);
+  removeFarmWithoutData(key) {
+    Vue.delete(store.farmsWithoutData, key);
   },
   clearFarmsWithoutData() {
-    store.farmsWithoutData = [];
+    Vue.set(store, 'farmsWithoutData', {});
   },
   // SHOW LOADING FARM INDICATORS
   setLoadingFarms(loading) {

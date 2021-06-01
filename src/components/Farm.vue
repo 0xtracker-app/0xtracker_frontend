@@ -45,7 +45,6 @@ export default {
   name: "Farm",
   props: {
     farm: Object,
-    accordion: Number,
   },
   data() {
     return {
