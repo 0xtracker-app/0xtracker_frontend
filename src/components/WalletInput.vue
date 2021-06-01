@@ -53,7 +53,7 @@
             block
             color="primary"
             class="mb-5"
-            :disabled="loading"
+            :disabled="loading || !valid"
             @click="viewWallet()"
           >
             GO
@@ -139,7 +139,7 @@ export default {
       if (this.$refs.form.validate()) {
         mutations.setFarmsAndWallet(this.selectedFarms, this.wallet);
         this.$eventHub.$emit('load-wallet');
-      }
+      } else this.valid = false;
     },
   }
 };
