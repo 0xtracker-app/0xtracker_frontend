@@ -73,8 +73,11 @@ export const mutations = {
           .then(response => {
             if (!response || !response.data || response.data.error) {
               this.setAlert('error', `No data returned for some farms, you might need to retry.`);
-              selectedFarm.error = true;
-              this.addFarmWithoutData(selectedFarm.sendValue, selectedFarm);
+              const selectedFarmTemp = {};
+              // require the .assign to prevent modifying original state
+              Object.assign(selectedFarmTemp, selectedFarm);
+              selectedFarmTemp.error = true;
+              this.addFarmWithoutData(selectedFarm.sendValue, selectedFarmTemp);
             } else if (Object.keys(response.data).length) {
               for (const contract in response.data) {
                 if (Object.hasOwnProperty.call(response.data, contract)) {
@@ -89,8 +92,11 @@ export const mutations = {
           })
           .catch(error => {
             this.setAlert('error', error);
-            selectedFarm.error = true;
-            this.addFarmWithoutData(selectedFarm.sendValue, selectedFarm);
+            const selectedFarmTemp = {};
+            // require the .assign to prevent modifying original state
+            Object.assign(selectedFarmTemp, selectedFarm);
+            selectedFarmTemp.error = true;
+            this.addFarmWithoutData(selectedFarm.sendValue, selectedFarmTemp);
             resolve(true);
           });
         }) 
@@ -132,8 +138,11 @@ export const mutations = {
     } catch (error) {
       this.setAlert('error', error);
       this.setLoadingPortfolio(false);
-      selectedFarm.error = true;
-      this.addFarmWithoutData(key, selectedFarm);
+      const selectedFarmTemp = {};
+      // require the .assign to prevent modifying original state
+      Object.assign(selectedFarmTemp, selectedFarm);
+      selectedFarmTemp.error = true;
+      this.addFarmWithoutData(key, selectedFarmTemp);
     }
   },
   // FARMS WITH DATA
