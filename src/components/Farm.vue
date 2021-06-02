@@ -13,7 +13,7 @@
                 :set="loanAmount = (farm.poolTotal-farm.userData['0x066807c7B22c6c0a7fa370A2cA812e5Fc22DBef6'].lpPrice)*0.6"
                 class="text-center"
               >
-                <strong>Credit / Borrow Balance</strong>
+                <strong>Borrow / Credit Balance</strong>
                 <v-progress-linear
                   :value="farm.mintedFAI/loanAmount*100"
                   height="25"
@@ -27,7 +27,7 @@
                 :set="loanAmount = farm.mintedFAI/(farm.poolTotal*0.6)"
                 class="text-center"
               >
-                <strong>Credit / Borrow Balance</strong>
+                <strong>Borrow / Credit Balance</strong>
                 <v-progress-linear
                   :value="loanAmount"
                   height="25"
