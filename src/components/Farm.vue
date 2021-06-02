@@ -8,14 +8,33 @@
         >
           <v-card outlined>
             <v-card-text>
-              <p :set="value = (farm.mintedFAI/(farm.poolTotal*0.6))*100">
+              <p
+                v-if="farm.userData && farm.userData['0x066807c7B22c6c0a7fa370A2cA812e5Fc22DBef6']"
+                :set="loanAmount = (farm.poolTotal-farm.userData['0x066807c7B22c6c0a7fa370A2cA812e5Fc22DBef6'].lpPrice)*0.6"
+                class="text-center"
+              >
                 <strong>Credit / Borrow Balance</strong>
                 <v-progress-linear
-                  :value="value"
+                  :value="farm.mintedFAI/loanAmount*100"
                   height="25"
                 >
-                  <strong>{{ value }}%</strong>
+                  <strong>{{ farm.mintedFAI/loanAmount*100 | to2Decimals }}%</strong>
                 </v-progress-linear>
+                {{ farm.mintedFAI | toCurrency }}/{{ loanAmount | toCurrency }}
+              </p>
+              <p
+                v-else
+                :set="loanAmount = farm.mintedFAI/(farm.poolTotal*0.6)"
+                class="text-center"
+              >
+                <strong>Credit / Borrow Balance</strong>
+                <v-progress-linear
+                  :value="loanAmount"
+                  height="25"
+                >
+                  <strong>{{ loanAmount*100 | to2Decimals }}%</strong>
+                </v-progress-linear>
+                {{ farm.mintedFAI | toCurrency }} / {{ loanAmount | toCurrency }}
               </p>
             </v-card-text>
           </v-card>
