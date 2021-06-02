@@ -1,10 +1,10 @@
 <template>
   <div>
     <v-container>
-      <v-row v-if="farm.name === 'fortress.loans'">
+      <v-row v-if="farm.name === 'fortress.loans'" align="center" justify="center">
         <v-col
           cols="12"
-          sm="12"
+          sm="6"
         >
           <v-card outlined>
             <v-card-text>
