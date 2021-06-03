@@ -24,15 +24,15 @@
               </p>
               <p
                 v-else
-                :set="loanAmount = farm.mintedFAI/(farm.poolTotal*0.6)"
+                :set="loanAmount = farm.poolTotal*0.6"
                 class="text-center"
               >
                 <strong>Borrow / Credit Balance</strong>
                 <v-progress-linear
-                  :value="loanAmount"
+                  :value="farm.mintedFAI/loanAmount*100"
                   height="25"
                 >
-                  <strong>{{ loanAmount*100 | to2Decimals }}%</strong>
+                  <strong>{{ farm.mintedFAI/loanAmount*100 | to2Decimals }}%</strong>
                 </v-progress-linear>
                 {{ farm.mintedFAI | toCurrency }} / {{ loanAmount | toCurrency }}
               </p>
