@@ -3,12 +3,13 @@
     <Nav />
     <v-main>
       <Banner />
-      <v-container>
+      <v-container :fluid="width === 1 ? true : false" :class="{slim: width === 2}">
         <Alert />
         <router-view />
       </v-container>
     </v-main>
-    <DarkModeToggle />
+    <SettingsToggle />
+    <SettingsDialog />
     <Footer />
   </v-app>
 </template>
@@ -19,7 +20,8 @@ import { store, mutations } from '@/store.js';
 import Nav from "@/components/Nav.vue";
 import Banner from "@/components/Banner.vue";
 import Alert from "@/components/Alert.vue";
-import DarkModeToggle from "@/components/DarkModeToggle.vue";
+import SettingsToggle from "@/components/SettingsToggle.vue";
+import SettingsDialog from "@/components/SettingsDialog.vue";
 import Footer from "@/components/Footer.vue";
 
 export default {
@@ -28,12 +30,16 @@ export default {
     Nav,
     Banner,
     Alert,
-    DarkModeToggle,
+    SettingsToggle,
+    SettingsDialog,
     Footer,
   },
   computed: {
     darkmode() {
       return store.userData.darkmode;
+    },
+    width() {
+      return store.userData.width;
     },
   },
   created() {
@@ -46,5 +52,9 @@ export default {
 <style>
 .darkmode {
   background-color: #383838 !important;
+}
+
+.slim {
+  max-width: 760px !important;
 }
 </style>
