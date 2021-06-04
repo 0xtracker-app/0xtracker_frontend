@@ -9,19 +9,36 @@
         Check Out Our Sponsors!
       </p>
       </v-card-text>
-      <v-col
-        class="d-flex flex-column justify-space-between align-center"
-        cols="12"
-      >
-        <a href="https://iron.finance/" target="_blank">
-          <v-img
-            max-height="50"
-            max-width="50"
-            src="@/assets/images/iron-finance.gif"
-          ></v-img>
-        </a>
-        <p>Iron Finance</p>
-      </v-col>
+      <v-row justify="space-around">
+        <div class="text-center">
+          <a href="https://iron.finance/" target="_blank">
+            <v-avatar>
+              <v-img
+                max-height="50"
+                max-width="50"
+                src="@/assets/images/iron-finance.gif"
+              ></v-img>
+            </v-avatar>
+          </a>
+          <a href="https://iron.finance/" target="_blank">
+            <p>Iron Finance</p>
+          </a>
+        </div>
+        <div class="text-center">
+          <a href="https://iron.finance/" target="_blank">
+            <v-avatar>
+              <v-img
+                max-height="50"
+                max-width="50"
+                src="@/assets/images/prism-finance.jpg"
+              ></v-img>
+            </v-avatar>
+          </a>
+          <a href="https://www.prismfinance.net/" target="_blank">
+            <p>Prism Finance</p>
+          </a>
+        </div>
+      </v-row>
     </v-card>
   </v-col>
 </template>
