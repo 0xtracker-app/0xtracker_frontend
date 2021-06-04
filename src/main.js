@@ -13,22 +13,24 @@ const plugin = {
 
 Vue.use(plugin);
 
-Vue.filter("to2Decimals", value => {
-  if (value && !isNaN(value)) {
+Vue.filter('to2Decimals', (value, round) => {
+  if (round === false && value) {
+    return value;
+  } else if (value && !isNaN(value)) {
     return value.toFixed(2);
   } else {
     return 0;
   }
 });
 
-Vue.filter('toCurrency', function (value) {
+Vue.filter('toCurrency', (value, round) => {
   if (typeof value !== "number") {
-      return value;
+    return value;
   }
   var formatter = new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 2
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: round ? 2 : 18
   });
   return formatter.format(value);
 });

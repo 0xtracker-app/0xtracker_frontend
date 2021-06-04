@@ -18,9 +18,9 @@
                   :value="farm.mintedFAI/loanAmount*100"
                   height="25"
                 >
-                  <strong>{{ farm.mintedFAI/loanAmount*100 | to2Decimals }}%</strong>
+                  <strong>{{ farm.mintedFAI/loanAmount*100 | to2Decimals(round) }}%</strong>
                 </v-progress-linear>
-                {{ farm.mintedFAI | toCurrency }}/{{ loanAmount | toCurrency }}
+                {{ farm.mintedFAI | toCurrency(round) }}/{{ loanAmount | toCurrency(round) }}
               </p>
               <p
                 v-else
@@ -32,9 +32,9 @@
                   :value="farm.mintedFAI/loanAmount*100"
                   height="25"
                 >
-                  <strong>{{ farm.mintedFAI/loanAmount*100 | to2Decimals }}%</strong>
+                  <strong>{{ farm.mintedFAI/loanAmount*100 | to2Decimals(round) }}%</strong>
                 </v-progress-linear>
-                {{ farm.mintedFAI | toCurrency }} / {{ loanAmount | toCurrency }}
+                {{ farm.mintedFAI | toCurrency(round) }} / {{ loanAmount | toCurrency(round) }}
               </p>
             </v-card-text>
           </v-card>
@@ -50,18 +50,18 @@
             <v-card-title>
               {{ pool.tokenPair }}
               <v-spacer />
-              {{ pool.lpPrice + pool.pendingAmount | toCurrency }}
+              {{ pool.lpPrice + pool.pendingAmount | toCurrency(round) }}
             </v-card-title>
             <v-card-text>
-              <p><strong>Total Staked:</strong> {{ pool.staked | to2Decimals }}</p>
-              <p><strong>Total LP:</strong> {{ pool.lpTotal }} {{ pool.elevenBalance }}</p>
+              <p><strong>Total Staked:</strong> {{ pool.staked | to2Decimals(round) }}</p>
+              <p><strong>Total LP:</strong> {{ pool.lpTotal || 0 }} {{ pool.elevenBalance }}</p>
               <div v-if="pool.gambitRewards && pool.gambitRewards.length">
-                <p v-for="(gReward, index) in pool.gambitRewards" :key="index"><strong>Pending {{ gReward.symbol }}:</strong> {{ gReward.pending | to2Decimals }} ({{ gReward.pendingAmount | toCurrency }})</p>
+                <p v-for="(gReward, index) in pool.gambitRewards" :key="index"><strong>Pending {{ gReward.symbol }}:</strong> {{ gReward.pending | to2Decimals(round) }} ({{ gReward.pendingAmount | toCurrency(round) }})</p>
               </div>
-              <p v-else><strong>Pending {{ pool.rewardSymbol || 'Rewards' }}:</strong> {{ pool.pending | to2Decimals }} ({{ pool.pendingELE || pool.pendingRewardAmount || pool.pendingAmount | toCurrency }})</p>
-              <p v-if="pool.pendingNerve"><strong>Pending 11NRV:</strong> {{ pool.pendingNerve | to2Decimals }} ({{ pool.pendingNRVAmount | toCurrency }})</p>
-              <p v-if="pool.pendingBunny"><strong>Pending BUNNY:</strong> {{ pool.pendingBunny | to2Decimals }} ({{ pool.pendingBunnyAmount | toCurrency }})</p>
-              <p v-if="pool.pendingMerlin"><strong>Pending MERLIN:</strong> {{ pool.pendingMerlin | to2Decimals }} ({{ pool.pendingMerlinAmount | toCurrency }})</p>
+              <p v-else><strong>Pending {{ pool.rewardSymbol || 'Rewards' }}:</strong> {{ pool.pending | to2Decimals(round) }} ({{ pool.pendingELE || pool.pendingRewardAmount || pool.pendingAmount | toCurrency(round) }})</p>
+              <p v-if="pool.pendingNerve"><strong>Pending 11NRV:</strong> {{ pool.pendingNerve | to2Decimals(round) }} ({{ pool.pendingNRVAmount | toCurrency(round) }})</p>
+              <p v-if="pool.pendingBunny"><strong>Pending BUNNY:</strong> {{ pool.pendingBunny | to2Decimals(round) }} ({{ pool.pendingBunnyAmount | toCurrency(round) }})</p>
+              <p v-if="pool.pendingMerlin"><strong>Pending MERLIN:</strong> {{ pool.pendingMerlin | to2Decimals(round) }} ({{ pool.pendingMerlinAmount | toCurrency(round) }})</p>
             </v-card-text>
           </v-card>
         </v-col>
@@ -71,10 +71,17 @@
 </template>
 
 <script>
+import { store } from '@/store.js';
+
 export default {
   name: "Farm",
   props: {
     farm: Object,
+  },
+  computed: {
+    round() {
+      return store.userData.round;
+    },
   },
   data() {
     return {

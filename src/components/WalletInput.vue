@@ -21,7 +21,7 @@
             clearable
             label="Enter Wallet Address"
             type="text"
-            @click:append="viewWallet()"
+            @click:append="viewPortfolio()"
             @click:clear="wallet = ''"
             :loading="loading"
           />
@@ -55,7 +55,7 @@
             color="primary"
             class="mb-5"
             :disabled="loading || !valid"
-            @click="viewWallet()"
+            @click="viewPortfolio()"
           >
             GO
           </v-btn>
@@ -94,8 +94,11 @@ export default {
     darkmode() {
       return store.userData.darkmode;
     },
+    width() {
+      return store.userData.width;
+    },
     loading: function() {
-      return store.loadingFarms || store.loadingPortfolio;
+      return store.loadingPortfolio || store.loadingFarms || store.loadingBalances;
     },
     wallet: {
       get () {
@@ -136,10 +139,11 @@ export default {
     async getFarmsList() {
       mutations.getFarms();
     },
-    viewWallet() {
+    viewPortfolio() {
       if (this.$refs.form.validate()) {
         mutations.setFarmsAndWallet(this.selectedFarms, this.wallet);
         this.$eventHub.$emit('load-wallet');
+        this.$eventHub.$emit('load-farms');
       } else this.valid = false;
     },
   }

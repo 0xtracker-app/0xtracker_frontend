@@ -1,14 +1,13 @@
 <template>
   <v-btn
-    @click="toggleDarkMode()"
+    @click="showSettings = !showSettings"
     :dark="!darkmode"
     fixed
     bottom
     right
     fab
   >
-    <v-icon v-if="darkmode">mdi-weather-sunny</v-icon>
-    <v-icon v-else>mdi-weather-night</v-icon>
+    <v-icon>mdi-cog</v-icon>
   </v-btn>
 </template>
 
@@ -16,15 +15,18 @@
 import { store, mutations } from '@/store.js';
 
 export default {
-  name: "DarkModeToggle",
+  name: "SettingsToggle",
   computed: {
     darkmode() {
       return store.userData.darkmode;
     },
-  },
-  methods: {
-    toggleDarkMode() {
-      mutations.toggleDarkMode();
+    showSettings: {
+      get () {
+        return store.showSettings;
+      },
+      set () {
+        mutations.toggleShowSettings();
+      }
     },
   },
 };

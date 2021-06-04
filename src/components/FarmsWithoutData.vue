@@ -36,7 +36,7 @@ export default {
   },
   computed: {
     loading: function() {
-      return store.loadingFarms || store.loadingPortfolio;
+      return store.loadingPortfolio || store.loadingFarms || store.loadingBalances;
     },
   },
   methods: {

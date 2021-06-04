@@ -8,24 +8,36 @@ axios.interceptors.response.use((response) => response, (error) => {
 
 export const store = Vue.observable({
   userData: {
+    width: 0,
     darkmode: false,
+    round: true,
     selectedFarms: [],
     wallet: '',
+    version: 1,
   },
+  showSettings: false,
   // TODO: Change to array for multiple errors
   alert: { type: '', message: '' },
   loadingFarms: false,
   loadingPortfolio: false,
+  loadingBalances: false,
   farmsList: [],
   farmsWithData: {},
   farmsWithoutData: {},
+  balancesList: [],
+  totalWalletValue: 0,
+  totalFarmsValue: 0,
 });
 
 export const mutations = {
   // STORE
   initStore() {
     if (localStorage.getItem('store')) {
-      store.userData = JSON.parse(localStorage.getItem('store'));
+      const userData = JSON.parse(localStorage.getItem('store'));
+      if (!userData.version || userData.version < store.userData.version) {
+        localStorage.removeItem('store');
+      } else store.userData = userData;
+      this.storeUserDataState();
     }
   },
   storeUserDataState() {
@@ -165,6 +177,35 @@ export const mutations = {
   clearFarmsWithoutData() {
     Vue.set(store, 'farmsWithoutData', {});
   },
+  setTotalFarmsValue(value) {
+    store.totalFarmsValue = value;
+  },
+  // WALLET BALANCES
+  async getBalancesForWallet() {
+    try {
+      this.setAlert('', '');
+      this.setLoadingBalances(true);
+      this.clearBalances();
+      const requestBody = {
+        wallet : store.userData.wallet,
+      }
+      const response = await axios.post(process.env.VUE_APP_MYBALANCES_URL, requestBody);
+      if (!response || !response.data || response.data.error) throw `No wallet data returned, you might need to retry.`;
+      for (const item of response.data) {
+        store.balancesList.push(item);
+      }
+      this.setLoadingBalances(false);
+    } catch (error) {
+      this.setAlert('error', error);
+      this.setLoadingBalances(false);
+    }
+  },
+  clearBalances() {
+    store.balancesList = [];
+  },
+  setTotalWalletValue(value) {
+    store.totalWalletValue = value;
+  },
   // SHOW LOADING FARM INDICATORS
   setLoadingFarms(loading) {
     store.loadingFarms = loading;
@@ -173,9 +214,29 @@ export const mutations = {
   setLoadingPortfolio(loading) {
     store.loadingPortfolio = loading;
   },
+  // SHOW LOADING WALLET BALANCE INDICATORS
+  setLoadingBalances(loading) {
+    store.loadingBalances = loading;
+  },
   // DARKMODE
   toggleDarkMode() {
     store.userData.darkmode = !store.userData.darkmode;
     this.storeUserDataState();
+  },
+  // ROUNDING TO 2 DECIMALS
+  toggleRounding() {
+    store.userData.round = !store.userData.round;
+  },
+  // SETTINGS
+  toggleShowSettings() {
+    store.showSettings = !store.showSettings;
+  },
+  // WIDTH
+  // 0 = default
+  // 1 = fluid
+  // 2 = slim
+  toggleWidth() {
+    if (store.userData.width < 2) store.userData.width++;
+    else store.userData.width = 0;
   }
 };
