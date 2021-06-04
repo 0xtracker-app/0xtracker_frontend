@@ -30,7 +30,7 @@
                 v-for="(farm, key) in farmsWithData" :key="key"
               >
                 <v-expansion-panel-header>
-                  {{ farm.name }} - {{ farm.total | toCurrency(round) }} ({{ farm.pendingTotal | toCurrency(round) }})
+                  {{ farm.name }} ({{ farm.network }}) - {{ farm.total | toCurrency(round) }} ({{ farm.pendingTotal | toCurrency(round) }})
                 </v-expansion-panel-header>
                 <v-expansion-panel-content>
                   <Farm :farm="farm" />
