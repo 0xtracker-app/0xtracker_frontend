@@ -36,17 +36,20 @@ export default {
     wallet() {
       return store.userData.wallet;
     },
+    width() {
+      return store.userData.width;
+    },
   },
   async created () {
-    this.$eventHub.$on('load-wallet', this.viewPortfolio);
+    this.$eventHub.$on('load-farms', this.viewPortfolio);
   },
   methods: {
     viewPortfolio() {
-      this.$router.push({ name: 'Portfolio', params: { wallet: this.wallet, loadPortfolio: true }})
+      this.$router.push({ name: 'Portfolio', params: { wallet: this.wallet, loadPortfolio: true, loadWallet: true }})
     }
   },
   beforeDestroy() {
-    this.$eventHub.$off('load-wallet', this.viewPortfolio);
+    this.$eventHub.$off('load-farms', this.viewPortfolio);
   }
 };
 </script>

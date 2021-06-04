@@ -12,7 +12,7 @@
     </template>
     <v-card-text class="text-center">
       <div>
-        Total Wallet Value
+        Total Farms Value
       </div>
       <p class="display-1 mb-1">
         {{ value | toCurrency(round) }}
@@ -25,7 +25,7 @@
 import { store } from '@/store.js';
 
 export default {
-  name: "WalletTotalValue",
+  name: "FarmTotalValue",
   props: {
     value: Number,
     farms: String,
