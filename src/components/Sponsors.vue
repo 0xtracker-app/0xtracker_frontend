@@ -25,7 +25,7 @@
           </a>
         </div>
         <div class="text-center">
-          <a href="https://iron.finance/" target="_blank">
+          <a href="https://www.prismfinance.net/" target="_blank">
             <v-avatar>
               <v-img
                 max-height="50"
