@@ -3,7 +3,7 @@
     class="d-flex flex-column justify-space-between align-center"
     cols="12"
   >
-    <a href="https://fortress.loans/" target="_blank"><img data-orig-file="@/assets/images/wide-fortress.gif" data-orig-size="1920,106" data-image-title="wide fortress" data-medium-file="@/assets/images/wide-fortress.gif" data-large-file="@/assets/images/wide-fortress.gif" width="1920" height="106" src="@/assets/images/wide-fortress.gif" class="image wp-image-2182 attachment-full size-full jetpack-lazy-image lazyloaded jetpack-lazy-image--handled" alt="" loading="eager" style="max-width: 100%; height: auto;" data-src="@/assets/images/wide-fortress.gif" data-lazy-loaded="1"></a>
+    <a href="https://jetswap.finance/" target="_blank"><img data-orig-file="@/assets/images/wide-jetswap.gif" data-orig-size="1920,106" data-image-title="wide fortress" data-medium-file="@/assets/images/wide-jetswap.gif" data-large-file="@/assets/images/wide-jetswap.gif" width="1920" height="106" src="@/assets/images/wide-jetswap.gif" class="image wp-image-2182 attachment-full size-full jetpack-lazy-image lazyloaded jetpack-lazy-image--handled" alt="" loading="eager" style="max-width: 100%; height: auto;" data-src="@/assets/images/wide-jetswap.gif" data-lazy-loaded="1"></a>
   </v-col>
 </template>
 
