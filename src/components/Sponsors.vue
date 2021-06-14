@@ -25,6 +25,20 @@
           </a>
         </div>
         <div class="text-center">
+          <a href="https://stablegaj.finance/" target="_blank">
+            <v-avatar>
+              <v-img
+                max-height="50"
+                max-width="50"
+                src="@/assets/images/stablegaj.svg"
+              ></v-img>
+            </v-avatar>
+          </a>
+          <a href="https://stablegaj.finance/" target="_blank">
+            <p>StableGaj</p>
+          </a>
+        </div>
+        <div class="text-center">
           <a href="https://www.prismfinance.net/" target="_blank">
             <v-avatar>
               <v-img
