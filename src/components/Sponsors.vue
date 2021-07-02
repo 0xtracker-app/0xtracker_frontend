@@ -11,17 +11,17 @@
       </v-card-text>
       <v-row justify="space-around">
         <div class="text-center">
-          <a href="https://iron.finance/" target="_blank">
+          <a href="https://farmhero.io?r=start" target="_blank">
             <v-avatar>
               <v-img
                 max-height="50"
                 max-width="50"
-                src="@/assets/images/iron-finance.gif"
+                src="@/assets/images/farmhero.png"
               ></v-img>
             </v-avatar>
           </a>
-          <a href="https://iron.finance/" target="_blank">
-            <p>Iron Finance</p>
+          <a href="https://farmhero.io?r=start" target="_blank">
+            <p>Farm Hero</p>
           </a>
         </div>
         <div class="text-center">
@@ -39,17 +39,17 @@
           </a>
         </div>
         <div class="text-center">
-          <a href="https://www.prismfinance.net/" target="_blank">
+          <a href="http://kogefarm.io/" target="_blank">
             <v-avatar>
               <v-img
                 max-height="50"
                 max-width="50"
-                src="@/assets/images/prism-finance.jpg"
+                src="@/assets/images/koge.png"
               ></v-img>
             </v-avatar>
           </a>
-          <a href="https://www.prismfinance.net/" target="_blank">
-            <p>Prism Finance</p>
+          <a href="http://kogefarm.io/" target="_blank">
+            <p>Koge Farm</p>
           </a>
         </div>
       </v-row>
