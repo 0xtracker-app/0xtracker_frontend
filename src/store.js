@@ -14,7 +14,7 @@ export const store = Vue.observable({
     selectedFarms: [],
     wallet: '',
     // increment to clear localstore
-    version: 5,
+    version: 2,
   },
   showSettings: false,
   alerts: [],
