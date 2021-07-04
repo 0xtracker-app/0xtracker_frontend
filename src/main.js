@@ -1,7 +1,8 @@
-import Vue from 'vue';
-import App from './App.vue';
+import Vue from "vue";
+import App from "./App.vue";
 import router from "./router";
-import vuetify from './plugins/vuetify';
+import vuetify from "./plugins/vuetify";
+import DashboardPlugin from "./plugins/dashboard-plugin";
 
 Vue.config.productionTip = false;
 
@@ -35,8 +36,11 @@ Vue.filter('toCurrency', (value, round) => {
   return formatter.format(value);
 });
 
+// plugin setup
+Vue.use(DashboardPlugin);
+
 new Vue({
   router,
   vuetify,
-  render: h => h(App)
-}).$mount('#app')
+  render: (h) => h(App),
+}).$mount("#app");

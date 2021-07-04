@@ -8,19 +8,19 @@ axios.interceptors.response.use((response) => response, (error) => {
 
 export const store = Vue.observable({
   userData: {
-    width: 0,
     darkmode: false,
     round: true,
+    smallValues: true,
     selectedFarms: [],
     wallet: '',
-    version: 1,
+    // increment to clear localstore
+    version: 5,
   },
   showSettings: false,
-  // TODO: Change to array for multiple errors
-  alert: { type: '', message: '' },
+  alerts: [],
   loadingFarms: false,
-  loadingPortfolio: false,
-  loadingBalances: false,
+  loadingPools: false,
+  loadingWallet: false,
   farmsList: [],
   farmsWithData: {},
   farmsWithoutData: {},
@@ -38,15 +38,30 @@ export const mutations = {
         localStorage.removeItem('store');
       } else store.userData = userData;
       this.storeUserDataState();
+    } else {
+      // Check if system theme is dark
+      const darkThemeMq = window.matchMedia("(prefers-color-scheme: dark)");
+      if (darkThemeMq.matches) {
+        store.userData.darkmode = true;
+      } else {
+        store.userData.darkmode = false;
+      }
+      this.storeUserDataState();
     }
   },
   storeUserDataState() {
     localStorage.setItem('store', JSON.stringify(store.userData));
   },
   // ALERT
-  setAlert(type, message) {
-    store.alert.type = type;
-    store.alert.message = message;
+  setAlert(message) {
+    store.alerts.push(message);
+    const timer = window.setInterval(function () {
+      if (store.alerts.length > 0) {
+        store.alerts.shift();
+      } else {
+        window.clearInterval(timer);
+      }
+    }, 20 * 1000);
   },
   // WALLET & FARMS
   setFarmsAndWallet(selectedFarms, wallet) {
@@ -57,21 +72,19 @@ export const mutations = {
   // GET FARMS
   async getFarms() {
     try {
-      this.setAlert('', '')
       this.setLoadingFarms(true);
       const response = await axios.get(process.env.VUE_APP_FARMS_URL);
       store.farmsList = response.data;
       this.setLoadingFarms(false);
     } catch (error) {
-      this.setAlert('error', error)
+      this.setAlert(error)
       this.setLoadingFarms(false);
     }
   },
   // GET ALL FARM DATA
   async getFarmData() {
     try {
-      this.setLoadingPortfolio(true);
-      this.setAlert('', '');
+      this.setLoadingPortfolio(true);;
       this.clearFarmsWithData();
       this.clearFarmsWithoutData();
       if (!store.userData.selectedFarms || store.userData.selectedFarms.length === 0) throw 'No farms selected, is this a bug?';
@@ -84,7 +97,7 @@ export const mutations = {
           axios.post(process.env.VUE_APP_MYFARM_URL, requestBody)
           .then(response => {
             if (!response || !response.data || response.data.error) {
-              this.setAlert('error', `No data returned for some farms, you might need to retry.`);
+              this.setAlert(`No data returned for ${selectedFarm.name}, you might need to retry.`);
               const selectedFarmTemp = {};
               // require the .assign to prevent modifying original state
               Object.assign(selectedFarmTemp, selectedFarm);
@@ -103,7 +116,7 @@ export const mutations = {
             resolve(true);
           })
           .catch(error => {
-            this.setAlert('error', error);
+            this.setAlert('An error occurred when getting Farm data, error: ' + error);
             const selectedFarmTemp = {};
             // require the .assign to prevent modifying original state
             Object.assign(selectedFarmTemp, selectedFarm);
@@ -116,19 +129,18 @@ export const mutations = {
       try {
         await Promise.all(requestArray);
       } catch (error) {
-        this.setAlert('error', error);
+        this.setAlert(error);
       } finally {
         this.setLoadingPortfolio(false);
       }
     } catch (error) {
-      this.setAlert('error', error);
+      this.setAlert(error);
       this.setLoadingPortfolio(false);
     }
   },
   // REFRESH SINGLE FARM
   async refreshSingleFarm(key, selectedFarm) {
-    try {
-      this.setAlert('', '');
+    try {;
       this.setLoadingPortfolio(true);
       this.removeFarmWithoutData(key);
       this.removeFarmWithData(key);
@@ -148,7 +160,7 @@ export const mutations = {
       } else this.addFarmWithoutData(key, selectedFarm);
       this.setLoadingPortfolio(false);
     } catch (error) {
-      this.setAlert('error', error);
+      this.setAlert(error);
       this.setLoadingPortfolio(false);
       const selectedFarmTemp = {};
       // require the .assign to prevent modifying original state
@@ -182,8 +194,7 @@ export const mutations = {
   },
   // WALLET BALANCES
   async getBalancesForWallet() {
-    try {
-      this.setAlert('', '');
+    try {;
       this.setLoadingBalances(true);
       this.clearBalances();
       const requestBody = {
@@ -196,7 +207,7 @@ export const mutations = {
       }
       this.setLoadingBalances(false);
     } catch (error) {
-      this.setAlert('error', error);
+      this.setAlert(error);
       this.setLoadingBalances(false);
     }
   },
@@ -212,11 +223,11 @@ export const mutations = {
   },
   // SHOW LOADING PORTFOLIO INDICATORS
   setLoadingPortfolio(loading) {
-    store.loadingPortfolio = loading;
+    store.loadingPools = loading;
   },
   // SHOW LOADING WALLET BALANCE INDICATORS
   setLoadingBalances(loading) {
-    store.loadingBalances = loading;
+    store.loadingWallet = loading;
   },
   // DARKMODE
   toggleDarkMode() {
@@ -226,6 +237,9 @@ export const mutations = {
   // ROUNDING TO 2 DECIMALS
   toggleRounding() {
     store.userData.round = !store.userData.round;
+  },
+  toggleSmallValues() {
+    store.userData.smallValues = !store.userData.smallValues;
   },
   // SETTINGS
   toggleShowSettings() {
