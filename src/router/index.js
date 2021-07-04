@@ -4,13 +4,11 @@ import DashboardLayout from "../views/Layout/DashboardLayout.vue";
 import SinglePageLayout from "@/views/Layout/SinglePageLayout";
 
 // Dashboard pages
-const Dashboard = () => import("../views/Dashboard/Dashboard.vue");
+const Portfolio = () => import("../views/Dashboard/Portfolio.vue");
+const Settings = () => import("../views/Dashboard/Settings.vue");
 
 // Pages
-const Home = () =>
-  import(/* webpackChunkName: "pages" */ "@/views/Pages/Home.vue");
-const Settings = () =>
-  import(/* webpackChunkName: "pages" */ "@/views/Pages/Settings.vue");
+const Home = () => import(/* webpackChunkName: "pages" */ "@/views/Pages/Home.vue");
 
 Vue.use(VueRouter);
 
@@ -37,12 +35,12 @@ const routes = [
       {
         path: "/portfolio/:wallet",
         name: "Portfolio",
-        component: Dashboard,
+        component: Portfolio,
       },
       {
         path: "/portfolio/",
         name: "Portfolio",
-        component: Dashboard,
+        component: Portfolio,
       },
       {
         path: "/settings",
