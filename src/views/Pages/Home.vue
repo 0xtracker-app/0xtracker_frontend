@@ -17,8 +17,8 @@
         right
         fab
       >
-        <v-icon v-if="darkmode">mdi-weather-night</v-icon>
-        <v-icon v-else>mdi-weather-sunny</v-icon>
+        <v-icon v-if="darkmode">mdi-weather-sunny</v-icon>
+        <v-icon v-else>mdi-weather-night</v-icon>
       </v-btn>
     </v-col>
   </v-row>
