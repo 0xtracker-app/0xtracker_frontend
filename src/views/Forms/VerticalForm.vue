@@ -36,6 +36,10 @@
           deletable-chips
           solo
           class="font-size-input text-color-dark input-alternative input-focused-alternative input-icon mb-0"
+          :dark="darkmode"
+          :search-input.sync="farmSearchInput"
+          @change="farmSearchInput=''"
+          :menu-props="darkmode ? 'dark' : 'light'"
         >
           <template v-slot:item="data">
             <template>
@@ -94,6 +98,7 @@ export default {
         value => !!value || 'Required.',
         value => (value && value.length >= 1) || 'Min 1 farm.',
       ],
+      farmSearchInput: '',
     };
   },
   created () {
