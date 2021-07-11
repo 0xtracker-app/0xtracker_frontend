@@ -9,13 +9,15 @@
               <v-spacer />
               <v-img
                 v-if="darkmode"
-                max-width="130"
+                max-height="50px"
+                max-width="253px"
                 src="@/assets/0xtracker-black.svg"
                 class="me-5"
               />
               <v-img
                 v-else
-                max-width="130"
+                max-height="50px"
+                max-width="253px"
                 src="@/assets/0xtracker-white.svg"
                 class="me-5"
               />

@@ -90,7 +90,6 @@ import Wallet from "@/views/Wallet/Wallet.vue";
 import Farms from "@/views/Farms/Farms.vue";
 import FarmsWithoutData from "@/views/Farms/FarmsWithoutData.vue";
 
-
 export default {
   name: "Dashboard",
   components: {
