@@ -6,9 +6,9 @@
     lazy-validation
   >
     <v-row>
-      <v-col cols="11">
+      <v-col md="11" sm="11">
         <v-row>
-          <v-col cols="6" sm="6">
+          <v-col md="6" sm="12">
             <label for="" class="font-weight-600 mb-2 d-block text-white">Wallet Address</label>
             <v-text-field
               v-model="wallet"
@@ -25,7 +25,7 @@
               </template>
             </v-text-field>
           </v-col>
-          <v-col cols="6" sm="6">
+          <v-col md="6" sm="12">
             <label for="" class="font-weight-600 mb-2 d-block text-white">Farms</label>
             <v-autocomplete
               rounded
@@ -41,6 +41,9 @@
               solo
               class="font-size-input text-color-dark input-alternative input-focused-alternative input-icon mb-0"
               :dark="darkmode"
+              :search-input.sync="farmSearchInput"
+              @change="farmSearchInput=''"
+              :menu-props="darkmode ? 'dark' : 'light'"
             >
               <template v-slot:item="data">
                 <template>
@@ -62,7 +65,7 @@
           </v-col>
         </v-row>
       </v-col>
-      <v-col cols="1">
+      <v-col md="1" sm="1" class="text-center">
         <label for="" class="font-weight-600 mb-1 d-block text-white">Go!</label>
         <v-btn
           :disabled="loading"
@@ -98,6 +101,7 @@ export default {
         value => !!value || 'Required.',
         value => (value && value.length >= 1) || 'Min 1 farm.',
       ],
+      farmSearchInput: '',
     };
   },
   created () {
