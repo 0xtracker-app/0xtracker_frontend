@@ -17,6 +17,7 @@
           </div>
 
           <div
+            v-if="!$vuetify.breakpoint.mobile"
             class="drawer-toggler pa-5 cursor-pointer"
             :class="{ active: togglerActive }"
             @click="minifyDrawer"
@@ -98,6 +99,11 @@ export default {
     },
     darkmode() {
       return store.userData.darkmode;
+    },
+  },
+  watch: {
+    '$vuetify.breakpoint.mobile' (val) {
+      if (val) this.mini = !val;
     },
   },
   methods: {
