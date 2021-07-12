@@ -33,15 +33,13 @@
   </div>
 </template>
 <script>
-import { store, mutations } from '@/store.js';
-import HorizontalForm from '@/views/Forms/HorizontalForm.vue'
+import { mutations } from "@/store.js";
 import SponsorsHeader from "@/components/SponsorsHeader.vue";
 
 export default {
   name: "app-bar",
   components: {
     SponsorsHeader,
-    HorizontalForm,
   },
   props: {
     background: String,
@@ -55,21 +53,21 @@ export default {
       portfolios: [
         {
           text: "BSC Main Wallet",
-          value: "0x72Dc7f18ff4B59143ca3D21d73fA6e40D286751f"
+          value: "0x72Dc7f18ff4B59143ca3D21d73fA6e40D286751f",
         },
         {
           text: "Matic Main Wallet",
-          value: "0x117e1e54B3b138374d1AE94032F34F0ed6A3E276"
-        }
+          value: "0x117e1e54B3b138374d1AE94032F34F0ed6A3E276",
+        },
       ],
       selectedPortfolio: "0x123",
       walletRules: [
-        value => !!value || 'Required.',
-        value => (value && value.length >= 3) || 'Min 3 characters.',
+        (value) => !!value || "Required.",
+        (value) => (value && value.length >= 3) || "Min 3 characters.",
       ],
       farmRules: [
-        value => !!value || 'Required.',
-        value => (value && value.length >= 1) || 'Min 1 farm.',
+        (value) => !!value || "Required.",
+        (value) => (value && value.length >= 1) || "Min 1 farm.",
       ],
       drawer: false,
       togglerActive: false,
@@ -77,7 +75,7 @@ export default {
   },
   created () {
     this.getFarmsList();
-    if (this.$route.name === 'Portfolio') this.wallet = this.$route?.params?.wallet;
+    if (this.$route.name === "Portfolio") this.wallet = this.$route?.params?.wallet;
   },
   methods: {
     drawerClose() {
@@ -90,8 +88,8 @@ export default {
     viewPortfolio() {
       if (this.$refs.form.validate()) {
         mutations.setFarmsAndWallet(this.selectedFarms, this.wallet);
-        this.$eventHub.$emit('load-wallet');
-        this.$eventHub.$emit('load-farms');
+        this.$eventHub.$emit("load-wallet");
+        this.$eventHub.$emit("load-farms");
       } else this.valid = false;
     },
   },
