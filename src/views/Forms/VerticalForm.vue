@@ -6,7 +6,8 @@
   >
     <v-card class="card-shadow" :dark="darkmode">
       <v-card-text
-        class="card-header-padding px-12 pt-8 text-center font-size-root"
+        class="card-header-padding pt-8 text-center font-size-root"
+        :class="{'px-12' : !$vuetify.breakpoint.mobile, 'px-2' : $vuetify.breakpoint.mobile}"
       >
         <label for="" class="label-color font-weight-600 mb-2 d-block" :class="{'text-white': darkmode}">Wallet Address</label>
         <v-text-field
