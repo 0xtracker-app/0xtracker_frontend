@@ -11,21 +11,21 @@
         v-if="$route.name != 'Portfolio'"
         background="bg-primary"
         has-bg
-        @drawer-toggle="drawer = $event"
+        @drawer-toggle="drawer = !drawer"
         :toggle-active="drawer"
       ></app-bar>
       <app-bar
         v-else-if="$route.name == 'Portfolio'"
         background="bg-default"
         has-bg
-        @drawer-toggle="drawer = $event"
+        @drawer-toggle="drawer = !drawer"
         :toggle-active="drawer"
       ></app-bar>
       <app-bar
         v-else
         background="transparent"
         linkColor="rgba(0,0,0,.6)"
-        @drawer-toggle="drawer = $event"
+        @drawer-toggle="drawer = !drawer"
         :toggle-active="drawer"
       ></app-bar>
       <fade-transition :duration="200" origin="center top" mode="out-in">
