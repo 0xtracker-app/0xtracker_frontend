@@ -47,7 +47,7 @@ export default {
     background: String,
     hasBg: Boolean,
     linkColor: String,
-    toggleActive: String,
+    toggleActive: Boolean,
   },
   data() {
     return {
