@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card v-if="balances.length" class="card-shadow">
+    <v-card v-if="balances.length || loading" class="card-shadow">
       <v-card-text class="px-0 py-0">
         <v-data-table
           :headers="headers"
@@ -56,9 +56,6 @@ export default {
   name: "WalletTable",
   components: {
     NoDataCard,
-  },
-  props: {
-    heading: String,
   },
   data() {
     return {

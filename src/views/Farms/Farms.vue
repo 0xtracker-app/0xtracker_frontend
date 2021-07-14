@@ -1,7 +1,8 @@
 <template>
   <div>
-    <v-card v-if="Object.keys(farmsWithData).length || Object.keys(farmsWithoutData).length" class="card-shadow">
-      <v-card-text class="px-0 py-0">
+    <v-card v-if="Object.keys(farmsWithData).length || Object.keys(farmsWithoutData).length || loading" class="card-shadow">
+      <v-card-text v-if="loading" class="text-center">Loading...</v-card-text>
+      <v-card-text v-else class="px-0 py-0">
         <v-expansion-panels v-if="Object.keys(farmsWithData).length" accordion multiple :value="panelsArray">
           <v-expansion-panel
             v-for="(farm, key) in farmsWithData" :key="key"
@@ -21,6 +22,17 @@
           </v-expansion-panel>
         </v-expansion-panels>
       </v-card-text>
+      <v-overlay
+        :absolute="true"
+        :value="loading"
+      >
+        <div class="text-center">
+          <v-progress-circular
+            indeterminate
+            color="white"
+          ></v-progress-circular>
+        </div>
+      </v-overlay>
     </v-card>
     <NoDataCard v-else />
   </div>
