@@ -31,6 +31,7 @@
       <fade-transition :duration="200" origin="center top" mode="out-in">
         <router-view></router-view>
       </fade-transition>
+      <SponsorsFooter class="mx-5 mb-5" />
       <Footer v-if="!$route.meta.hideFooter" />
     </v-main>
   </v-app>
@@ -59,10 +60,12 @@ import { store } from '@/store.js';
 import { FadeTransition } from "vue2-transitions";
 import Drawer from "@/components/Drawer.vue";
 import AppBar from "@/components/AppBar.vue";
+import SponsorsFooter from "@/components/SponsorsFooter.vue";
 import Footer from "@/components/Footer.vue";
 
 export default {
   components: {
+    SponsorsFooter,
     Footer,
     FadeTransition,
     Drawer,
