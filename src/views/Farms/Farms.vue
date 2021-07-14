@@ -1,7 +1,7 @@
 <template>
   <div>
-    <v-card v-if="Object.keys(farmsWithData).length || Object.keys(farmsWithoutData).length || loading" class="card-shadow">
-      <v-card-text v-if="loading" class="text-center">Loading...</v-card-text>
+    <v-card v-if="Object.keys(farmsWithData).length || Object.keys(farmsWithoutData).length" class="card-shadow">
+      <v-card-text v-if="Object.keys(farmsWithData).length === 0" class="text-center">Loading...</v-card-text>
       <v-card-text v-else class="px-0 py-0">
         <v-expansion-panels v-if="Object.keys(farmsWithData).length" accordion multiple :value="panelsArray">
           <v-expansion-panel
@@ -82,7 +82,7 @@ export default {
       return store.userData.selectedFarms;
     },
     loading: function() {
-      return store.loadingPools || store.loadingFarms || store.loadingWallet;
+      return store.loadingPools;
     },
     farmsWithData: function() {
       // getting object keys and sorting them highest to lowest into an array based on value of total,

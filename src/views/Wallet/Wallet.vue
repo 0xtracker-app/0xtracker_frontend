@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card v-if="balances.length || loading" class="card-shadow">
+    <v-card v-if="balances.length" class="card-shadow">
       <v-card-text class="px-0 py-0">
         <v-data-table
           :headers="headers"
@@ -33,17 +33,6 @@
           circle
         ></v-pagination>
       </div>
-      <v-overlay
-        :absolute="true"
-        :value="loading"
-      >
-        <div class="text-center">
-          <v-progress-circular
-            indeterminate
-            color="white"
-          ></v-progress-circular>
-        </div>
-      </v-overlay>
     </v-card>
     <NoDataCard v-else />
   </div>
