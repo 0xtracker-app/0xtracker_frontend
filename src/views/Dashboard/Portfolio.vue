@@ -102,9 +102,8 @@ export default {
   },
   data: function () {
     return {
-      smallValues: false,
-      showWallet: false,
-      showFarms: false,
+      showWallet: true,
+      showFarms: true,
     };
   },
   computed: {
