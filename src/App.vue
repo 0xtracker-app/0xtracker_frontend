@@ -19,7 +19,7 @@ export default {
   },
   created() {
     mutations.initStore();
-    console.log("Life is very short and anxious for those who forget the past, neglect the present, and fear the future.")
+    console.log("Ask not that events should happen as you will, but let your will be that events should happen as they do, and you shall have peace.")
   },
 };
 </script>
