@@ -12,7 +12,7 @@
             <v-img
               max-height="50"
               max-width="50"
-              src="@/assets/images/farmhero.png"
+              src="@/assets/images/sponsors-footer/farmhero.png"
             ></v-img>
           </v-avatar>
           <p :class="{'text-white': darkmode}">Farm Hero</p>
@@ -24,7 +24,7 @@
             <v-img
               max-height="50"
               max-width="50"
-              src="@/assets/images/stablegaj.svg"
+              src="@/assets/images/sponsors-footer/stablegaj.svg"
             ></v-img>
           </v-avatar>
           <p :class="{'text-white': darkmode}">StableGaj</p>
@@ -36,10 +36,22 @@
             <v-img
               max-height="50"
               max-width="50"
-              src="@/assets/images/koge.png"
+              src="@/assets/images/sponsors-footer/koge.png"
             ></v-img>
           </v-avatar>
           <p :class="{'text-white': darkmode}">Koge Farm</p>
+        </a>
+      </div>
+      <div class="text-center">
+        <a href="https://jetswap.finance/" target="_blank">
+          <v-avatar>
+            <v-img
+              max-height="50"
+              max-width="50"
+              src="@/assets/images/sponsors-footer/jetswap.png"
+            ></v-img>
+          </v-avatar>
+          <p :class="{'text-white': darkmode}">Jetswap</p>
         </a>
       </div>
     </v-row>

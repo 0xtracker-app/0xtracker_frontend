@@ -1,39 +1,24 @@
 <template>
-  <v-card class="flex text-center" color="transparent">
-    <a v-if="sponsor === 1" :key="sponsor" href="https://jetswap.finance/" target="_blank">
-      <img
-        data-orig-file="@/assets/images/wide-jetswap.gif"
-        data-orig-size="1920,106"
-        data-image-title="Jetswap"
-        data-medium-file="@/assets/images/wide-jetswap.gif"
-        data-large-file="@/assets/images/wide-jetswap.gif"
-
-        src="@/assets/images/wide-jetswap.gif"
-        class="image wp-image-2182 attachment-full size-full jetpack-lazy-image lazyloaded jetpack-lazy-image--handled"
-        alt=""
-        loading="eager"
-        style="max-width: 100%; height: auto;"
-        data-src="@/assets/images/wide-jetswap.gif"
-        data-lazy-loaded="1"
-      >
-    </a>
-    <!-- <a v-if="sponsor === 2" :key="sponsor" href="https://via.placeholder.com/1124x94.png?text=This+Is+Another+Sponsor" target="_blank">
-      <img
-        data-orig-file="https://via.placeholder.com/1124x94.png?text=This+Is+Another+Sponsor"
-        data-orig-size="1920,106"
-        data-image-title="Jetswap"
-        data-medium-file="https://via.placeholder.com/1124x94.png?text=This+Is+Another+Sponsor"
-        data-large-file="https://via.placeholder.com/1124x94.png?text=This+Is+Another+Sponsor"
-
-        src="https://via.placeholder.com/1124x94.png?text=This+Is+Another+Sponsor"
-        class="image wp-image-2182 attachment-full size-full jetpack-lazy-image lazyloaded jetpack-lazy-image--handled"
-        alt=""
-        loading="eager"
-        style="max-width: 100%; height: auto;"
-        data-src="https://via.placeholder.com/1124x94.png?text=This+Is+Another+Sponsor"
-        data-lazy-loaded="1"
-      >
-    </a> -->
+  <v-card
+    class="mx-auto text-center"
+    color="transparent"
+  >
+    <v-carousel
+      height="94px"
+      cycle
+      interval="3000"
+      hide-delimiter-background
+      hide-delimiters
+      :show-arrows="false"
+    >
+      <v-carousel-item
+        v-for="(item,i) in items"
+        :key="i"
+        :src="item.src"
+        :href="item.href"
+        target="_blank"
+      ></v-carousel-item>
+    </v-carousel>
     <p class="text-h6 text-white">Sponsor</p>
   </v-card>
 </template>
@@ -45,6 +30,16 @@ export default {
       sponsor: 1,
       totalSponsors: 1,
       interval: '',
+      items: [
+        {
+          src: require('@/assets/images/sponsors-header/wide-jetswap.gif'),
+          href: 'https://jetswap.finance/',
+        },
+        {
+          src: require('@/assets/images/sponsors-header/mooncake.jpg'),
+          href: 'https://www.mooncake.io/',
+        },
+      ],
     }
   },
   created() {
