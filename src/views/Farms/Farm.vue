@@ -6,7 +6,7 @@
           cols="12"
           sm="6"
         >
-          <v-card outlined>
+          <v-card outlined class="card-shadow">
             <v-card-text>
               <p
                 v-if="farm.userData && farm.userData['0x066807c7B22c6c0a7fa370A2cA812e5Fc22DBef6']"
@@ -46,8 +46,8 @@
           cols="12"
           sm="3"
         >
-          <v-card outlined>
-            <v-card-title>
+          <v-card outlined class="card-shadow">
+            <v-card-title class="font-weight-600 text-uppercase text-h3">
               {{ pool.tokenPair }}
               <v-spacer />
               {{ pool.lpPrice + pool.pendingAmount | toCurrency(round) }}

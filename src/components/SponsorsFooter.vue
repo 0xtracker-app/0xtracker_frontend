@@ -42,6 +42,8 @@
           <p :class="{'text-white': darkmode}">Koge Farm</p>
         </a>
       </div>
+    </v-row>
+    <v-row justify="space-around">
       <div class="text-center">
         <a href="https://jetswap.finance/" target="_blank">
           <v-avatar>
