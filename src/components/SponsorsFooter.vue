@@ -19,6 +19,18 @@
         </a>
       </div>
       <div class="text-center">
+        <a href="https://iron.finance/" target="_blank">
+          <v-avatar>
+            <v-img
+              max-height="50"
+              max-width="50"
+              src="@/assets/images/sponsors-footer/iron-finance.gif"
+            ></v-img>
+          </v-avatar>
+          <p :class="{'text-white': darkmode}">Iron Finance</p>
+        </a>
+      </div>
+      <!-- <div class="text-center">
         <a href="https://stablegaj.finance/" target="_blank">
           <v-avatar>
             <v-img
@@ -29,7 +41,7 @@
           </v-avatar>
           <p :class="{'text-white': darkmode}">StableGaj</p>
         </a>
-      </div>
+      </div> -->
       <div class="text-center">
         <a href="http://kogefarm.io/" target="_blank">
           <v-avatar>

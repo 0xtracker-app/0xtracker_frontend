@@ -42,7 +42,7 @@
       </v-row>
       <v-row>
         <v-col
-          v-for="(pool, index) in farm.userData" :key="index"
+          v-for="(pool, index) in poolsWithoutTotalLP" :key="index"
           cols="12"
           sm="3"
         >
@@ -81,6 +81,23 @@ export default {
   computed: {
     round() {
       return store.userData.round;
+    },
+    noLPPools() {
+      return store.userData.noLPPools;
+    },
+    poolsWithoutTotalLP: function() {
+      if (this.noLPPools) {
+        return this.farm.userData;
+      } else {
+        let pools = [];
+        for (const key in this.farm.userData) {
+          if (Object.hasOwnProperty.call(this.farm.userData, key)) {
+            const pool = this.farm.userData[key];
+            if (pool && pool.lpTotal) pools.push(pool);
+          }
+        }
+        return pools;
+      }
     },
   },
   data() {

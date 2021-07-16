@@ -11,12 +11,12 @@ export const store = Vue.observable({
     darkmode: false,
     round: true,
     smallValues: true,
+    noLPPools: true,
     selectedFarms: [],
     wallet: '',
     // increment to clear localstore
-    version: 2,
+    version: 3,
   },
-  showSettings: false,
   alerts: [],
   loadingFarms: false,
   loadingPools: false,
@@ -241,9 +241,12 @@ export const mutations = {
   toggleSmallValues() {
     store.userData.smallValues = !store.userData.smallValues;
   },
+  toggleSmallValues() {
+    store.userData.smallValues = !store.userData.smallValues;
+  },
   // SETTINGS
-  toggleShowSettings() {
-    store.showSettings = !store.showSettings;
+  toggleNoLPPools() {
+    store.userData.noLPPools = !store.userData.noLPPools;
   },
   // WIDTH
   // 0 = default

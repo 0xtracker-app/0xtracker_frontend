@@ -5,20 +5,20 @@
     tile
   >
     <v-carousel
-      cycle
       height="100%"
-      interval="6000"
       hide-delimiter-background
       hide-delimiters
       :show-arrows="false"
+      :value="slide"
+      :reverse="slide+1 === slides.length"
     >
       <v-carousel-item
-        v-for="(item,i) in items"
+        v-for="(slide,i) in slides"
         :key="i"
-        :href="item.href"
+        :href="slide.href"
         target="_blank"
       >
-        <img :src="item.src" style="max-width:900px;width:100%;height:auto;" />
+        <img :src="slide.src" style="max-width:900px;width:100%;height:auto;" />
       </v-carousel-item>
     </v-carousel>
   </v-card>
@@ -28,10 +28,8 @@
 export default {
   data() {
     return {
-      sponsor: 1,
-      totalSponsors: 1,
-      interval: '',
-      items: [
+      slide: 0,
+      slides: [
         {
           src: require('@/assets/images/sponsors-header/wide-jetswap.gif'),
           href: 'https://jetswap.finance/',
@@ -41,15 +39,16 @@ export default {
           href: 'https://www.mooncake.io/',
         },
       ],
+      interval: '',
     }
   },
   created() {
     let self = this;
     self.interval = setInterval(function() {
-      if (self.sponsor === self.totalSponsors) {
-        self.sponsor = 1;
-      } else self.sponsor++;
-    }, 3000);
+      if (self.slide+1 === self.slides.length) {
+        self.slide = 0;
+      } else self.slide++;
+    }, 6000);
   },
   beforeDestroy() {
     clearInterval(this.interval);

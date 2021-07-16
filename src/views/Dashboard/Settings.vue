@@ -31,6 +31,14 @@
                 <v-icon v-else class="pr-1">mdi-greater-than</v-icon>
                 {{ smallValues ? 'Small Values' : 'No Small Values'}}
               </v-chip>
+              <v-chip
+                class="ma-2"
+                @click="noLPPools = !noLPPools"
+              >
+                <v-icon v-if="noLPPools" class="pr-1">mdi-water-plus</v-icon>
+                <v-icon v-else class="pr-1">mdi-water-minus</v-icon>
+                {{ noLPPools ? 'Show No LP Pools' : 'Hide No LP Pools'}}
+              </v-chip>
             </v-card-text>
             </v-card-text>
           </v-card>
@@ -71,6 +79,14 @@ export default {
       },
       set () {
         mutations.toggleSmallValues();
+      }
+    },
+    noLPPools: {
+      get () {
+        return store.userData.noLPPools;
+      },
+      set () {
+        mutations.toggleNoLPPools();
       }
     },
   },
