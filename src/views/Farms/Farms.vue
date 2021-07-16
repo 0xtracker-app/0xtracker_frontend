@@ -53,7 +53,6 @@ export default {
   },
   data() {
     return {
-      smallValues: false,
       page: 1,
       headers: [
         {

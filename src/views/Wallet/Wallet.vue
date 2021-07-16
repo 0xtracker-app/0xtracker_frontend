@@ -10,6 +10,8 @@
           class="table"
           mobile-breakpoint="0"
           @page-count="pageCount = $event"
+          sort-by="tokenValue"
+          :sort-desc="true"
         >
           <template v-slot:item.tokenBalance="{ item }">
             {{ item.tokenBalance | to2Decimals(round) }}
