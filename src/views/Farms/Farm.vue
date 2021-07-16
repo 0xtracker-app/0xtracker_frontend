@@ -54,7 +54,7 @@
             </v-card-title>
             <v-card-text>
               <p><strong>Total Staked:</strong> {{ pool.staked | to2Decimals(round) }}</p>
-              <p><strong>Total LP:</strong> {{ pool.lpTotal || 0 }} {{ pool.elevenBalance }}</p>
+              <p v-if="pool.lpTotal"><strong>Total LP:</strong> {{ pool.lpTotal || 0 }} {{ pool.elevenBalance }}</p>
               <div v-if="pool.gambitRewards && pool.gambitRewards.length">
                 <p v-for="(gReward, index) in pool.gambitRewards" :key="index"><strong>Pending {{ gReward.symbol }}:</strong> {{ gReward.pending | to2Decimals(round) }} ({{ gReward.pendingAmount | toCurrency(round) }})</p>
               </div>
@@ -93,7 +93,7 @@ export default {
         for (const key in this.farm.userData) {
           if (Object.hasOwnProperty.call(this.farm.userData, key)) {
             const pool = this.farm.userData[key];
-            if (pool && pool.lpTotal) pools.push(pool);
+            if (pool.lpPrice + pool.pendingAmount) pools.push(pool);
           }
         }
         return pools;

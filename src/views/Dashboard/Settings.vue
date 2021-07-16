@@ -37,7 +37,7 @@
               >
                 <v-icon v-if="noLPPools" class="pr-1">mdi-water-plus</v-icon>
                 <v-icon v-else class="pr-1">mdi-water-minus</v-icon>
-                {{ noLPPools ? 'Show No LP Pools' : 'Hide No LP Pools'}}
+                {{ noLPPools ? 'Empty Pools' : 'No Empty Pools'}}
               </v-chip>
             </v-card-text>
             </v-card-text>
