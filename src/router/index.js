@@ -1,32 +1,62 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "../views/Home.vue";
-import Portfolio from "../views/Portfolio.vue";
-import NotFound from "../views/NotFound.vue";
+import DashboardLayout from "../views/Layout/DashboardLayout.vue";
+import SinglePageLayout from "@/views/Layout/SinglePageLayout";
+
+// Dashboard pages
+const Portfolio = () => import("../views/Dashboard/Portfolio.vue");
+const Settings = () => import("../views/Dashboard/Settings.vue");
+
+// Pages
+const Home = () => import(/* webpackChunkName: "pages" */ "@/views/Pages/Home.vue");
 
 Vue.use(VueRouter);
+
+let singlePages = {
+  path: "/",
+  component: SinglePageLayout,
+  name: "SinglePage",
+  children: [
+    {
+      path: "/home",
+      name: "Home",
+      component: Home,
+    },
+  ],
+};
 
 const routes = [
   {
     path: "/",
-    name: "Home",
-    component: Home,
+    name: "Dashboard",
+    redirect: "/home",
+    component: DashboardLayout,
+    children: [
+      {
+        path: "/portfolio/:wallet",
+        name: "Portfolio",
+        component: Portfolio,
+      },
+      {
+        path: "/portfolio/",
+        name: "Portfolio",
+        component: Portfolio,
+      },
+      {
+        path: "/settings",
+        name: "Settings",
+        component: Settings,
+        meta: {
+          groupName: "Dashboards",
+        },
+      },
+    ],
   },
-  {
-    path: "/portfolio/:wallet",
-    name: "Portfolio",
-    component: Portfolio,
-  },
-  {
-    path: '*',
-    name: "404",
-    component: NotFound,
-  }
+  singlePages,
 ];
 
 const router = new VueRouter({
-  mode: "history",
-  base: process.env.BASE_URL,
+  mode: 'history',
   routes,
 });
 

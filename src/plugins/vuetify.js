@@ -1,10 +1,15 @@
-import Vue from 'vue';
-import Vuetify from 'vuetify';
-import 'vuetify/dist/vuetify.min.css';
-import '@mdi/font/css/materialdesignicons.css';
+/* eslint-disable no-unused-vars */
+import Vue from "vue";
+import Vuetify from "vuetify/lib/framework";
+import "@fortawesome/fontawesome-free/css/all.css";
+
+const vuetify = new Vuetify({
+  theme: { disable: true },
+  icons: {
+    iconfont: "fa",
+  },
+});
 
 Vue.use(Vuetify);
 
-const opts = {};
-
-export default new Vuetify(opts);
+export default new Vuetify({});
