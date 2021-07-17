@@ -13,7 +13,7 @@
           </p>
         </v-col>
         <v-col cols="12" lg="3" md="3" class="text-right">
-          <v-avatar color="bg-gradient-success">
+          <v-avatar color="bg-gradient-purple">
             <v-icon size="20" class="text-white">
               fas fa-hourglass-half
             </v-icon>
