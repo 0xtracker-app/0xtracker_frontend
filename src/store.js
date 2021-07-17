@@ -27,6 +27,7 @@ export const store = Vue.observable({
   balancesList: [],
   totalWalletValue: 0,
   totalFarmsValue: 0,
+  totalPendingRewardsValue: 0,
 });
 
 export const mutations = {
@@ -191,6 +192,9 @@ export const mutations = {
   },
   setTotalFarmsValue(value) {
     store.totalFarmsValue = value;
+  },
+  setTotalPendingRewardsValue(value) {
+    store.totalPendingRewardsValue = value;
   },
   // WALLET BALANCES
   async getBalancesForWallet() {

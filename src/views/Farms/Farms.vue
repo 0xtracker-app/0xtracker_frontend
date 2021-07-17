@@ -103,6 +103,14 @@ export default {
     panelsArray: function() {
       return Array.from({length: Object.keys(this.farmsWithData).length}, (e, i)=> i);
     },
+    pendingRewards: function() {
+      let pendingTotal = 0;
+      for (const contract in this.farmsWithData) {
+        const farm = this.farmsWithData[contract];
+        pendingTotal += farm.pendingTotal;
+      }
+      return pendingTotal;
+    },
   },
   async created() {
     if (this.$route?.params?.loadFarms) this.loadFarms();
@@ -111,6 +119,9 @@ export default {
   watch: {
     total: function (val) {
       mutations.setTotalFarmsValue(val);
+    },
+    pendingRewards: function (val) {
+      mutations.setTotalPendingRewardsValue(val);
     },
   },
   methods: {
