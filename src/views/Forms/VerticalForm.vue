@@ -103,7 +103,7 @@ export default {
     };
   },
   mounted () {
-    if (this.$route?.params?.wallet != this.wallet) {
+    if (this.$route.name === "Portfolio" && this.$route?.params?.wallet && this.$route?.params?.wallet != this.wallet) {
       this.wallet = this.$route?.params?.wallet;
       this.$router.push({ name: 'Portfolio', params: { wallet: this.wallet }}).catch(()=>{});
     }
@@ -163,6 +163,7 @@ export default {
     },
     viewPortfolio() {
       if (this.$refs.form.validate()) {
+        console.log("this.wallet", this.wallet)
         mutations.setFarmsAndWallet(this.selectedFarms, this.wallet);
         // pushing additional params to trigger loading of farms and wallets when navigating from this page
         this.$router.push({ name: 'Portfolio', params: { wallet: this.wallet, loadFarms: true, loadWallet: true }});

@@ -105,7 +105,7 @@ export default {
     };
   },
   mounted () {
-    if (this.$route?.params?.wallet != this.wallet) {
+    if (this.$route.name === "Portfolio" && this.$route?.params?.wallet && this.$route?.params?.wallet != this.wallet) {
       this.wallet = this.$route?.params?.wallet;
       this.$router.push({ name: 'Portfolio', params: { wallet: this.wallet }}).catch(()=>{});
     }
