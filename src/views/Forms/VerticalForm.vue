@@ -102,6 +102,12 @@ export default {
       farmSearchInput: '',
     };
   },
+  mounted () {
+    if (this.$route?.params?.wallet != this.wallet) {
+      this.wallet = this.$route?.params?.wallet;
+      this.$router.push({ name: 'Portfolio', params: { wallet: this.wallet }}).catch(()=>{});
+    }
+  },
   created () {
     this.getFarmsList();
   },
