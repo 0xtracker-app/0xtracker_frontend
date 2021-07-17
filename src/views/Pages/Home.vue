@@ -106,9 +106,6 @@ export default {
       return this.joinedFarms.map(farm => {return { text: farm.name, value: farm, network: farm.network, group: farm.featured === 1 ? 'Featured' : '' }});
     },
   },
-  created () {
-    if (this.$route.name === 'Portfolio') this.wallet = this.$route?.params?.wallet;
-  },
   methods: {
     // TODO: Move to store
     async getFarmsList() {

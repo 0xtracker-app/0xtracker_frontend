@@ -117,11 +117,5 @@ export default {
       return store.loadingPools || store.loadingFarms || store.loadingWallet;
     },
   },
-  methods: {
-  },
-  mounted() {
-  },
-  async created() {
-  },
 };
 </script>
