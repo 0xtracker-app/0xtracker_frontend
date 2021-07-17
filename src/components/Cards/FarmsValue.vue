@@ -58,10 +58,5 @@ export default {
       return store.userData.round;
     },
   },
-  watch: {
-    total: function (val) {
-      mutations.setTotalFarmsValue(val);
-    },
-  },
 }
 </script>
