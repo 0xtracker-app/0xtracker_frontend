@@ -38,6 +38,10 @@ export default {
           src: require('@/assets/images/sponsors-header/mooncake.png'),
           href: 'https://www.mooncake.io/',
         },
+        {
+          src: require('@/assets/images/sponsors-header/adamant.png'),
+          href: 'https://adamant.finance/',
+        },
       ],
       interval: '',
     }
