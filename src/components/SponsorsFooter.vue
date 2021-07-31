@@ -30,18 +30,6 @@
           <p :class="{'text-white': darkmode}">Iron Finance</p>
         </a>
       </div>
-      <!-- <div class="text-center">
-        <a href="https://stablegaj.finance/" target="_blank">
-          <v-avatar>
-            <v-img
-              max-height="50"
-              max-width="50"
-              src="@/assets/images/sponsors-footer/stablegaj.svg"
-            ></v-img>
-          </v-avatar>
-          <p :class="{'text-white': darkmode}">StableGaj</p>
-        </a>
-      </div> -->
       <div class="text-center">
         <a href="http://kogefarm.io/" target="_blank">
           <v-avatar>
@@ -78,6 +66,18 @@
             ></v-img>
           </v-avatar>
           <p :class="{'text-white': darkmode}">Bundle DAO</p>
+        </a>
+      </div>
+      <div class="text-center">
+        <a href="https://timeleap.finance/" target="_blank">
+          <v-avatar>
+            <v-img
+              max-height="50"
+              max-width="50"
+              src="@/assets/images/sponsors-footer/timeleap.gif"
+            ></v-img>
+          </v-avatar>
+          <p :class="{'text-white': darkmode}">Timeleap</p>
         </a>
       </div>
     </v-row>
