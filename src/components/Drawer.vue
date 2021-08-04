@@ -52,12 +52,31 @@
             <v-list-item-title v-text="item.title" :class="{'text-white': darkmode}" />
           </v-list-item-content>
         </v-list-item>
+      <v-list-item
+          class="pb-1 no-default-hover"
+          :class="{'item-active' : address != ''}"
+          :ripple="false"
+      >
+          <v-list-item-icon>
+            <v-icon class="fa fa-wallet v-icon-drawer"></v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-content v-if="address == ''">
+            <v-list-item-title :class="{'text-white': darkmode}"  v-on:click="connectWallet">Connect Wallet</v-list-item-title>
+          </v-list-item-content>
+          <v-list-item-content v-else>
+            <v-list-item-title :class="{'text-white': darkmode}"  v-on:click="connectWallet">[{{ address }}]</v-list-item-title>
+          </v-list-item-content>
+
+            <span style="font-weight: bold" ></span>
+      </v-list-item>
       </v-list-item-group>
     </v-list>
   </v-navigation-drawer>
 </template>
 <script>
-import { store } from '@/store.js';
+import { store } from "@/store.js";
+import { ethers } from "ethers";
 
 export default {
   name: "Drawer",
@@ -67,14 +86,18 @@ export default {
       default: null,
     },
   },
-  data: () => ({
-    portfolios: [
-    ],
+  data: () => ({      
+      provider: new ethers.providers.Web3Provider(window.ethereum),
+      balance: 0.0,
+      count: "",
+      address: "",
+      networkId: "",
+    response: "",
+    portfolios: [],
     selectedPortfolio: "",
     mini: false,
     togglerActive: false,
-    itemsDocs: [
-    ],
+    itemsDocs: [],
     itemsSimple: [
       {
         icon: "fa-home v-icon-drawer",
@@ -102,11 +125,18 @@ export default {
     },
   },
   watch: {
-    '$vuetify.breakpoint.mobile' (val) {
+    "$vuetify.breakpoint.mobile"(val) {
       if (val) this.mini = !val;
     },
   },
   methods: {
+    connectWallet() {
+      var that = this;
+      ethereum.request({ method: "eth_requestAccounts" }).then(function(address){
+          console.log(address);
+          that.address = address[0];
+      })
+    },
     minifyDrawer() {
       this.togglerActive = !this.togglerActive;
       this.mini = !this.mini;

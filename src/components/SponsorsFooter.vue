@@ -6,7 +6,7 @@
       Check Out Our Sponsors!
     </v-card-text>
     <v-row justify="space-around">
-      <div class="text-center">
+      <!-- <div class="text-center">
         <a href="https://farmhero.io?r=start" target="_blank">
           <v-avatar>
             <v-img
@@ -16,6 +16,18 @@
             ></v-img>
           </v-avatar>
           <p :class="{'text-white': darkmode}">Farm Hero</p>
+        </a>
+      </div> -->
+      <div class="text-center">
+        <a href="https://jetswap.finance/" target="_blank">
+          <v-avatar>
+            <v-img
+              max-height="50"
+              max-width="50"
+              src="@/assets/images/sponsors-footer/jetswap.png"
+            ></v-img>
+          </v-avatar>
+          <p :class="{'text-white': darkmode}">Jetswap</p>
         </a>
       </div>
       <div class="text-center">
@@ -44,18 +56,7 @@
       </div>
     </v-row>
     <v-row justify="space-around">
-      <div class="text-center">
-        <a href="https://jetswap.finance/" target="_blank">
-          <v-avatar>
-            <v-img
-              max-height="50"
-              max-width="50"
-              src="@/assets/images/sponsors-footer/jetswap.png"
-            ></v-img>
-          </v-avatar>
-          <p :class="{'text-white': darkmode}">Jetswap</p>
-        </a>
-      </div>
+
       <div class="text-center">
         <a href="https://bundledao.org/" target="_blank">
           <v-avatar>

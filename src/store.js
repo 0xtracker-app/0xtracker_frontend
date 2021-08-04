@@ -28,6 +28,7 @@ export const store = Vue.observable({
   totalWalletValue: 0,
   totalFarmsValue: 0,
   totalPendingRewardsValue: 0,
+  App : {}
 });
 
 export const mutations = {
