@@ -28,7 +28,8 @@ export const store = Vue.observable({
   totalWalletValue: 0,
   totalFarmsValue: 0,
   totalPendingRewardsValue: 0,
-  App : {}
+  walletData : {}
+
 });
 
 export const mutations = {
@@ -197,6 +198,9 @@ export const mutations = {
   setTotalPendingRewardsValue(value) {
     store.totalPendingRewardsValue = value;
   },
+  setProvider(provider) {
+    Vue.set(store.walletData, 'provider', provider);
+  }, 
   // WALLET BALANCES
   async getBalancesForWallet() {
     try {;

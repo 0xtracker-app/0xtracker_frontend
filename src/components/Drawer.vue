@@ -75,7 +75,7 @@
   </v-navigation-drawer>
 </template>
 <script>
-import { store } from "@/store.js";
+import { store, mutations } from "@/store.js";
 import { ethers } from "ethers";
 
 export default {
@@ -87,11 +87,7 @@ export default {
     },
   },
   data: () => ({      
-      provider: new ethers.providers.Web3Provider(window.ethereum),
-      balance: 0.0,
-      count: "",
-      address: "",
-      networkId: "",
+    address: "",
     response: "",
     portfolios: [],
     selectedPortfolio: "",
@@ -130,12 +126,22 @@ export default {
     },
   },
   methods: {
-    connectWallet() {
-      var that = this;
-      ethereum.request({ method: "eth_requestAccounts" }).then(function(address){
-          console.log(address);
-          that.address = address[0];
-      })
+    async connectWallet() {
+      if (typeof window.ethereum !== 'undefined') {
+        try {
+          await window.ethereum.request({ method: 'eth_requestAccounts' })
+
+          const provider = new ethers.providers.Web3Provider(window.ethereum)
+          const signer = provider.getSigner()
+          const network = await signer.getChainId()
+          const address = await signer.getAddress()
+          console.log('connected: ',this.address)
+          mutations.setProvider(provider)
+          print(store.WalletData.provider.isProvider())
+        } catch (err) {
+          console.log(err.message)
+        }
+      }
     },
     minifyDrawer() {
       this.togglerActive = !this.togglerActive;

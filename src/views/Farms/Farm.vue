@@ -51,6 +51,8 @@
                 <v-progress-linear
                   :value="(farm.mintedFAI / loanAmount) * 100"
                   height="25"
+                  rounded
+                  color="#5e72e4"
                 >
                   <strong
                     >{{
@@ -66,6 +68,41 @@
           </v-card>
         </v-col>
       </v-row>
+<!-- Dynamic Lending Protocols -->
+      <v-row
+        v-if="farm.type === 'lending'"
+        align="center"
+        justify="center"
+      >
+        <v-col cols="12" sm="6">
+          <v-card outlined class="card-shadow">
+            <v-card-text>
+              <p
+                :set="(loanAmount = farm.availableLimit)"
+                class="text-center"
+              >
+                <strong>Borrow / Credit Balance</strong>
+                <v-progress-linear
+                  :value="(farm.totalBorrowed / loanAmount) * 100"
+                  height="25"
+                  rounded
+                  color="#5e72e4"
+                >
+                  <strong
+                    >{{
+                      ((farm.totalBorrowed / loanAmount) * 100)
+                        | to2Decimals(round)
+                    }}%</strong
+                  >
+                </v-progress-linear>
+                {{ farm.totalBorrowed | toCurrency(round) }} /
+                {{ loanAmount | toCurrency(round) }}
+              </p>
+            </v-card-text>
+          </v-card>
+        </v-col>
+      </v-row>
+
       <v-row>
         <v-col
           v-for="(pool, index) in poolsWithoutTotalLP"
@@ -84,6 +121,10 @@
               <p>
                 <strong>Total Staked:</strong>
                 {{ pool.staked | to2Decimals(round) }}
+              </p>
+              <p v-if="pool.borrowed">
+                <strong>Total Borrowed:</strong>
+                {{ pool.borrowed | to2Decimals(round) }} ({{ pool.borrowedUSD | toCurrency(round) }})
               </p>
               <p v-if="pool.lpTotal">
                 <strong>Total LP:</strong> {{ pool.lpTotal || 0 }}
@@ -124,15 +165,15 @@
                 }})
               </p>
             </v-card-text>
-            <v-card-actions>
+            <v-card-actions v-if="pool.contractAddress">
               <v-btn text>
                   <v-icon class="fa fa-plus"></v-icon>
               </v-btn>
               <v-btn text>
                   <v-icon class="fa fa-minus"></v-icon>
               </v-btn>
-              <v-btn text @click="chefContract_claim">
-                  <v-icon class="fa fa-shopping-basket"></v-icon>
+              <v-btn text>
+                  <v-icon v-if="pool.rawPending > 0" class="fa fa-shopping-basket" v-on:click="claimReward(pool.contractAddress,pool.poolID,pool.rawPending)"></v-icon>
               </v-btn>
             </v-card-actions>
           </v-card>
@@ -144,6 +185,8 @@
 
 <script>
 import { store } from "@/store.js";
+import { ethers } from "ethers";
+import ERC20_ABI from "../../abi/ERC20.json"
 
 export default {
   name: "Farm",
@@ -151,34 +194,11 @@ export default {
     farm: Object,
   },
   computed: {
-
-
-  async chefContract_claim (chefAbi, chefAddress, poolIndex, App, pendingRewardsFunction, claimFunction) {
-    const signer = App.provider.getSigner()
-
-    const CHEF_CONTRACT = new ethers.Contract(chefAddress, chefAbi, signer)
-
-    if (earnedTokenAmount > 0) {
-      showLoading()
-      if (claimFunction) {
-        claimFunction(poolIndex, {gasLimit: 500000})
-          .then(function(t) {
-            return App.provider.waitForTransaction(t.hash)
-          })
-      }
-      else {
-        CHEF_CONTRACT.deposit(poolIndex, 0, {gasLimit: 500000})
-          .then(function(t) {
-            return App.provider.waitForTransaction(t.hash)
-          })
-          .catch(function() {
-            hideLoading()
-          })
-      }
-    }
-  },
     round() {
       return store.userData.round;
+    },
+    checkProvider() {
+      return store.walletData.provider;
     },
     noLPPools() {
       return store.userData.noLPPools;
@@ -197,6 +217,30 @@ export default {
         return pools;
       }
     },
+  },
+  methods: {
+        async claimReward(contractAddress,poolIndex,rawTokens,claimFunction) {
+      const signer = store.state.provider.getSigner()
+      const contract = new ethers.Contract(contractAddress,ERC20_ABI,signer)
+      if (rawTokens > 0) {
+        if (claimFunction) {
+          contract.claimFunction(poolIndex, {gasLimit: 500000})
+          .then(function(t) {
+            console.log(t.hash)
+            return store.walletData.provider.waitForTransaction(t.hash)
+          })
+        }
+        else {
+          contract.deposit(poolIndex, 0, {gasLimit: 500000})
+          .then(function(t) {
+            return store.walletData.provider.waitForTransaction(t.hash)
+          })
+          .catch(function(){
+            console.log('Complete')
+          })
+        }
+        }
+      },
   },
   data() {
     return {
