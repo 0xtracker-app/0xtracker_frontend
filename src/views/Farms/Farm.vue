@@ -17,6 +17,8 @@
                 <v-progress-linear
                   :value="farm.mintedFAI/loanAmount*100"
                   height="25"
+                  rounded
+                  color="#5e72e4"
                 >
                   <strong>{{ farm.mintedFAI/loanAmount*100 | to2Decimals(round) }}%</strong>
                 </v-progress-linear>
@@ -31,6 +33,8 @@
                 <v-progress-linear
                   :value="farm.mintedFAI/loanAmount*100"
                   height="25"
+                  rounded
+                  color="#5e72e4"
                 >
                   <strong>{{ farm.mintedFAI/loanAmount*100 | to2Decimals(round) }}%</strong>
                 </v-progress-linear>
@@ -40,6 +44,41 @@
           </v-card>
         </v-col>
       </v-row>
+<!-- Dynamic Lending Protocols -->
+      <v-row
+        v-if="farm.type === 'lending'"
+        align="center"
+        justify="center"
+      >
+        <v-col cols="12" sm="6">
+          <v-card outlined class="card-shadow">
+            <v-card-text>
+              <p
+                :set="(loanAmount = farm.availableLimit)"
+                class="text-center"
+              >
+                <strong>Borrow / Credit Balance</strong>
+                <v-progress-linear
+                  :value="(farm.totalBorrowed / loanAmount) * 100"
+                  height="25"
+                  rounded
+                  color="#5e72e4"
+                >
+                  <strong
+                    >{{
+                      ((farm.totalBorrowed / loanAmount) * 100)
+                        | to2Decimals(round)
+                    }}%</strong
+                  >
+                </v-progress-linear>
+                {{ farm.totalBorrowed | toCurrency(round) }} /
+                {{ loanAmount | toCurrency(round) }}
+              </p>
+            </v-card-text>
+          </v-card>
+        </v-col>
+      </v-row>
+
       <v-row>
         <v-col
           v-for="(pool, index) in poolsWithoutTotalLP" :key="index"
@@ -53,12 +92,13 @@
               {{ pool.lpPrice + pool.pendingAmount | toCurrency(round) }}
             </v-card-title>
             <v-card-text>
-              <p><strong>Total Staked:</strong> {{ pool.staked | to2Decimals(round) }}</p>
+              <p v-if="pool.staked"><strong>Total Staked:</strong> {{ pool.staked | to2Decimals(round) }}</p>
+              <p v-if="pool.borrowed"><strong>Total Borrowed:</strong> {{ pool.borrowed | to2Decimals(round) }} ({{ pool.borrowedUSD | toCurrency(round) }})</p>
               <p v-if="pool.lpTotal"><strong>Total LP:</strong> {{ pool.lpTotal || 0 }} {{ pool.elevenBalance }}</p>
               <div v-if="pool.gambitRewards && pool.gambitRewards.length">
                 <p v-for="(gReward, index) in pool.gambitRewards" :key="index"><strong>Pending {{ gReward.symbol }}:</strong> {{ gReward.pending | to2Decimals(round) }} ({{ gReward.pendingAmount | toCurrency(round) }})</p>
               </div>
-              <p v-else><strong>Pending {{ pool.rewardSymbol || 'Rewards' }}:</strong> {{ pool.pending | to2Decimals(round) }} ({{ pool.pendingELE || pool.pendingRewardAmount || pool.pendingAmount | toCurrency(round) }})</p>
+              <p v-else-if="pool.pending > 0"><strong>Pending {{ pool.rewardSymbol || 'Rewards' }}:</strong> {{ pool.pending | to2Decimals(round) }} ({{ pool.pendingELE || pool.pendingRewardAmount || pool.pendingAmount | toCurrency(round) }})</p>
               <p v-if="pool.pendingNerve"><strong>Pending 11NRV:</strong> {{ pool.pendingNerve | to2Decimals(round) }} ({{ pool.pendingNRVAmount | toCurrency(round) }})</p>
               <p v-if="pool.pendingBunny"><strong>Pending BUNNY:</strong> {{ pool.pendingBunny | to2Decimals(round) }} ({{ pool.pendingBunnyAmount | toCurrency(round) }})</p>
               <p v-if="pool.pendingMerlin"><strong>Pending MERLIN:</strong> {{ pool.pendingMerlin | to2Decimals(round) }} ({{ pool.pendingMerlinAmount | toCurrency(round) }})</p>
