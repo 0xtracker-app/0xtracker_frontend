@@ -87,6 +87,11 @@ export default {
         title: "Portfolio",
       },
       {
+        icon: "fa-tractor v-icon-drawer",
+        link: "/farms",
+        title: "Farms",
+      },
+      {
         icon: "fa-cog v-icon-drawer",
         link: "/settings",
         title: "Settings",

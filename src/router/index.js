@@ -5,6 +5,7 @@ import SinglePageLayout from "@/views/Layout/SinglePageLayout";
 
 // Dashboard pages
 const Portfolio = () => import("../views/Dashboard/Portfolio.vue");
+const Farms = () => import("../views/Dashboard/FarmsAll.vue");
 const Settings = () => import("../views/Dashboard/Settings.vue");
 
 // Pages
@@ -41,6 +42,14 @@ const routes = [
         path: "/portfolio/",
         name: "Portfolio",
         component: Portfolio,
+      },
+      {
+        path: "/farms",
+        name: "Farms",
+        component: Farms,
+        meta: {
+          groupName: "Dashboards",
+        },
       },
       {
         path: "/settings",
