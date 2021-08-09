@@ -159,7 +159,7 @@
                 }})
               </p>
             </v-card-text>
-            <v-card-actions :disabled="farm.network != network || farm.wallet !== connectedWallet">
+            <v-card-actions :disabled="!connectedWallet || farm.network != network || farm.wallet !== connectedWallet">
               <v-spacer />
               <!-- <v-btn text>
                   <v-icon class="fa fa-plus"></v-icon>
@@ -169,7 +169,7 @@
               </v-btn> -->
               <v-tooltip top>
                 <template v-slot:activator="{ on, attrs }">
-                  <v-btn text :disabled="pool.rawPending < 1">
+                  <v-btn text :disabled="!connectedWallet || pool.rawPending < 1">
                     <v-icon
                       @click="claimReward(pool.contractAddress, pool.poolID, pool.rawPending)"
                       v-bind="attrs"
@@ -190,9 +190,7 @@
 </template>
 
 <script>
-import { store } from "@/store.js";
-import { ethers } from "ethers";
-import ERC20_ABI from "../../abi/ERC20.json"
+import { store, mutations } from "@/store.js";
 
 export default {
   name: "Farm",
@@ -233,27 +231,8 @@ export default {
   },
   methods: {
     async claimReward(contractAddress, poolIndex, rawTokens, claimFunction) {
-      const signer = this.provider.getSigner()
-      const contract = new ethers.Contract(contractAddress, ERC20_ABI, signer)
-      if (rawTokens > 0) {
-        if (claimFunction) {
-          contract.claimFunction(poolIndex, {gasLimit: 500000})
-          .then(function(t) {
-            console.log(t.hash)
-            return this.provider.waitForTransaction(t.hash)
-          })
-        }
-        else {
-          contract.deposit(poolIndex, 0, {gasLimit: 500000})
-          .then(function(t) {
-            return this.provider.waitForTransaction(t.hash)
-          })
-          .catch(function(){
-            console.log('Complete')
-          })
-        }
-        }
-      },
+      await mutations.claimReward(contractAddress, poolIndex, rawTokens, claimFunction);
+    }
   },
 };
 </script>

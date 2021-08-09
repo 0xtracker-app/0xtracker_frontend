@@ -24,7 +24,7 @@
                 <v-icon size=".875rem">fas fa-wallet</v-icon>
               </template>
               <template v-slot:append v-if="!wallet">
-                <v-icon @click="connectWallet()" v-bind="attrs" v-on="on">
+                <v-icon @click="connectWallet()">
                   fas fa-plug
                 </v-icon>
               </template>
