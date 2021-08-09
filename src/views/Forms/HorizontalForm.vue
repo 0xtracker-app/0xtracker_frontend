@@ -23,6 +23,11 @@
               <template slot="prepend-inner">
                 <v-icon size=".875rem">fas fa-wallet</v-icon>
               </template>
+              <template v-slot:append v-if="!wallet">
+                <v-icon @click="connectWallet()" v-bind="attrs" v-on="on">
+                  fas fa-plug
+                </v-icon>
+              </template>
             </v-text-field>
           </v-col>
           <v-col md="6" sm="12">
@@ -136,7 +141,6 @@ export default {
         return store.userData.selectedFarms;
       },
       set (value) {
-        console.log("wallet", value)
         mutations.setFarmsAndWallet(value, this.wallet);
       }
     },
@@ -170,6 +174,9 @@ export default {
         this.$eventHub.$emit('load-wallet');
         this.$eventHub.$emit('load-farms');
       } else this.valid = false;
+    },
+    async connectWallet() {
+      await mutations.connectWallet();
     },
   }
 };

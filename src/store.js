@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import axios from "axios";
+import { ethers } from "ethers";
 
 // If we get CORS errors we can override them with this
 axios.interceptors.response.use((response) => response, (error) => {
@@ -17,6 +18,7 @@ export const store = Vue.observable({
     // increment to clear localstore
     version: 3,
   },
+  walletData : {},
   alerts: [],
   loadingFarms: false,
   loadingPools: false,
@@ -28,8 +30,6 @@ export const store = Vue.observable({
   totalWalletValue: 0,
   totalFarmsValue: 0,
   totalPendingRewardsValue: 0,
-  walletData : {}
-
 });
 
 export const mutations = {
@@ -64,7 +64,7 @@ export const mutations = {
       } else {
         window.clearInterval(timer);
       }
-    }, 20 * 1000);
+    }, 12 * 1000);
   },
   // WALLET & FARMS
   setFarmsAndWallet(selectedFarms, wallet) {
@@ -200,6 +200,12 @@ export const mutations = {
   },
   setProvider(provider) {
     Vue.set(store.walletData, 'provider', provider);
+  },
+  setConnectedWallet(address) {
+    Vue.set(store.walletData, 'connectedWallet', address);
+  },
+  setNetwork(networkName) {
+    Vue.set(store.walletData, 'network', networkName);
   }, 
   // WALLET BALANCES
   async getBalancesForWallet() {
@@ -225,6 +231,64 @@ export const mutations = {
   },
   setTotalWalletValue(value) {
     store.totalWalletValue = value;
+  },
+  async connectWallet(addListener = true) {
+    if (typeof window.ethereum !== 'undefined') {
+      try {
+        await window.ethereum.request({ method: 'eth_requestAccounts' })
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner()
+        const networkId = await signer.getChainId()
+        const address = await signer.getAddress()
+        this.setFarmsAndWallet(this.selectedFarms, address);
+        this.setProvider(provider);
+        this.setConnectedWallet(address);
+        this.setNetwork(this.returnNetworkName(networkId));
+        this.setAlert('Wallet connected successfully with address ' + store.userData.wallet + ' and network "' + store.walletData.network + '".');
+        window.ethereum.on('chainChanged', async () => {
+          // call with false as the listener event was already added if
+          // this function was called the first time
+          await this.connectWallet(false);
+        })
+        return Promise.resolve(true);
+      } catch (error) {
+        console.log(error);
+        this.setAlert('Wallet connection failed with error: ' + error);
+        Promise.reject(error);
+      }
+    }
+  },
+  returnNetworkName(id) {
+    const networkIds = {'bsc': { 'id' : 56},'matic':  {'id' : 137}, 'ftm' : {'id': 250}, 'kcc' : { 'id': 321}, 'optimism': { 'id' : 10}, 'eth': { 'id' : 1}, 'oke': { 'id' : 66}, 'harmony': { 'id' : 1666600000}};
+    for (const network in networkIds) {
+      if (Object.hasOwnProperty.call(networkIds, network)) {
+        const networkObj = networkIds[network];
+        if (networkObj.id == id) return network;
+      }
+    }
+    return 'unknown';
+  },
+  async claimReward(contractAddress, poolIndex, rawTokens, claimFunction) {
+    const signer = this.provider.getSigner();
+    const contract = new ethers.Contract(contractAddress, ERC20_ABI, signer);
+    if (rawTokens > 0) {
+      if (claimFunction) {
+        contract.claimFunction(poolIndex, {gasLimit: 500000})
+        .then(function(t) {
+          console.log(t.hash)
+          return this.provider.waitForTransaction(t.hash)
+        })
+      }
+      else {
+        contract.deposit(poolIndex, 0, {gasLimit: 500000})
+        .then(function(t) {
+          return this.provider.waitForTransaction(t.hash)
+        })
+        .catch(function(){
+          console.log('Complete')
+        })
+      }
+    }
   },
   // SHOW LOADING FARM INDICATORS
   setLoadingFarms(loading) {

@@ -52,31 +52,34 @@
             <v-list-item-title v-text="item.title" :class="{'text-white': darkmode}" />
           </v-list-item-content>
         </v-list-item>
-      <v-list-item
+      </v-list-item-group>
+    </v-list>
+
+    <div class="border-bottom-dark ma-0"></div>
+
+    <v-list nav dense>
+      <v-list-item-group>
+        <v-list-item
+          @click="connectWallet()"
           class="pb-1 no-default-hover"
-          :class="{'item-active' : address != ''}"
           :ripple="false"
-      >
+          active-class="item-active"
+        >
           <v-list-item-icon>
-            <v-icon class="fa fa-wallet v-icon-drawer"></v-icon>
+            <v-icon v-if="provider" color="green">fas fa-plug</v-icon>
+            <v-icon v-else>fas fa-plug</v-icon>
           </v-list-item-icon>
-
-          <v-list-item-content v-if="address == ''">
-            <v-list-item-title :class="{'text-white': darkmode}"  v-on:click="connectWallet">Connect Wallet</v-list-item-title>
+          <v-list-item-content>
+            <v-list-item-title v-if="provider" :class="{'text-white': darkmode}">Connected: {{ connectedWalletShortened }}</v-list-item-title>
+            <v-list-item-title v-else :class="{'text-white': darkmode}">Connect Wallet</v-list-item-title>
           </v-list-item-content>
-          <v-list-item-content v-else>
-            <v-list-item-title :class="{'text-white': darkmode}"  v-on:click="connectWallet">[{{ address }}]</v-list-item-title>
-          </v-list-item-content>
-
-            <span style="font-weight: bold" ></span>
-      </v-list-item>
+        </v-list-item>
       </v-list-item-group>
     </v-list>
   </v-navigation-drawer>
 </template>
 <script>
 import { store, mutations } from "@/store.js";
-import { ethers } from "ethers";
 
 export default {
   name: "Drawer",
@@ -87,13 +90,10 @@ export default {
     },
   },
   data: () => ({      
-    address: "",
-    response: "",
     portfolios: [],
     selectedPortfolio: "",
     mini: false,
     togglerActive: false,
-    itemsDocs: [],
     itemsSimple: [
       {
         icon: "fa-home v-icon-drawer",
@@ -119,6 +119,16 @@ export default {
     darkmode() {
       return store.userData.darkmode;
     },
+    provider() {
+      if (store?.walletData?.provider) return store?.walletData?.provider;
+      else return false;
+    },
+    connectedWallet() {
+      return store.walletData.connectedWallet;
+    },
+    connectedWalletShortened() {
+      return this.connectedWallet.slice(0,6) + '...' + this.connectedWallet.slice(-4);
+    }
   },
   watch: {
     "$vuetify.breakpoint.mobile"(val) {
@@ -127,21 +137,7 @@ export default {
   },
   methods: {
     async connectWallet() {
-      if (typeof window.ethereum !== 'undefined') {
-        try {
-          await window.ethereum.request({ method: 'eth_requestAccounts' })
-
-          const provider = new ethers.providers.Web3Provider(window.ethereum)
-          const signer = provider.getSigner()
-          const network = await signer.getChainId()
-          const address = await signer.getAddress()
-          console.log('connected: ',this.address)
-          mutations.setProvider(provider)
-          print(store.WalletData.provider.isProvider())
-        } catch (err) {
-          console.log(err.message)
-        }
-      }
+      await mutations.connectWallet();
     },
     minifyDrawer() {
       this.togglerActive = !this.togglerActive;

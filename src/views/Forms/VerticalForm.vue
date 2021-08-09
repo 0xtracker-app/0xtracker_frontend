@@ -21,6 +21,11 @@
           <template slot="prepend-inner">
             <v-icon size=".875rem">fas fa-wallet</v-icon>
           </template>
+          <template v-slot:append v-if="!wallet">
+            <v-icon @click="connectWallet()" v-bind="attrs" v-on="on">
+              fas fa-plug
+            </v-icon>
+          </template>
         </v-text-field>
 
         <label for="" class="label-color font-weight-600 mb-2 d-block" :class="{'text-white': darkmode}">Farms</label>
@@ -157,6 +162,9 @@ export default {
     },
   },
   methods: {
+    async connectWallet() {
+      await mutations.connectWallet();
+    },
     // TODO: Move to store
     async getFarmsList() {
       mutations.getFarms();

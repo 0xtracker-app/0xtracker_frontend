@@ -54,12 +54,9 @@
                   rounded
                   color="#5e72e4"
                 >
-                  <strong
-                    >{{
-                      ((farm.mintedFAI / loanAmount) * 100)
-                        | to2Decimals(round)
-                    }}%</strong
-                  >
+                  <strong>
+                    {{((farm.mintedFAI / loanAmount) * 100) | to2Decimals(round)}}%
+                  </strong>
                 </v-progress-linear>
                 {{ farm.mintedFAI | toCurrency(round) }} /
                 {{ loanAmount | toCurrency(round) }}
@@ -68,7 +65,7 @@
           </v-card>
         </v-col>
       </v-row>
-<!-- Dynamic Lending Protocols -->
+      <!-- Dynamic Lending Protocols -->
       <v-row
         v-if="farm.type === 'lending'"
         align="center"
@@ -88,12 +85,9 @@
                   rounded
                   color="#5e72e4"
                 >
-                  <strong
-                    >{{
-                      ((farm.totalBorrowed / loanAmount) * 100)
-                        | to2Decimals(round)
-                    }}%</strong
-                  >
+                  <strong>
+                    {{((farm.totalBorrowed / loanAmount) * 100) | to2Decimals(round)}}%
+                  </strong>
                 </v-progress-linear>
                 {{ farm.totalBorrowed | toCurrency(round) }} /
                 {{ loanAmount | toCurrency(round) }}
@@ -165,16 +159,28 @@
                 }})
               </p>
             </v-card-text>
-            <v-card-actions v-if="pool.contractAddress">
-              <v-btn text>
+            <v-card-actions :disabled="farm.network != network || farm.wallet !== connectedWallet">
+              <v-spacer />
+              <!-- <v-btn text>
                   <v-icon class="fa fa-plus"></v-icon>
               </v-btn>
               <v-btn text>
                   <v-icon class="fa fa-minus"></v-icon>
-              </v-btn>
-              <v-btn text>
-                  <v-icon v-if="pool.rawPending > 0" class="fa fa-shopping-basket" v-on:click="claimReward(pool.contractAddress,pool.poolID,pool.rawPending)"></v-icon>
-              </v-btn>
+              </v-btn> -->
+              <v-tooltip top>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn text :disabled="pool.rawPending < 1">
+                    <v-icon
+                      @click="claimReward(pool.contractAddress, pool.poolID, pool.rawPending)"
+                      v-bind="attrs"
+                      v-on="on"
+                      class="fa fa-shopping-basket"
+                    />
+                  </v-btn>
+                </template>
+                <span>Claim Rewards</span>
+              </v-tooltip>
+              <v-spacer />
             </v-card-actions>
           </v-card>
         </v-col>
@@ -197,8 +203,9 @@ export default {
     round() {
       return store.userData.round;
     },
-    checkProvider() {
-      return store.walletData.provider;
+    provider() {
+      if (store?.walletData?.provider) return store.walletData.provider;
+      else return false;
     },
     noLPPools() {
       return store.userData.noLPPools;
@@ -217,23 +224,29 @@ export default {
         return pools;
       }
     },
+    network() {
+      return store.walletData.network;
+    },
+    connectedWallet() {
+      return store.walletData.connectedWallet;
+    },
   },
   methods: {
-        async claimReward(contractAddress,poolIndex,rawTokens,claimFunction) {
-      const signer = store.state.provider.getSigner()
-      const contract = new ethers.Contract(contractAddress,ERC20_ABI,signer)
+    async claimReward(contractAddress, poolIndex, rawTokens, claimFunction) {
+      const signer = this.provider.getSigner()
+      const contract = new ethers.Contract(contractAddress, ERC20_ABI, signer)
       if (rawTokens > 0) {
         if (claimFunction) {
           contract.claimFunction(poolIndex, {gasLimit: 500000})
           .then(function(t) {
             console.log(t.hash)
-            return store.walletData.provider.waitForTransaction(t.hash)
+            return this.provider.waitForTransaction(t.hash)
           })
         }
         else {
           contract.deposit(poolIndex, 0, {gasLimit: 500000})
           .then(function(t) {
-            return store.walletData.provider.waitForTransaction(t.hash)
+            return this.provider.waitForTransaction(t.hash)
           })
           .catch(function(){
             console.log('Complete')
@@ -241,11 +254,6 @@ export default {
         }
         }
       },
-  },
-  data() {
-    return {
-      farmData: "",
-    };
   },
 };
 </script>
