@@ -243,20 +243,29 @@ export const mutations = {
         const signer = provider.getSigner()
         const networkId = await signer.getChainId()
         const address = await signer.getAddress()
-        this.setFarmsAndWallet(this.selectedFarms, address);
+        this.setFarmsAndWallet(store.userData.selectedFarms, address);
         this.setProvider(provider);
         this.setConnectedWallet(address);
         this.setNetwork(this.returnNetworkName(networkId));
         this.setAlert('Wallet connected successfully with address ' + store.userData.wallet + ' and network "' + store.walletData.network + '".');
-        window.ethereum.on('chainChanged', async () => {
-          // call with false as the listener event was already added if
-          // this function was called the first time
-          await this.connectWallet(false);
-        })
+        if (addListener) {
+          window.ethereum.on('accountsChanged', async (accounts) => {
+            console.log("accountsChanged", accounts)
+            await this.connectWallet(false);
+            // call with false as the listener event was already added if
+            // this function was called the first time
+            // await this.connectWallet(false);
+          })
+          window.ethereum.on('chainChanged', async () => {
+            // call with false as the listener event was already added if
+            // this function was called the first time
+            await this.connectWallet(false);
+          })
+        }
         return Promise.resolve(true);
       } catch (error) {
         console.log(error);
-        this.setAlert('Wallet connection failed with error: ' + error);
+        this.setAlert('Wallet connection failed with error: ' + error.message || error);
         Promise.reject(error);
       }
     }
@@ -275,23 +284,18 @@ export const mutations = {
     try {
       if (!store?.walletData?.provider) throw 'No wallet provider detected.'
       const signer = store.walletData.provider.getSigner()
-      console.log('signer', signer);
       const contract = new ethers.Contract(contractAddress, ERC20_ABI, signer)
-      console.log('contract', contract);
       if (rawTokens > 0) {
-        console.log('rawTokens', rawTokens);
         if (claimFunction) {
-          console.log('claimFunction', claimFunction);
           contract.claimFunction(poolIndex, {gasLimit: 500000})
           .then(async (t) => {
-            console.log('claimFunction t', t);
             await store.walletData.provider.waitForTransaction(t.hash);
-            this.setAlert(`Transaction ${t.hash} completed.`)
+            this.setAlert(`Transaction "${t.hash}" completed.`)
             return Promise.resolve(true);
           })
           .catch((error) => {
             console.log('claimRewards if error', error);
-            this.setAlert(`An error occurred with the transaction. Error: ${error}`);
+            this.setAlert(`An error occurred with the transaction. Error: ${error.message || error}`);
             return Promise.reject(error);
           })
         } else {
@@ -300,19 +304,19 @@ export const mutations = {
           .then(async (t) => {
             console.log('deposit', t);
             await store.walletData.provider.waitForTransaction(t.hash);
-            this.setAlert(`Transaction ${t.hash} completed.`)
+            this.setAlert(`Transaction "${t.hash}" completed.`)
             return Promise.resolve(true);
           })
           .catch((error) => {
             console.log('claimRewards else error', error);
-            this.setAlert(`An error occurred with the transaction. Error: ${error}`);
+            this.setAlert(`An error occurred with the transaction. Error: ${error.message || error}`);
             return Promise.reject(error);
           })
         }
       }
     } catch (error) {
       console.log('claimRewards error', error);
-      this.setAlert(`An error occurred with the transaction. Error: ${error}`);
+      this.setAlert(`An error occurred with the transaction. Error: ${error.message || error}`);
       return Promise.reject(error);
     }
   },

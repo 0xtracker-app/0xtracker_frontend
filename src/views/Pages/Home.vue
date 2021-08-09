@@ -7,7 +7,7 @@
         :value="alerts.length"
         :timeout="-1"
       >
-        {{ alerts.join(' ') }}
+        <template v-for="(alert, index) in alerts"><p :key="index">{{alert}}</p></template>
       </v-snackbar>
       <v-btn
         @click="darkmode = !darkmode"
