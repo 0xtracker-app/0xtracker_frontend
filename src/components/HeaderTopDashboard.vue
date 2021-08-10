@@ -1,9 +1,9 @@
 <template>
   <v-container fluid class="pt-0 px-6 pb-16">
     <v-row no-gutters class="py-3">
-      <v-col cols="12" md="6" class="d-flex align-center">
+      <v-col cols="12">
         <h2
-          class="text-h2 font-weight-600 text-white"
+          class="text-h2 font-weight-600 text-white text-center"
         >
           <template v-if="$route.name === 'Dashboard'">Dashboard</template>
           <template v-else>{{ $route.name }}</template>
