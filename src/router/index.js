@@ -46,7 +46,7 @@ const routes = [
       },
       {
         path: "/farms",
-        name: "Farms",
+        name: "Supported Networks and Farms",
         component: SupportedNetworksAndFarms,
       },
       {

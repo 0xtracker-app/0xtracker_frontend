@@ -113,7 +113,7 @@ export default {
       {
         icon: "fa-ambulance v-icon-drawer",
         link: "/rekt",
-        title: "Rekt",
+        title: "Rekt?",
       },
       {
         icon: "fa-cog v-icon-drawer",

@@ -2,9 +2,24 @@
   <div>
     <HeaderTopDashboard />
     <v-container class="px-6 mt-n16">
-      <v-row v-for="(networkWithFarms, network) in farmsByNetwork" :key="network">
-        <v-col class="mx-auto pt-0" lg="8">
+      <v-row v-if="!loading && farmsByNetwork && Object.keys(farmsByNetwork).length">
+        <v-col v-for="(networkWithFarms, network) in farmsByNetwork" :key="network" class="mx-auto pt-0" lg="8">
           <SupportedNetworkAndFarms :network="network" :farms="networkWithFarms" />
+        </v-col>
+      </v-row>
+      <v-row v-else>
+        <v-col class="mx-auto pt-0" lg="8">
+          <v-overlay
+            :absolute="true"
+            :value="loading"
+          >
+            <div class="text-center">
+              <v-progress-circular
+                indeterminate
+                color="white"
+              />
+            </div>
+          </v-overlay>
         </v-col>
       </v-row>
     </v-container>
