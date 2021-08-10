@@ -159,7 +159,7 @@
                 }})
               </p>
             </v-card-text>
-            <v-card-actions v-if="pool.contractAddress && pool.rawPending > 0" :disabled="!connectedWallet || farm.network != network || farm.wallet !== connectedWallet">
+            <v-card-actions v-if="pool.contractAddress && pool.rawPending > 0">
               <v-spacer />
               <!-- <v-btn text>
                   <v-icon class="fa fa-plus"></v-icon>

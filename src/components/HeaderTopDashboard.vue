@@ -1,7 +1,15 @@
 <template>
   <v-container fluid class="pt-0 px-6 pb-16">
     <v-row no-gutters class="py-3">
-      <v-col cols="12">
+      <v-col cols="6" v-if="$route.name === 'Portfolio'">
+        <h2
+          class="text-h2 font-weight-600 text-white"
+        >
+          <template v-if="$route.name === 'Dashboard'">Dashboard</template>
+          <template v-else>{{ $route.name }}</template>
+        </h2>
+      </v-col>
+      <v-col cols="12" v-else>
         <h2
           class="text-h2 font-weight-600 text-white text-center"
         >
@@ -9,7 +17,7 @@
           <template v-else>{{ $route.name }}</template>
         </h2>
       </v-col>
-      <v-col v-if="showRefresh" cols="12" md="6" class="d-flex justify-end align-center">
+      <v-col v-if="showRefresh" cols="6" md="6" class="d-flex justify-end">
         <v-btn
           elevation="0"
           small
