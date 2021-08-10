@@ -108,7 +108,12 @@ export default {
       {
         icon: "fa-tractor v-icon-drawer",
         link: "/farms",
-        title: "Farms",
+        title: "Supported Farms",
+      },
+      {
+        icon: "fa-ambulance v-icon-drawer",
+        link: "/rekt",
+        title: "Rekt",
       },
       {
         icon: "fa-cog v-icon-drawer",

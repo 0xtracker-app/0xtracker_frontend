@@ -1,7 +1,7 @@
 <template>
   <v-card class="card-shadow mb-30" :dark="darkmode">
     <div class="card-header-padding card-border-bottom">
-      <p class="font-weight-600 text-h3 mb-0">{{ network }}</p>
+      <p class="font-weight-600 text-h3 mb-0">{{ $t(network) }}</p>
     </div>
     <v-card-text class="card-padding card-shadow">
       <v-card-text class="px-0 py-0">

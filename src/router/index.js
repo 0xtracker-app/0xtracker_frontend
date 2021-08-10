@@ -6,6 +6,7 @@ import SinglePageLayout from "@/views/Layout/SinglePageLayout";
 // Dashboard pages
 const Portfolio = () => import("../views/Dashboard/Portfolio.vue");
 const SupportedNetworksAndFarms = () => import("../views/Dashboard/SupportedNetworksAndFarms.vue");
+const Rekt = () => import("../views/Dashboard/Rekt.vue");
 const Settings = () => import("../views/Dashboard/Settings.vue");
 
 // Pages
@@ -47,6 +48,11 @@ const routes = [
         path: "/farms",
         name: "Farms",
         component: SupportedNetworksAndFarms,
+      },
+      {
+        path: "/rekt",
+        name: "Rekt",
+        component: Rekt,
       },
       {
         path: "/settings",
