@@ -56,8 +56,8 @@
                     <v-icon>fas fa-star</v-icon>
                   </v-list-item-avatar>
                   <v-list-item-content>
-                    <v-list-item-title v-html="data.item.text"></v-list-item-title>
-                    <v-list-item-subtitle v-html="`${data.item.group ? 'Featured' : ''}`"></v-list-item-subtitle>
+                    <v-list-item-title v-html="data.item.text" />
+                    <v-list-item-subtitle v-html="`${data.item.group ? 'Featured' : ''}`" />
                   </v-list-item-content>
                 </template>
               </template>
@@ -159,7 +159,7 @@ export default {
       return this.allFeaturedFarms.concat(this.allRegularFarms);
     },
     farms: function() {
-      return this.joinedFarms.map(farm => {return { text: `${farm.name} (${farm.network})`, value: farm, network: farm.network, group: farm.featured === 1 ? 'Featured' : '' }});
+      return this.joinedFarms.map(farm => {return { text: `${farm.name} (${this.$t(farm.network)})`, value: farm, network: farm.network, group: farm.featured === 1 ? 'Featured' : '' }});
     },
   },
   methods: {
