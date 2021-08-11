@@ -57,6 +57,18 @@
         </a>
       </div>
       <div class="text-center">
+        <a href="https://shibanova.io/" target="_blank">
+          <v-avatar>
+            <v-img
+              max-height="50"
+              max-width="50"
+              src="@/assets/images/sponsors-footer/2-coin_logo.gif"
+            ></v-img>
+          </v-avatar>
+          <p :class="{'text-white': darkmode}">ShibaNova</p>
+        </a>
+      </div>
+      <div class="text-center">
         <a href="https://timeleap.finance/" target="_blank">
           <v-avatar>
             <v-img
