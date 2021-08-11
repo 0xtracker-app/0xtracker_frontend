@@ -53,7 +53,7 @@
               src="@/assets/images/sponsors-footer/bundle.svg"
             ></v-img>
           </v-avatar>
-          <p :class="{'text-white': darkmode}">Bundle DAO</p>
+          <p :class="{'text-white': darkmode}">Bundle</p>
         </a>
       </div>
       <div class="text-center">
