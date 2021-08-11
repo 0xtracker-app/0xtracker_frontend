@@ -26,6 +26,7 @@ export const store = Vue.observable({
   loadingFarms: false,
   loadingPools: false,
   loadingWallet: false,
+  loadingApprovals: false,
   farmsList: [],
   farmsWithData: {},
   farmsWithoutData: {},
@@ -33,6 +34,8 @@ export const store = Vue.observable({
   totalWalletValue: 0,
   totalFarmsValue: 0,
   totalPendingRewardsValue: 0,
+  approvedTokens: {},
+
 });
 
 export const mutations = {
@@ -175,6 +178,24 @@ export const mutations = {
       this.addFarmWithoutData(key, selectedFarmTemp);
     }
   },
+  async getTokenApprovals(wallet,network) {
+    try {;
+      this.setLoadingApprovals(true);
+
+      const requestBody = {
+        wallet : wallet,
+        network : network
+      }
+      const response = await axios.post(process.env.VUE_APP_APPROVALS_URL, requestBody);
+      if (!response || !response.data || response.data.error) throw `There was an error in the response.`;
+      if (Object.keys(response.data).length) {
+        this.setTokenApprovals(response.data) }
+      this.setLoadingApprovals(false);
+    } catch (error) {
+      this.setAlert(error);
+      this.setLoadingApprovals(false);
+    }
+  },
   // FARMS WITH DATA
   addFarmWithData(key, farmData) {
     Vue.set(store.farmsWithData, key, farmData);
@@ -209,7 +230,10 @@ export const mutations = {
   },
   setNetwork(networkName) {
     Vue.set(store.walletData, 'network', networkName);
-  }, 
+  },
+  setTokenApprovals(approvals) {
+    Vue.set(store, 'approvedTokens', approvals);
+  },  
   // WALLET BALANCES
   async getBalancesForWallet() {
     try {;
@@ -331,6 +355,9 @@ export const mutations = {
   // SHOW LOADING WALLET BALANCE INDICATORS
   setLoadingBalances(loading) {
     store.loadingWallet = loading;
+  },
+  setLoadingApprovals(loading) {
+    store.loadingApprovals = loading;
   },
   // DARKMODE
   toggleDarkMode() {

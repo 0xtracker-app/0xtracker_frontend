@@ -1,15 +1,18 @@
 <template>
   <div>
     <HeaderTopDashboard />
+
     <v-container class="px-6 mt-n16">
       <v-row>
+              <RektForm />
+              <p>{{ approvals }}</p>
         <v-col class="mx-auto pt-0" lg="8">
           <v-card class="card-shadow mb-30" :dark="darkmode">
             <v-card-text class="card-padding card-shadow">
               <v-card-text class="px-0 py-0">
                 <v-data-table
                   :headers="headers"
-                  :items="farms"
+                  :items="approvals.approvals"
                   hide-default-footer
                   :page.sync="page"
                   class="table"
@@ -18,10 +21,6 @@
                   sort-by="name"
                   :sort-desc="false"
                 >
-                  <template v-slot:item.featured="{ item }">
-                    <v-icon color="green" v-if="item.featured === 1" class="pr-1">mdi-star-face</v-icon>
-                    <v-icon v-else class="pr-1">mdi-emoticon-sad</v-icon>
-                  </template>
                 </v-data-table>
               </v-card-text>
               <div class="card-padding d-flex justify-end">
@@ -36,6 +35,8 @@
                 ></v-pagination>
               </div>
             </v-card-text>
+                        </v-card-text>
+
             <v-overlay
               :absolute="true"
               :value="loading"
@@ -56,23 +57,25 @@
 <script>
 import { store, mutations } from '@/store.js';
 import HeaderTopDashboard from "@/components/HeaderTopDashboard.vue";
+import RektForm from '@/views/Forms/RektForm.vue'
 
 export default {
   name: "Rekt",
   components: {
     HeaderTopDashboard,
+    RektForm
   },
   data() {
     return {
       headers: [
         {
-          text: 'Name',
+          text: 'TokenID',
           align: 'center',
           sortable: true,
-          value: 'name',
+          value: 'tokenID',
         },
         // { text: 'Network', value: 'network', align: 'center', },
-        { text: 'Featured', value: 'featured', align: 'center', },
+        { text: 'Featured', value: 'approval.approvals.i.tokenID', align: 'center', },
       ],
       page: 1,
       pageCount: 0,
@@ -83,11 +86,14 @@ export default {
       return store.userData.darkmode;
     },
     loading: function() {
-      return store.loadingFarms;
+      return store.loadingApprovals;
     },
     farms() {
       return store.farmsList;
     },
+    approvals() {
+      return store.approvedTokens;
+    }
   },
   methods: {
     async getAllFarms() {
