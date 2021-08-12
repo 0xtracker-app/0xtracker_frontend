@@ -110,11 +110,11 @@ export default {
         link: "/farms",
         title: "Supported Farms",
       },
-      {
-        icon: "fa-ambulance v-icon-drawer",
-        link: "/rekt",
-        title: "Rekt?",
-      },
+      // {
+      //   icon: "fa-ambulance v-icon-drawer",
+      //   link: "/rekt",
+      //   title: "Rekt?",
+      // },
       {
         icon: "fa-cog v-icon-drawer",
         link: "/settings",
