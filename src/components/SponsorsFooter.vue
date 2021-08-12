@@ -62,7 +62,7 @@
             <v-img
               max-height="50"
               max-width="50"
-              src="@/assets/images/sponsors-footer/2-coin_logo.gif"
+              src="@/assets/images/sponsors-footer/coin.png"
             ></v-img>
           </v-avatar>
           <p :class="{'text-white': darkmode}">ShibaNova</p>
