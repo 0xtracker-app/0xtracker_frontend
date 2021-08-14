@@ -1,26 +1,46 @@
 <template>
   <div>
+    <RektForm />
     <HeaderTopDashboard />
 
     <v-container class="px-6 mt-n16">
       <v-row>
-              <RektForm />
               <p>{{ approvals }}</p>
-        <v-col class="mx-auto pt-0" lg="8">
+      </v-row>
+      <v-row>
+        <v-col class="mx-auto pt-0">
           <v-card class="card-shadow mb-30" :dark="darkmode">
             <v-card-text class="card-padding card-shadow">
               <v-card-text class="px-0 py-0">
                 <v-data-table
                   :headers="headers"
-                  :items="approvals.approvals"
+                  :items="approvals"
                   hide-default-footer
                   :page.sync="page"
                   class="table"
                   mobile-breakpoint="0"
                   @page-count="pageCount = $event"
-                  sort-by="name"
-                  :sort-desc="false"
                 >
+                  <template v-slot:item.tokenID="{ item }" class="text-center">
+                    <a>{{ item.tokenID }}</a>
+                  </template>
+                  <template v-slot:item.lastTx.contractApproved="{ item }" class="text-center">
+                    <a>{{ item.lastTx && item.lastTx.contractApproved || 'NA' }}</a>
+                  </template>
+                  <template v-slot:item.management="{ item }" class="text-center">
+                    <v-tooltip color="#212529" top>
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-icon
+                          v-bind="attrs"
+                          v-on="on"
+                          size="14"
+                          class="text-muted me-2 cursor-pointer"
+                          >fas fa-ban</v-icon
+                        >
+                      </template>
+                      <span>Revoke Access</span>
+                    </v-tooltip>
+                  </template>
                 </v-data-table>
               </v-card-text>
               <div class="card-padding d-flex justify-end">
@@ -32,11 +52,9 @@
                   v-model="page"
                   :length="pageCount"
                   circle
-                ></v-pagination>
+                />
               </div>
             </v-card-text>
-                        </v-card-text>
-
             <v-overlay
               :absolute="true"
               :value="loading"
@@ -45,7 +63,8 @@
                 <v-progress-circular
                   indeterminate
                   color="white"
-                ></v-progress-circular>
+                  :opacity="1"
+                />
               </div>
             </v-overlay>
           </v-card>
@@ -55,7 +74,7 @@
   </div>
 </template>
 <script>
-import { store, mutations } from '@/store.js';
+import { store } from '@/store.js';
 import HeaderTopDashboard from "@/components/HeaderTopDashboard.vue";
 import RektForm from '@/views/Forms/RektForm.vue'
 
@@ -69,13 +88,41 @@ export default {
     return {
       headers: [
         {
-          text: 'TokenID',
+          text: 'Token',
+          align: 'center',
+          sortable: true,
+          value: 'tokenData.tkn0s',
+        },
+        {
+          text: 'Token ID',
           align: 'center',
           sortable: true,
           value: 'tokenID',
         },
-        // { text: 'Network', value: 'network', align: 'center', },
-        { text: 'Featured', value: 'approval.approvals.i.tokenID', align: 'center', },
+        {
+          text: 'Contract',
+          align: 'center',
+          sortable: true,
+          value: 'network',
+        },
+        {
+          text: 'Contract',
+          align: 'center',
+          sortable: true,
+          value: 'lastTx.contractApproved',
+        },
+        {
+          text: 'Value',
+          align: 'center',
+          sortable: true,
+          value: 'balance',
+        },
+        {
+        sortable: false,
+        text: "Manage",
+        value: "management",
+        align: "center"
+      }
       ],
       page: 1,
       pageCount: 0,
@@ -85,20 +132,24 @@ export default {
     darkmode() {
       return store.userData.darkmode;
     },
-    loading: function() {
+    loading() {
       return store.loadingApprovals;
     },
     farms() {
       return store.farmsList;
     },
     approvals() {
-      return store.approvedTokens;
+      const tokens = [];
+      for (const tokenId in store.approvedTokens.approvals) {
+        if (Object.hasOwnProperty.call(store.approvedTokens.approvals, tokenId)) {
+          let transactions = store.approvedTokens.approvals[tokenId].contracts[Object.keys(store.approvedTokens.approvals[tokenId].contracts)[0]].tx;
+          const lastTx = transactions[transactions.length - 1][0];
+          store.approvedTokens.approvals[tokenId].lastTx = lastTx;
+          tokens.push(store.approvedTokens.approvals[tokenId]);
+        }
+      }
+      return tokens;
     }
-  },
-  methods: {
-    async getAllFarms() {
-      mutations.getFarms();
-    },
   },
 };
 </script>
