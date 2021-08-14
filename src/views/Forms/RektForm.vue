@@ -32,26 +32,32 @@
           </v-col>
           <v-col md="6" sm="12">
             <label for="" class="font-weight-600 mb-2 d-block text-white">Network</label>
-            <v-select
+            <v-autocomplete
               rounded
               v-model="selectedNetwork"
-              :items="items"
+              :disabled="loading"
+              :rules="networkRules"
+              :items="networks"
+              outlined
+              chips
+              small-chips
+              deletable-chips
+              solo
               class="font-size-input text-color-dark input-alternative input-focused-alternative input-icon mb-0"
               :dark="darkmode"
+              :search-input.sync="networkSearchInput"
+              @change="networkSearchInput=''"
               :menu-props="darkmode ? 'dark' : 'light'"
-            ></v-select>
-              <template>
-                <template>
-                  <v-list-item-content>
-                    <v-list-item-title :v-text="$t(items)"></v-list-item-title>
-                  </v-list-item-content>
-                </template>
+            >
+              <template v-slot:item="data">
+                <v-list-item-content>
+                  <v-list-item-title>{{ $t(data.item.text) }} ({{ data.item.value.toUpperCase() }})</v-list-item-title>
+                </v-list-item-content>
               </template>
               <template slot="prepend-inner">
-                  <v-icon size=".875rem"
-                  >fas fa-bolt</v-icon
-                >
+                  <v-icon size=".875rem">fas fa-network-wired</v-icon>
               </template>
+            </v-autocomplete>
           </v-col>
         </v-row>
       </v-col>
@@ -83,19 +89,19 @@ export default {
   data() {
     return {
       valid: true,
+      wallet: '',
       walletRules: [
         value => !!value || 'Required.',
         value => (value && value.length >= 3) || 'Min 3 characters.',
       ],
-    items: ['bsc', 'matic', 'ftm'],
-    selectedNetwork : ''
+      networkRules: [
+        value => !!value || 'Required.',
+        value => (value && value.length >= 1) || 'Min 1 network.',
+      ],
+      networks: [ {text: 'Binance Smart Chain', value: 'bsc' }, { text: 'Polygon Matic', value: 'matic' }, { text: 'Fantom', value: 'ftm' }],
+      selectedNetwork : '',
+      networkSearchInput: '',
     };
-  },
-  mounted () {
-    if (this.$route.name === "Portfolio" && this.$route?.params?.wallet && this.$route?.params?.wallet != this.wallet) {
-      this.wallet = this.$route?.params?.wallet;
-      this.$router.push({ name: 'Portfolio', params: { wallet: this.wallet }}).catch(()=>{});
-    }
   },
   computed: {
     darkmode() {
@@ -107,16 +113,13 @@ export default {
     loading: function() {
       return store.loadingApprovals;
     },
-    wallet: {
-      get () {
-        return store.userData.wallet;
-      }
-    }
+  },
+  created() {
+    this.wallet = store.userData.wallet;
   },
   methods: {
     loadApprovals() {
       if (this.$refs.form.validate()) {
-        // .catch(()=>{}) to allow router navigation to the same component
         mutations.getTokenApprovals(this.wallet, this.selectedNetwork);
       } else this.valid = false;
     },
