@@ -1,12 +1,11 @@
 <template>
   <v-container fluid class="pt-0 px-6 pb-16">
     <v-row no-gutters class="py-3">
-      <v-col cols="6" v-if="$route.name === 'Portfolio'">
+      <v-col cols="6" v-if="$route.name === 'Portfolio' || $route.name === 'Rekt'">
         <h2
           class="text-h2 font-weight-600 text-white"
         >
-          <template v-if="$route.name === 'Dashboard'">Dashboard</template>
-          <template v-else>{{ $route.name }}</template>
+          <template>{{ $route.name }}</template>
         </h2>
       </v-col>
       <v-col cols="12" v-else>
