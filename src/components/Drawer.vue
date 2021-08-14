@@ -66,8 +66,8 @@
           active-class="item-active"
         >
           <v-list-item-icon>
-            <v-icon v-if="provider" color="green">fas fa-plug</v-icon>
-            <v-icon v-else>fas fa-plug</v-icon>
+            <v-icon v-if="provider" v-text="'fas fa-plug v-icon-drawer'" color="green" />
+            <v-icon v-else v-text="'fas fa-plug v-icon-drawer'" />
           </v-list-item-icon>
           <v-list-item-content>
             <v-list-item-title v-if="provider" :class="{'text-white': darkmode}">Connected: {{ connectedWalletShortened }}</v-list-item-title>
@@ -110,11 +110,11 @@ export default {
         link: "/farms",
         title: "Supported Farms",
       },
-      // {
-      //   icon: "fa-ambulance v-icon-drawer",
-      //   link: "/rekt",
-      //   title: "Rekt?",
-      // },
+      {
+        icon: "fa-ambulance v-icon-drawer",
+        link: "/rekt",
+        title: "Rekt?",
+      },
       {
         icon: "fa-cog v-icon-drawer",
         link: "/settings",
