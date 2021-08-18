@@ -36,7 +36,7 @@ export default {
         },
         {
           src: require('@/assets/images/sponsors-header/koge.gif'),
-          href: 'https://www.http://kogefarm.io/',
+          href: 'https://kogefarm.io/',
         },
         {
           src: require('@/assets/images/sponsors-header/adamant.png'),
