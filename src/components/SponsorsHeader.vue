@@ -35,8 +35,8 @@ export default {
           href: 'https://jetswap.finance/',
         },
         {
-          src: require('@/assets/images/sponsors-header/mooncake.png'),
-          href: 'https://www.mooncake.io/',
+          src: require('@/assets/images/sponsors-header/koge.gif'),
+          href: 'https://www.http://kogefarm.io/',
         },
         {
           src: require('@/assets/images/sponsors-header/adamant.png'),
@@ -52,7 +52,7 @@ export default {
       if (self.slide+1 === self.slides.length) {
         self.slide = 0;
       } else self.slide++;
-    }, 6000);
+    }, 8000);
   },
   beforeDestroy() {
     clearInterval(this.interval);
