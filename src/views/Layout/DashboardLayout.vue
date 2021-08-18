@@ -33,6 +33,12 @@
       </fade-transition>
       <SponsorsFooter class="mx-5 mb-5" />
       <Footer v-if="!$route.meta.hideFooter" />
+      <v-snackbar
+        :value="alerts.length"
+        :timeout="-1"
+      >
+        <template v-for="(alert, index) in alerts"><p :key="index">{{alert}}</p></template>
+      </v-snackbar>
     </v-main>
   </v-app>
 </template>
@@ -77,6 +83,9 @@ export default {
     };
   },
   computed: {
+    alerts() {
+      return store.alerts;
+    },
     darkmode() {
       return store.userData.darkmode;
     },

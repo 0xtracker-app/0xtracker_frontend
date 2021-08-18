@@ -112,8 +112,8 @@ export default {
       },
       {
         icon: "fa-ambulance v-icon-drawer",
-        link: "/rekt",
-        title: "Rekt?",
+        link: "/rev0x",
+        title: "Rev0x",
       },
       {
         icon: "fa-cog v-icon-drawer",

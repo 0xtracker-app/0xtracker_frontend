@@ -344,6 +344,10 @@ export const mutations = {
       return Promise.reject(error);
     }
   },
+  revokePermissions() {
+    alert("This alert is coming from store.js, remove the alert and add logic :)");
+    this.setAlert('Permissions revoked successfully.');
+  },
   // SHOW LOADING FARM INDICATORS
   setLoadingFarms(loading) {
     store.loadingFarms = loading;

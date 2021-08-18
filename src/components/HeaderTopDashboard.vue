@@ -1,7 +1,7 @@
 <template>
   <v-container fluid class="pt-0 px-6 pb-16">
     <v-row no-gutters class="py-3">
-      <v-col cols="6" v-if="$route.name === 'Portfolio' || $route.name === 'Rekt'">
+      <v-col cols="6" v-if="$route.name === 'Portfolio' || $route.name === 'Rev0x'">
         <h2
           class="text-h2 font-weight-600 text-white"
         >

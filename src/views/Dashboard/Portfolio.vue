@@ -72,12 +72,6 @@
         </v-col>
       </v-row>
     </v-container>
-    <v-snackbar
-      :value="alerts.length"
-      :timeout="-1"
-    >
-      <template v-for="(alert, index) in alerts"><p :key="index">{{alert}}</p></template>
-    </v-snackbar>
   </div>
 </template>
 
