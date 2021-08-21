@@ -112,18 +112,9 @@
               {{ (pool.lpPrice + pool.pendingAmount) | toCurrency(round) }}
             </v-card-title>
             <v-card-text>
-              <p>
-                <strong>Total Staked:</strong>
-                {{ pool.staked | to2Decimals(round) }}
-              </p>
-              <p v-if="pool.borrowed">
-                <strong>Total Borrowed:</strong>
-                {{ pool.borrowed | to2Decimals(round) }} ({{ pool.borrowedUSD | toCurrency(round) }})
-              </p>
-              <p v-if="pool.lpTotal">
-                <strong>Total LP:</strong> {{ pool.lpTotal || 0 }}
-                {{ pool.elevenBalance }}
-              </p>
+              <p v-if="pool.staked"><strong>Total Staked:</strong> {{ pool.staked | to2Decimals(round) }}</p>
+              <p v-if="pool.borrowed"><strong>Total Borrowed:</strong> {{ pool.borrowed | to2Decimals(round) }} ({{ pool.borrowedUSD | toCurrency(round) }})</p>
+              <p v-if="pool.lpTotal"><strong>Total LP:</strong> {{ pool.lpTotal || 0 }} {{ pool.elevenBalance }}</p>
               <div v-if="pool.gambitRewards && pool.gambitRewards.length">
                 <p v-for="(gReward, index) in pool.gambitRewards" :key="index">
                   <strong>Pending {{ gReward.symbol }}:</strong>
@@ -132,32 +123,10 @@
                   }})
                 </p>
               </div>
-              <p v-else>
-                <strong>Pending {{ pool.rewardSymbol || "Rewards" }}:</strong>
-                {{ pool.pending | to2Decimals(round) }} ({{
-                  pool.pendingELE ||
-                  pool.pendingRewardAmount ||
-                  pool.pendingAmount | toCurrency(round)
-                }})
-              </p>
-              <p v-if="pool.pendingNerve">
-                <strong>Pending 11NRV:</strong>
-                {{ pool.pendingNerve | to2Decimals(round) }} ({{
-                  pool.pendingNRVAmount | toCurrency(round)
-                }})
-              </p>
-              <p v-if="pool.pendingBunny">
-                <strong>Pending BUNNY:</strong>
-                {{ pool.pendingBunny | to2Decimals(round) }} ({{
-                  pool.pendingBunnyAmount | toCurrency(round)
-                }})
-              </p>
-              <p v-if="pool.pendingMerlin">
-                <strong>Pending MERLIN:</strong>
-                {{ pool.pendingMerlin | to2Decimals(round) }} ({{
-                  pool.pendingMerlinAmount | toCurrency(round)
-                }})
-              </p>
+              <p v-else-if="pool.pending > 0"><strong>Pending {{ pool.rewardSymbol || 'Rewards' }}:</strong> {{ pool.pending | to2Decimals(round) }} ({{ pool.pendingELE || pool.pendingRewardAmount || pool.pendingAmount | toCurrency(round) }})</p>
+              <p v-if="pool.pendingNerve"><strong>Pending 11NRV:</strong> {{ pool.pendingNerve | to2Decimals(round) }} ({{ pool.pendingNRVAmount | toCurrency(round) }})</p>
+              <p v-if="pool.pendingBunny"><strong>Pending BUNNY:</strong> {{ pool.pendingBunny | to2Decimals(round) }} ({{ pool.pendingBunnyAmount | toCurrency(round) }})</p>
+              <p v-if="pool.pendingMerlin"><strong>Pending MERLIN:</strong> {{ pool.pendingMerlin | to2Decimals(round) }} ({{ pool.pendingMerlinAmount | toCurrency(round) }})</p>
             </v-card-text>
             <v-card-actions v-if="pool.contractAddress && pool.rawPending > 0">
               <v-spacer />

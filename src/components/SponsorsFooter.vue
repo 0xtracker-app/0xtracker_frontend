@@ -6,18 +6,6 @@
       Check Out Our Sponsors!
     </v-card-text>
     <v-row justify="space-around">
-      <!-- <div class="text-center">
-        <a href="https://farmhero.io?r=start" target="_blank">
-          <v-avatar>
-            <v-img
-              max-height="50"
-              max-width="50"
-              src="@/assets/images/sponsors-footer/farmhero.png"
-            ></v-img>
-          </v-avatar>
-          <p :class="{'text-white': darkmode}">Farm Hero</p>
-        </a>
-      </div> -->
       <div class="text-center">
         <a href="https://jetswap.finance/" target="_blank">
           <v-avatar>
@@ -43,21 +31,6 @@
         </a>
       </div>
       <div class="text-center">
-        <a href="http://kogefarm.io/" target="_blank">
-          <v-avatar>
-            <v-img
-              max-height="50"
-              max-width="50"
-              src="@/assets/images/sponsors-footer/koge.png"
-            ></v-img>
-          </v-avatar>
-          <p :class="{'text-white': darkmode}">Koge Farm</p>
-        </a>
-      </div>
-    </v-row>
-    <v-row justify="space-around">
-
-      <div class="text-center">
         <a href="https://bundledao.org/" target="_blank">
           <v-avatar>
             <v-img
@@ -66,7 +39,22 @@
               src="@/assets/images/sponsors-footer/bundle.svg"
             ></v-img>
           </v-avatar>
-          <p :class="{'text-white': darkmode}">Bundle DAO</p>
+          <p :class="{'text-white': darkmode}">Bundle</p>
+        </a>
+      </div>
+    </v-row>
+    <v-row justify="space-around">
+
+      <div class="text-center">
+        <a href="https://shibanova.io/" target="_blank">
+          <v-avatar>
+            <v-img
+              max-height="50"
+              max-width="50"
+              src="@/assets/images/sponsors-footer/coin.png"
+            ></v-img>
+          </v-avatar>
+          <p :class="{'text-white': darkmode}">ShibaNova</p>
         </a>
       </div>
       <div class="text-center">
