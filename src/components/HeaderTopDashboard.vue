@@ -37,7 +37,7 @@
   </v-container>
 </template>
 <script>
-import { store } from '@/store.js';
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
   name: "header-top",
@@ -45,14 +45,14 @@ export default {
     showRefresh: Boolean,
   },
   computed: {
-    darkmode() {
-      return store.userData.darkmode;
-    },
+    ...mapGetters('generalStore', ['darkmode']),
   },
   methods: {
+    ...mapActions('poolStore', ['getPoolsForSelectedFarms']),
+    ...mapActions('walletStore', ['loadWallet']),
     loadPortfolio() {
-      this.$eventHub.$emit('load-wallet');
-      this.$eventHub.$emit('load-farms');
+      if (this.$store.state.farmStore.selectedFarms && this.$store.state.farmStore.selectedFarms.length) this.getPoolsForSelectedFarms();
+      this.loadWallet();
     },
   }
 };

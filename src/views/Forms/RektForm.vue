@@ -82,7 +82,8 @@
 </template>
 
 <script>
-import { store, mutations } from '@/store.js';
+import { mapActions, mapGetters } from 'vuex';
+import { store, mutations } from '@/store-old.js';
 
 export default {
   name: "RektForm",
@@ -104,12 +105,7 @@ export default {
     };
   },
   computed: {
-    darkmode() {
-      return store.userData.darkmode;
-    },
-    width() {
-      return store.userData.width;
-    },
+    ...mapGetters('generalStore', ['darkmode']),
     loading: function() {
       return store.loadingApprovals;
     },

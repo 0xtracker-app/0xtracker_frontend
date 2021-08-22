@@ -62,7 +62,7 @@ function initScrollbar(className) {
   }
 }
 
-import { store } from '@/store.js';
+import { mapGetters } from 'vuex';
 import { FadeTransition } from "vue2-transitions";
 import Drawer from "@/components/Drawer.vue";
 import AppBar from "@/components/AppBar.vue";
@@ -84,11 +84,9 @@ export default {
   },
   computed: {
     alerts() {
-      return store.alerts;
+      return this.$store.state.generalStore.alerts;
     },
-    darkmode() {
-      return store.userData.darkmode;
-    },
+    ...mapGetters('generalStore', ['darkmode']),
   },
   methods: {
     initScrollbar() {

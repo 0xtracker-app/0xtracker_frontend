@@ -40,7 +40,8 @@
   </div>
 </template>
 <script>
-import { store, mutations } from '@/store.js';
+import { mapActions, mapGetters } from 'vuex';
+import { store, mutations } from '@/store-old.js';
 import HeaderTopDashboard from "@/components/HeaderTopDashboard.vue";
 import SupportedNetworkAndFarms from "@/components/SupportedNetworksAndFarms/SupportedNetworkAndFarms.vue";
 
@@ -54,9 +55,7 @@ export default {
     search: '',
   }),
   computed: {
-    darkmode() {
-      return store.userData.darkmode;
-    },
+    ...mapGetters('generalStore', ['darkmode']),
     loading: function() {
       return store.loadingFarms;
     },

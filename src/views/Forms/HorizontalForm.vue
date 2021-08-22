@@ -91,21 +91,13 @@
 </template>
 
 <script>
-import { store, mutations } from '@/store.js';
+import { mapActions, mapGetters } from 'vuex';
+import { store, mutations } from '@/store-old.js';
 
 export default {
-  name: "HorizontalForm",
   data() {
     return {
       valid: true,
-      walletRules: [
-        value => !!value || 'Required.',
-        value => (value && value.length >= 3) || 'Min 3 characters.',
-      ],
-      farmRules: [
-        value => !!value || 'Required.',
-        value => (value && value.length >= 1) || 'Min 1 farm.',
-      ],
       farmSearchInput: '',
     };
   },
@@ -116,37 +108,34 @@ export default {
     }
   },
   created () {
-    this.getFarmsList();
+    this.getFarms();
   },
   computed: {
-    darkmode() {
-      return store.userData.darkmode;
-    },
-    width() {
-      return store.userData.width;
-    },
+    ...mapGetters('generalStore', ['darkmode']),
+    ...mapGetters('farmStore', ['farmRules']),
+    ...mapGetters('walletStore', ['walletRules']),
     loading: function() {
       return store.loadingPools || store.loadingFarms || store.loadingWallet;
     },
     wallet: {
       get () {
-        return store.userData.wallet;
+        return this.$store.state.walletStore.wallet;
       },
       set (value) {
-        mutations.setFarmsAndWallet(this.selectedFarms, value);
+        this.setWallet(value);
       }
     },
     selectedFarms: {
       get () {
-        return store.userData.selectedFarms;
+        return this.$store.state.farmStore.selectedFarms;
       },
       set (value) {
-        mutations.setFarmsAndWallet(value, this.wallet);
+        this.setSelectedFarms(value);
       }
     },
     sortFarmsAlpha: function() {
       // make a new array as .sort modifies original array
-      const array = store.farmsList;
+      const array = JSON.parse(JSON.stringify(this.$store.state.farmStore.farms));
       return array.sort((a, b) => a.name.localeCompare(b.name));
     },
     allFeaturedFarms: function() {
@@ -163,14 +152,12 @@ export default {
     },
   },
   methods: {
-    async getFarmsList() {
-      mutations.getFarms();
-    },
+    ...mapActions('walletStore', ['setWallet']),
+    ...mapActions('farmStore', ['getFarms', 'setSelectedFarms']),
     loadPortfolio() {
       if (this.$refs.form.validate()) {
         // .catch(()=>{}) to allow router navigation to the same component
         this.$router.push({ name: 'Portfolio', params: { wallet: this.wallet }}).catch(()=>{});
-        mutations.setFarmsAndWallet(this.selectedFarms, this.wallet);
         this.$eventHub.$emit('load-wallet');
         this.$eventHub.$emit('load-farms');
       } else this.valid = false;

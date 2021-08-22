@@ -10,7 +10,7 @@
         <template v-for="(alert, index) in alerts"><p :key="index">{{alert}}</p></template>
       </v-snackbar>
       <v-btn
-        @click="darkmode = !darkmode"
+        @click="toggleDarkMode()"
         :dark="darkmode"
         fixed
         bottom
@@ -25,12 +25,11 @@
 </template>
 
 <script>
-import { store, mutations } from '@/store.js';
+import { mapActions, mapGetters } from 'vuex';
 import VerticalForm from '@/views/Forms/VerticalForm.vue'
 import SponsorsFooter from '@/components/SponsorsFooter.vue'
 
 export default {
-  name: "WalletInput",
   components: {
     VerticalForm,
     SponsorsFooter,
@@ -38,86 +37,11 @@ export default {
   props: {
     showEasySubmit: Boolean,
   },
-  data() {
-    return {
-      valid: true,
-      walletRules: [
-        value => !!value || 'Required.',
-        value => (value && value.length >= 3) || 'Min 3 characters.',
-      ],
-      farmRules: [
-        value => !!value || 'Required.',
-        value => (value && value.length >= 1) || 'Min 1 farm.',
-      ],
-    };
-  },
   computed: {
-    alerts() {
-      return store.alerts;
-    },
-    count() {
-      return store.count;
-    },
-    darkmode: {
-      get () {
-        return store.userData.darkmode;
-      },
-      set () {
-        mutations.toggleDarkMode();
-      }
-    },
-    width() {
-      return store.userData.width;
-    },
-    loading: function() {
-      return store.loadingPools || store.loadingFarms || store.loadingWallet;
-    },
-    wallet: {
-      get () {
-        return store.userData.wallet;
-      },
-      set (value) {
-        mutations.setFarmsAndWallet(this.selectedFarms, value);
-      }
-    },
-    selectedFarms: {
-      get () {
-        return store.userData.selectedFarms;
-      },
-      set (value) {
-        mutations.setFarmsAndWallet(value, this.wallet);
-      }
-    },
-    sortFarmsAlpha: function() {
-      // make a new array as .sort modifies original array
-      const array = store.farmsList;
-      return array.sort((a, b) => a.name.localeCompare(b.name));
-    },
-    allFeaturedFarms: function() {
-      return this.sortFarmsAlpha.filter(farm => farm.featured === 1)
-    },
-    allRegularFarms: function() {
-      return this.sortFarmsAlpha.filter(farm => farm.featured !== 1)
-    },
-    joinedFarms: function() {
-      return this.allFeaturedFarms.concat(this.allRegularFarms);
-    },
-    farms: function() {
-      return this.joinedFarms.map(farm => {return { text: farm.name, value: farm, network: farm.network, group: farm.featured === 1 ? 'Featured' : '' }});
-    },
+    ...mapGetters('generalStore', ['darkmode']),
   },
   methods: {
-    // TODO: Move to store
-    async getFarmsList() {
-      mutations.getFarms();
-    },
-    viewPortfolio() {
-      if (this.$refs.form.validate()) {
-        mutations.setFarmsAndWallet(this.selectedFarms, this.wallet);
-        this.$eventHub.$emit('load-wallet');
-        this.$eventHub.$emit('load-farms');
-      } else this.valid = false;
-    },
+    ...mapActions('generalStore', ['toggleDarkMode']),
   }
 };
 </script>

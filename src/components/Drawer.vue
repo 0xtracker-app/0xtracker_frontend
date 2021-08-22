@@ -32,7 +32,7 @@
       </v-list-item-content>
     </v-list-item>
     
-    <div class="border-bottom ma-0"></div>
+    <div class="border-bottom ma-0"/>
 
     <v-list nav dense>
       <v-list-item-group>
@@ -55,7 +55,7 @@
       </v-list-item-group>
     </v-list>
 
-    <div class="border-bottom-dark ma-0"></div>
+    <div class="border-bottom ma-0"/>
 
     <v-list nav dense>
       <v-list-item-group>
@@ -79,7 +79,8 @@
   </v-navigation-drawer>
 </template>
 <script>
-import { store, mutations } from "@/store.js";
+import { mapActions, mapGetters } from 'vuex';
+import { store, mutations } from "@/store-old.js";
 
 export default {
   name: "Drawer",
@@ -90,8 +91,6 @@ export default {
     },
   },
   data: () => ({      
-    portfolios: [],
-    selectedPortfolio: "",
     mini: false,
     togglerActive: false,
     itemsSimple: [
@@ -126,9 +125,7 @@ export default {
     currentRoute() {
       return this.$route.name;
     },
-    darkmode() {
-      return store.userData.darkmode;
-    },
+    ...mapGetters('generalStore', ['darkmode']),
     provider() {
       if (store?.walletData?.provider) return store?.walletData?.provider;
       else return false;

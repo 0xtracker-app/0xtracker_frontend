@@ -159,7 +159,8 @@
 </template>
 
 <script>
-import { store, mutations } from "@/store.js";
+import { mapActions, mapGetters } from 'vuex';
+import { store, mutations } from "@/store-old.js";
 
 export default {
   name: "Farm",
@@ -167,15 +168,10 @@ export default {
     farm: Object,
   },
   computed: {
-    round() {
-      return store.userData.round;
-    },
+    ...mapGetters('generalStore', ['noLPPools', 'round']),
     provider() {
       if (store?.walletData?.provider) return store.walletData.provider;
       else return false;
-    },
-    noLPPools() {
-      return store.userData.noLPPools;
     },
     poolsWithoutTotalLP: function () {
       if (this.noLPPools) {

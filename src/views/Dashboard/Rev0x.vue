@@ -68,7 +68,8 @@
   </div>
 </template>
 <script>
-import { store, mutations } from '@/store.js';
+import { mapActions, mapGetters } from 'vuex';
+import { store, mutations } from '@/store-old.js';
 import HeaderTopDashboard from "@/components/HeaderTopDashboard.vue";
 import RektForm from '@/views/Forms/RektForm.vue'
 
@@ -111,9 +112,7 @@ export default {
     };
   },
   computed: {
-    darkmode() {
-      return store.userData.darkmode;
-    },
+    ...mapGetters('generalStore', ['darkmode']),
     loading() {
       return store.loadingApprovals;
     },

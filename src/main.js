@@ -4,6 +4,8 @@ import router from "./router";
 import vuetify from "./plugins/vuetify";
 import DashboardPlugin from "./plugins/dashboard-plugin";
 import i18n from "./i18n";
+import store from './store';
+
 
 Vue.config.productionTip = false;
 
@@ -41,6 +43,7 @@ Vue.filter('toCurrency', (value, round) => {
 Vue.use(DashboardPlugin);
 
 new Vue({
+  store,
   router,
   vuetify,
   i18n,

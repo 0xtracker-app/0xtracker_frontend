@@ -56,7 +56,7 @@
   </v-app>
 </template>
 <script>
-import { store } from '@/store.js';
+import { mapGetters } from 'vuex';
 import SponsorsHeader from "@/components/SponsorsHeader.vue";
 import { FadeTransition } from "vue2-transitions";
 import ContentFooter from "@/components/Footer.vue";
@@ -74,9 +74,7 @@ export default {
     };
   },
   computed: {
-    darkmode() {
-      return store.userData.darkmode;
-    },
+    ...mapGetters('generalStore', ['darkmode']),
   },
   methods: {
     headerTitle() {

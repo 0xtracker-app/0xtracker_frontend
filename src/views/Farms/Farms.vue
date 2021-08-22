@@ -1,9 +1,8 @@
 <template>
   <div>
-    <v-card v-if="Object.keys(farmsWithData).length || Object.keys(farmsWithoutData).length" class="card-shadow">
-      <v-card-text v-if="Object.keys(farmsWithData).length === 0" class="text-center">Loading...</v-card-text>
-      <v-card-text v-else class="px-0 py-0">
-        <v-expansion-panels v-if="Object.keys(farmsWithData).length" accordion multiple :value="panelsArray">
+    <v-card class="card-shadow">
+      <v-card-text v-if="Object.keys(farmsWithData).length" class="px-0 py-0">
+        <v-expansion-panels accordion multiple :value="panelsArray">
           <v-expansion-panel
             v-for="(farm, key) in farmsWithData" :key="key"
           >
@@ -14,7 +13,7 @@
               <Farm :farm="farm" />
               <v-card-actions>
                 <v-spacer></v-spacer>
-                  <v-icon @click="refreshSingleFarm(farm.contract, farm)">
+                  <v-icon @click="getPoolsForSelectedFarm(farm.contract, farm)">
                     fas fa-redo
                   </v-icon>
               </v-card-actions>
@@ -22,23 +21,12 @@
           </v-expansion-panel>
         </v-expansion-panels>
       </v-card-text>
-      <v-overlay
-        :absolute="true"
-        :value="loading"
-      >
-        <div class="text-center">
-          <v-progress-circular
-            indeterminate
-            color="white"
-          ></v-progress-circular>
-        </div>
-      </v-overlay>
     </v-card>
-    <NoDataCard v-else />
+    <NoDataCard v-if="Object.keys(farmsWithData).length === 0" :loading="loading" />
   </div>
 </template>
 <script>
-import { store, mutations } from '@/store.js';
+import { mapActions, mapGetters } from 'vuex';
 import Farm from './Farm.vue';
 import NoDataCard from '@/components/Cards/NoDataCard.vue';
 
@@ -68,29 +56,15 @@ export default {
     };
   },
   computed: {
-    darkmode() {
-      return store.userData.darkmode;
-    },
-    round() {
-      return store.userData.round;
-    },
-    wallet: function() {
-      return store.userData.wallet;
-    },
-    selectedFarms: function() {
-      return store.userData.selectedFarms;
-    },
+    ...mapGetters('generalStore', ['darkmode', 'round']),
     loading: function() {
-      return store.loadingPools;
+      return this.$store.state.poolStore.loading;
     },
     farmsWithData: function() {
       // getting object keys and sorting them highest to lowest into an array based on value of total,
       // then adding the contract to the object so that it can be mapped back and removed from the
       // farmsWith/Without objects when a single refresh is done 😬
-      return Object.keys(store.farmsWithData).sort((a,b) => (store.farmsWithData[a].total < store.farmsWithData[b].total) ? 1 : -1).map(contract => {let farm = store.farmsWithData[contract];farm.contract = contract;return farm});
-    },
-    farmsWithoutData: function() {
-      return store.farmsWithoutData;
+      return Object.keys(this.$store.state.farmStore.farmsWithData).sort((a,b) => (this.$store.state.farmStore.farmsWithData[a].total < this.$store.state.farmStore.farmsWithData[b].total) ? 1 : -1).map(contract => {let farm = this.$store.state.farmStore.farmsWithData[contract];farm.contract = contract;return farm});
     },
     total: function() {
       let total = 0;
@@ -113,27 +87,23 @@ export default {
     },
   },
   async created() {
-    if (this.$route?.params?.loadFarms) this.loadFarms();
-    this.$eventHub.$on('load-farms', this.loadFarms);
+    if (this.$route?.params?.loadFarms) this.getPoolsForSelectedFarms();
+    this.$eventHub.$on('load-farms', this.getPoolsForSelectedFarms);
   },
   watch: {
     total: function (val) {
-      mutations.setTotalFarmsValue(val);
+      this.setFarmsValue(val);
     },
     pendingRewards: function (val) {
-      mutations.setTotalPendingRewardsValue(val);
+      this.setPendingRewardsValue(val);
     },
   },
   methods: {
-    loadFarms() {
-      mutations.getFarmData();
-    },
-    refreshSingleFarm(key, selectedFarm) {
-      mutations.refreshSingleFarm(key, selectedFarm);
-    },
+    ...mapActions('farmStore', ['setFarmsValue']),
+    ...mapActions('poolStore', ['getPoolsForSelectedFarms', 'getPoolsForSelectedFarm', 'setPendingRewardsValue']),
   },
   beforeDestroy() {
-    this.$eventHub.$off('load-farms', this.loadFarms);
+    this.$eventHub.$off('load-farms', this.getPoolsForSelectedFarms);
   },
 };
 </script>

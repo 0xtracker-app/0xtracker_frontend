@@ -74,16 +74,15 @@
 </template>
 
 <script>
-import { store } from '@/store.js';
+import { mapGetters } from 'vuex';
+import { store } from '@/store-old.js';
 
 export default {
   name: 'SponsorsFooter',
   components: {
   },
   computed: {
-    darkmode() {
-      return store.userData.darkmode;
-    },
+    ...mapGetters('generalStore', ['darkmode']),
   },
 };
 </script>

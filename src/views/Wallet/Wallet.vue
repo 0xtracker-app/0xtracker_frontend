@@ -36,15 +36,14 @@
         ></v-pagination>
       </div>
     </v-card>
-    <NoDataCard v-else />
+    <NoDataCard v-else :loading="loading" />
   </div>
 </template>
 <script>
-import { store, mutations } from '@/store.js';
+import { mapActions, mapGetters } from 'vuex';
 import NoDataCard from '@/components/Cards/NoDataCard.vue';
 
 export default {
-  name: "WalletTable",
   components: {
     NoDataCard,
   },
@@ -66,21 +65,15 @@ export default {
     };
   },
   computed: {
-    darkmode() {
-      return store.userData.darkmode;
-    },
-    round() {
-      return store.userData.round;
-    },
-    smallValues() {
-      return store.userData.smallValues;
-    },
+    ...mapGetters('generalStore', ['darkmode', 'smallValues', 'round']),
     loading: function() {
-      return store.loadingWallet;
+      return this.$store.state.walletStore.loading;
+    },
+    walletBalancesList: function() {
+      return this.$store.state.walletStore.walletBalancesList;
     },
     unfilteredBalances: function() {
-      const balancesList =  store.balancesList;
-      return balancesList.map(balance => {return { symbol: balance.symbol, tokenBalance: balance.tokenBalance, tokenPrice: balance.tokenPrice, tokenValue: balance.tokenBalance*balance.tokenPrice }});
+      return this.walletBalancesList.map(balance => {return { symbol: balance.symbol, tokenBalance: balance.tokenBalance, tokenPrice: balance.tokenPrice, tokenValue: balance.tokenBalance*balance.tokenPrice }});
     },
     balances: function() {
       const unfilteredBalances =  this.unfilteredBalances;
@@ -100,13 +93,11 @@ export default {
   },
   watch: {
     total: function (val) {
-      mutations.setTotalWalletValue(val);
+      this.setWalletValue(val);
     },
   },
   methods: {
-    loadWallet() {
-      mutations.getBalancesForWallet();
-    },
+    ...mapActions('walletStore', ['loadWallet', 'setWalletValue']),
   },
   beforeDestroy() {
     this.$eventHub.$off('load-wallet', this.loadWallet);

@@ -33,7 +33,6 @@
   </div>
 </template>
 <script>
-import { mutations } from "@/store.js";
 import SponsorsHeader from "@/components/SponsorsHeader.vue";
 
 export default {
@@ -49,48 +48,14 @@ export default {
   },
   data() {
     return {
-      // Mocked for testing purposes
-      portfolios: [
-        {
-          text: "BSC Main Wallet",
-          value: "0x72Dc7f18ff4B59143ca3D21d73fA6e40D286751f",
-        },
-        {
-          text: "Matic Main Wallet",
-          value: "0x117e1e54B3b138374d1AE94032F34F0ed6A3E276",
-        },
-      ],
-      selectedPortfolio: "0x123",
-      walletRules: [
-        (value) => !!value || "Required.",
-        (value) => (value && value.length >= 3) || "Min 3 characters.",
-      ],
-      farmRules: [
-        (value) => !!value || "Required.",
-        (value) => (value && value.length >= 1) || "Min 1 farm.",
-      ],
       drawer: false,
       togglerActive: false,
     };
-  },
-  created () {
-    this.getFarmsList();
-    if (this.$route.name === "Portfolio") this.wallet = this.$route?.params?.wallet;
   },
   methods: {
     drawerClose() {
       this.togglerActive = !this.togglerActive;
       this.$emit("drawer-toggle", true);
-    },
-    async getFarmsList() {
-      mutations.getFarms();
-    },
-    viewPortfolio() {
-      if (this.$refs.form.validate()) {
-        mutations.setFarmsAndWallet(this.selectedFarms, this.wallet);
-        this.$eventHub.$emit("load-wallet");
-        this.$eventHub.$emit("load-farms");
-      } else this.valid = false;
     },
   },
   watch: {

@@ -1,7 +1,8 @@
 <template>
   <v-card class="card-shadow">
     <v-card-text class="text-center">
-      <p>No data available...</p>
+      <p v-if="loading">Loading...</p>
+      <p v-else>No data available...</p>
     </v-card-text>
     <v-overlay
       :absolute="true"
@@ -18,14 +19,9 @@
 </template>
 
 <script>
-import { store } from '@/store.js';
-
 export default {
-  name: "NoDataCard",
-  computed: {
-    loading: function() {
-      return store.loadingWallet;
-    },
+  props: {
+    loading: Boolean,
   },
 }
 </script>

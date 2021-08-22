@@ -3,19 +3,15 @@
 </template>
 
 <script>
-import { store, mutations } from '@/store.js';
+import { mapActions, mapGetters } from 'vuex';
+import { store, mutations } from '@/store-old.js';
 
 export default {
   name: 'App',
   components: {
   },
   computed: {
-    darkmode() {
-      return store.userData.darkmode;
-    },
-    width() {
-      return store.userData.width;
-    },
+    ...mapGetters('generalStore', ['darkmode']),
   },
   created() {
     mutations.initStore();

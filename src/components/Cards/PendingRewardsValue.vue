@@ -6,7 +6,7 @@
           <div
             class="font-weight-600 text-muted text-uppercase text-h5"
           >
-            Pending Rewards Value
+            Pending Rewards
           </div>
           <p class="font-weight-600 text-h2 mb-0">
             {{ pendingRewardsValue | toCurrency(round) }}
@@ -40,22 +40,17 @@
 </template>
 
 <script>
-import { store } from '@/store.js';
+import { mapGetters } from 'vuex';
 
 export default {
   name: "Farms",
   computed: {
-    darkmode() {
-      return store.userData.darkmode;
-    },
+    ...mapGetters('generalStore', ['darkmode', 'round']),
     loading: function() {
-      return store.loadingPools;
+      return this.$store.state.poolStore.loading;
     },
     pendingRewardsValue: function() {
-      return store.totalPendingRewardsValue;
-    },
-    round() {
-      return store.userData.round;
+      return this.$store.state.poolStore.pendingRewardsValue;
     },
   },
 }

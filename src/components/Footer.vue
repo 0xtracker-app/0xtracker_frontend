@@ -72,7 +72,7 @@
   </span>
 </template>
 <script>
-import { store } from '@/store.js';
+import { mapGetters } from 'vuex';
 
 export default {
   name: "content-footer",
@@ -102,9 +102,7 @@ export default {
     };
   },
   computed: {
-    darkmode() {
-      return store.userData.darkmode;
-    },
+    ...mapGetters('generalStore', ['darkmode']),
   },
 };
 </script>
