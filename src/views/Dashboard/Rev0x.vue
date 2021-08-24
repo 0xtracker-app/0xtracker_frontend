@@ -5,7 +5,7 @@
 
     <v-container class="px-6 mt-n16">
       <v-row>
-        <p>{{ approvals }}</p>
+        {{ approvals }}
       </v-row>
       <v-row>
         <v-col class="mx-auto pt-0">
@@ -36,7 +36,7 @@
                               v-on="on"
                               size="14"
                               class="text-muted me-2 cursor-pointer"
-                              @click="revoke()"
+                              @click="revoke(approval.tokenID, item.contractId)"
                               >
                               fas fa-ban
                             </v-icon>
@@ -146,8 +146,8 @@ export default {
     }
   },
   methods: {
-    async revoke() {
-      mutations.revokePermissions();
+    async revoke(token,spender) {
+      mutations.revokePermissions(token,spender);
     }
   },
 };
