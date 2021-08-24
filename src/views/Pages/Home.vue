@@ -3,12 +3,6 @@
     <v-col cols="12" md="8">
       <VerticalForm />
       <SponsorsFooter />
-      <v-snackbar
-        :value="alerts.length"
-        :timeout="-1"
-      >
-        <template v-for="(alert, index) in alerts"><p :key="index">{{alert}}</p></template>
-      </v-snackbar>
       <v-btn
         @click="toggleDarkMode()"
         :dark="darkmode"

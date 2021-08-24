@@ -1,5 +1,10 @@
 import axios from "axios";
 
+// If we get CORS errors we can override them with this
+axios.interceptors.response.use((response) => response, (error) => {
+  if (typeof error.response === 'undefined') 'override undefined error response (cors)';
+});
+
 const poolStore = {
   namespaced: true,
   state: {
