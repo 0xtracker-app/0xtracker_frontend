@@ -2,7 +2,7 @@
   <div>
     <v-card class="card-shadow">
       <v-card-text v-if="Object.keys(farmsWithData).length" class="px-0 py-0">
-        <v-expansion-panels accordion multiple :value="panelsArray">
+        <v-expansion-panels accordion hover multiple :value="panelsArray">
           <v-expansion-panel
             v-for="(farm, key) in farmsWithData" :key="key"
           >
@@ -88,7 +88,6 @@ export default {
   },
   async created() {
     if (this.$route?.params?.loadFarms) this.getPoolsForSelectedFarms();
-    this.$eventHub.$on('load-farms', this.getPoolsForSelectedFarms);
   },
   watch: {
     total: function (val) {
@@ -101,9 +100,6 @@ export default {
   methods: {
     ...mapActions('farmStore', ['setFarmsValue']),
     ...mapActions('poolStore', ['getPoolsForSelectedFarms', 'getPoolsForSelectedFarm', 'setPendingRewardsValue']),
-  },
-  beforeDestroy() {
-    this.$eventHub.$off('load-farms', this.getPoolsForSelectedFarms);
   },
 };
 </script>

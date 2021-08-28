@@ -56,7 +56,6 @@
 </template>
 <script>
 import { mapGetters } from 'vuex';
-import { store } from '@/store-old.js';
 
 export default {
   name: "SupportedNetworkAndFarms",
@@ -83,7 +82,7 @@ export default {
   computed: {
     ...mapGetters('generalStore', ['darkmode']),
     loading: function() {
-      return store.loadingFarms;
+      return this.$store.state.farmStore.loading;
     },
   },
 };

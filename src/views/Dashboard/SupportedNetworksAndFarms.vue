@@ -41,7 +41,6 @@
 </template>
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import { store, mutations } from '@/store-old.js';
 import HeaderTopDashboard from "@/components/HeaderTopDashboard.vue";
 import SupportedNetworkAndFarms from "@/components/SupportedNetworksAndFarms/SupportedNetworkAndFarms.vue";
 
@@ -56,11 +55,9 @@ export default {
   }),
   computed: {
     ...mapGetters('generalStore', ['darkmode']),
+    ...mapGetters('farmStore', ['farms']),
     loading: function() {
-      return store.loadingFarms;
-    },
-    farms() {
-      return store.farmsList;
+      return this.$store.state.farmStore.loading;
     },
     farmsByNetwork() {
       let farmsByNetwork = {};
@@ -84,10 +81,11 @@ export default {
       return farmsByNetwork;
     },
   },
+  created() {
+    this.getFarms();
+  },
   methods: {
-    async getAllFarms() {
-      mutations.getFarms();
-    },
+    ...mapActions('farmStore', ['getFarms']),
   },
 };
 </script>

@@ -7,8 +7,10 @@ const networkStore = {
   },
   getters: {
     networks: state => state.networks,
-    networkNameFromID: (state) => (id) => {
-      return state.networks[id];
+  },
+  actions: {
+    networkNameFromID ({ state }, networkId) {
+      return state.networks[networkId] || 'Unknown';
     }
   },
 };

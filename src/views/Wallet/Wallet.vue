@@ -89,7 +89,6 @@ export default {
   },
   async created() {
     if (this.$route?.params?.loadWallet) this.loadWallet();
-    this.$eventHub.$on('load-wallet', this.loadWallet);
   },
   watch: {
     total: function (val) {
@@ -98,9 +97,6 @@ export default {
   },
   methods: {
     ...mapActions('walletStore', ['loadWallet', 'setWalletValue']),
-  },
-  beforeDestroy() {
-    this.$eventHub.$off('load-wallet', this.loadWallet);
   },
 };
 </script>

@@ -23,8 +23,13 @@
               <template slot="prepend-inner">
                 <v-icon size=".875rem">fas fa-wallet</v-icon>
               </template>
-              <template v-slot:append v-if="!wallet">
-                <v-icon @click="connectWallet()">
+              <template v-slot:append v-if="!connectedWallet">
+                <v-icon @click="setWalletDialog(true)">
+                  fas fa-plug
+                </v-icon>
+              </template>
+              <template v-slot:append v-else>
+                <v-icon @click="setWalletDialog(true)" color="green">
                   fas fa-plug
                 </v-icon>
               </template>
@@ -83,44 +88,56 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import { store, mutations } from '@/store-old.js';
 
 export default {
-  name: "RektForm",
   data() {
     return {
       valid: true,
-      wallet: '',
-      walletRules: [
-        value => !!value || 'Required.',
-        value => (value && value.length >= 3) || 'Min 3 characters.',
-      ],
-      networkRules: [
-        value => !!value || 'Required.',
-        value => (value && value.length >= 1) || 'Min 1 network.',
-      ],
       networks: [ {text: 'Binance Smart Chain', value: 'bsc' }, { text: 'Polygon Matic', value: 'matic' }, { text: 'Fantom', value: 'ftm' }],
-      selectedNetwork : '',
       networkSearchInput: '',
     };
   },
   computed: {
     ...mapGetters('generalStore', ['darkmode']),
+    ...mapGetters('approvalsStore', ['approvals', 'selectedNetwork', 'wallet']),
+    ...mapGetters('walletStore', ['connectedWallet']),
     loading: function() {
-      return store.loadingApprovals;
+      return this.$store.state.approvalsStore.loading;
+    },
+    wallet: {
+      get () {
+        return this.$store.state.approvalsStore.wallet;
+      },
+      set (value) {
+        this.setWallet(value);
+      }
+    },
+    networkRules: function() {
+      return this.$store.state.approvalsStore.networkRules;
+    },
+    selectedNetwork: {
+      get () {
+        return this.$store.state.approvalsStore.selectedNetwork;
+      },
+      set (value) {
+        this.setSelectedNetwork(value);
+      }
+    },
+    walletRules: function() {
+      return this.$store.state.walletStore.walletRules;
     },
   },
   created() {
-    this.wallet = store.userData.wallet;
+    this.selectedNetwork = this.$store.state.approvalsStore.selectedNetwork;
+    if (!this.$store.state.approvalsStore.wallet) this.wallet = this.$store.state.walletStore.wallet;
   },
   methods: {
+    ...mapActions('approvalsStore', ['getApprovals', 'setSelectedNetwork', 'setWallet']),
+    ...mapActions('generalStore', ['setWalletDialog']),
     loadApprovals() {
       if (this.$refs.form.validate()) {
-        mutations.getTokenApprovals(this.wallet, this.selectedNetwork);
+        this.getApprovals({ wallet: this.wallet, network: this.selectedNetwork });
       } else this.valid = false;
-    },
-    async connectWallet() {
-      await mutations.connectWallet();
     },
   }
 };

@@ -138,9 +138,9 @@
               </v-btn> -->
               <v-tooltip top>
                 <template v-slot:activator="{ on, attrs }">
-                  <v-btn text :disabled="!connectedWallet || pool.rawPending < 1 || farm.network != network || farm.wallet !== connectedWallet">
+                  <v-btn text :disabled="!connectedWallet || pool.rawPending < 1 || farm.network != connectedWalletNetwork || farm.wallet !== connectedWallet">
                     <v-icon
-                      @click="claimReward(pool.contractAddress, pool.poolID, pool.rawPending)"
+                      @click="claimReward({ contractAddress: pool.contractAddress, poolIndex: pool.poolID, rawTokens: pool.rawPending })"
                       v-bind="attrs"
                       v-on="on"
                       class="fa fa-shopping-basket"
@@ -169,10 +169,7 @@ export default {
   },
   computed: {
     ...mapGetters('generalStore', ['noLPPools', 'round']),
-    provider() {
-      if (store?.walletData?.provider) return store.walletData.provider;
-      else return false;
-    },
+    ...mapGetters('walletStore', ['connectedWallet', 'connectedWalletNetwork']),
     poolsWithoutTotalLP: function () {
       if (this.noLPPools) {
         return this.farm.userData;
@@ -187,17 +184,9 @@ export default {
         return pools;
       }
     },
-    network() {
-      return store.walletData.network;
-    },
-    connectedWallet() {
-      return store.walletData.connectedWallet;
-    },
   },
   methods: {
-    async claimReward(contractAddress, poolIndex, rawTokens, claimFunction) {
-      await mutations.claimReward(contractAddress, poolIndex, rawTokens, claimFunction);
-    }
+    ...mapActions('walletStore', ['claimReward']),
   },
 };
 </script>

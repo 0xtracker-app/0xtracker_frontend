@@ -41,7 +41,6 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import { store } from '@/store-old.js';
 
 export default {
   name: "Portfolio",
@@ -51,7 +50,7 @@ export default {
       return this.$store.state.poolStore.loading || this.$store.state.walletStore.loading;
     },
     totalValue: function() {
-      return this.$store.state.walletStore.walletValue + store.totalFarmsValue;
+      return this.$store.state.walletStore.walletValue + this.$store.state.farmStore.farmsValue;
     },
   }
 }

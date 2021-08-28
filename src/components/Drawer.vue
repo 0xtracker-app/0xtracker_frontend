@@ -60,37 +60,40 @@
     <v-list nav dense>
       <v-list-item-group>
         <v-list-item
-          @click="connectWallet()"
+          @click="setWalletDialog(true)"
           class="pb-1 no-default-hover"
           :ripple="false"
-          active-class="item-active"
+          active-class=""
         >
           <v-list-item-icon>
-            <v-icon v-if="provider" v-text="'fas fa-plug v-icon-drawer'" color="green" />
+            <v-icon v-if="connectedWallet" v-text="'fas fa-plug v-icon-drawer'" color="green" />
             <v-icon v-else v-text="'fas fa-plug v-icon-drawer'" />
           </v-list-item-icon>
           <v-list-item-content>
-            <v-list-item-title v-if="provider" :class="{'text-white': darkmode}">Connected: {{ connectedWalletShortened }}</v-list-item-title>
+            <v-list-item-title v-if="connectedWallet" :class="{'text-white': darkmode}">Connected: {{ connectedWalletShort }}</v-list-item-title>
             <v-list-item-title v-else :class="{'text-white': darkmode}">Connect Wallet</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list-item-group>
     </v-list>
+    <WalletConnectDialog />
   </v-navigation-drawer>
 </template>
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import { store, mutations } from "@/store-old.js";
+import WalletConnectDialog from '@/components/Wallet/WalletConnectDialog'
 
 export default {
-  name: "Drawer",
+  components: {
+    WalletConnectDialog,
+  },
   props: {
     drawer: {
       type: Boolean,
       default: null,
     },
   },
-  data: () => ({      
+  data: () => ({
     mini: false,
     togglerActive: false,
     itemsSimple: [
@@ -126,16 +129,7 @@ export default {
       return this.$route.name;
     },
     ...mapGetters('generalStore', ['darkmode']),
-    provider() {
-      if (store?.walletData?.provider) return store?.walletData?.provider;
-      else return false;
-    },
-    connectedWallet() {
-      return store.walletData.connectedWallet;
-    },
-    connectedWalletShortened() {
-      return this.connectedWallet.slice(0,6) + '...' + this.connectedWallet.slice(-4);
-    }
+    ...mapGetters('walletStore', ['connectedWallet', 'connectedWalletShort']),
   },
   watch: {
     "$vuetify.breakpoint.mobile"(val) {
@@ -143,9 +137,8 @@ export default {
     },
   },
   methods: {
-    async connectWallet() {
-      await mutations.connectWallet();
-    },
+    ...mapActions('generalStore', ['setWalletDialog']),
+    ...mapActions('walletStore', ['connectWallet']),
     minifyDrawer() {
       this.togglerActive = !this.togglerActive;
       this.mini = !this.mini;

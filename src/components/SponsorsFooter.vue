@@ -75,7 +75,6 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import { store } from '@/store-old.js';
 
 export default {
   name: 'SponsorsFooter',

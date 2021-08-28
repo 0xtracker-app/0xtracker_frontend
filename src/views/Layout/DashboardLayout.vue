@@ -83,10 +83,7 @@ export default {
     };
   },
   computed: {
-    alerts() {
-      return this.$store.state.generalStore.alerts;
-    },
-    ...mapGetters('generalStore', ['darkmode']),
+    ...mapGetters('generalStore', ['alerts', 'darkmode']),
   },
   methods: {
     initScrollbar() {

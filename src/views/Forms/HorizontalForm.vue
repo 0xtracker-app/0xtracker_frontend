@@ -23,8 +23,13 @@
               <template slot="prepend-inner">
                 <v-icon size=".875rem">fas fa-wallet</v-icon>
               </template>
-              <template v-slot:append v-if="!wallet">
-                <v-icon @click="connectWallet()">
+              <template v-slot:append v-if="!wallet || !connectedWallet || (wallet !== connectedWallet)">
+                <v-icon @click="setWalletDialog(true)">
+                  fas fa-plug
+                </v-icon>
+              </template>
+              <template v-slot:append v-else-if="connectedWallet">
+                <v-icon @click="setWalletDialog(true)" color="green">
                   fas fa-plug
                 </v-icon>
               </template>
@@ -92,13 +97,12 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import { store, mutations } from '@/store-old.js';
 
 export default {
   data() {
     return {
-      valid: true,
       farmSearchInput: '',
+      valid: true,
     };
   },
   mounted () {
@@ -113,9 +117,9 @@ export default {
   computed: {
     ...mapGetters('generalStore', ['darkmode']),
     ...mapGetters('farmStore', ['farmRules']),
-    ...mapGetters('walletStore', ['walletRules']),
+    ...mapGetters('walletStore', ['connectedWallet', 'walletRules']),
     loading: function() {
-      return store.loadingPools || store.loadingFarms || store.loadingWallet;
+      return this.$store.state.farmStore.loading || this.$store.state.walletStore.loading || this.$store.state.poolStore.loading;
     },
     wallet: {
       get () {
@@ -152,18 +156,19 @@ export default {
     },
   },
   methods: {
-    ...mapActions('walletStore', ['setWallet']),
     ...mapActions('farmStore', ['getFarms', 'setSelectedFarms']),
+    ...mapActions('generalStore', ['setWalletDialog']),
+    ...mapActions('poolStore', ['getPoolsForSelectedFarms']),
+    ...mapActions('walletStore', ['loadWallet', 'setWallet']),
     loadPortfolio() {
       if (this.$refs.form.validate()) {
-        // .catch(()=>{}) to allow router navigation to the same component
-        this.$router.push({ name: 'Portfolio', params: { wallet: this.wallet }}).catch(()=>{});
-        this.$eventHub.$emit('load-wallet');
-        this.$eventHub.$emit('load-farms');
+        // .catch(()=>{}); to prevent error when navigating to the same component with the same params
+        // pushing additional params to trigger loading of farms and wallets when navigating from this page
+        this.$router.push({ name: 'Portfolio', params: { wallet: this.wallet, loadFarms: true, loadWallet: true }}).catch(()=>{
+          this.loadWallet();
+          this.getPoolsForSelectedFarms();
+        });;
       } else this.valid = false;
-    },
-    async connectWallet() {
-      await mutations.connectWallet();
     },
   }
 };
