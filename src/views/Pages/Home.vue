@@ -1,7 +1,7 @@
 <template>
   <v-row class="d-flex justify-center mt-n16">
     <v-col cols="12" md="8">
-      <VerticalForm />
+      <VerticalForm class="pb-10" />
       <SponsorsFooter />
       <v-btn
         @click="toggleDarkMode()"

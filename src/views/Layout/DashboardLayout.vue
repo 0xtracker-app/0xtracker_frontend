@@ -31,7 +31,7 @@
       <fade-transition :duration="200" origin="center top" mode="out-in">
         <router-view></router-view>
       </fade-transition>
-      <SponsorsFooter class="mx-5 mb-5" />
+      <SponsorsFooter />
       <Footer v-if="!$route.meta.hideFooter" />
       <v-snackbar
         :value="alerts.length"
