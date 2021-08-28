@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="pt-0 px-6 mt-n13">
+  <v-container fluid class="pt-15 px-6 mt-n13">
     <v-row class="mt-0">
       <v-col cols="12" lg="12" class="pt-6">
         <v-card class="card-shadow mb-6" :dark="darkmode">
