@@ -160,7 +160,6 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import { store, mutations } from "@/store-old.js";
 
 export default {
   name: "Farm",

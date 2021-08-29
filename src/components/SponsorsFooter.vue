@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="px-3">
     <v-container
     >
       <v-card class="card-shadow mb-6" :dark="darkmode">
