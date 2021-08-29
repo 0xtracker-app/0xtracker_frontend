@@ -23,7 +23,7 @@
               <template slot="prepend-inner">
                 <v-icon size=".875rem">fas fa-wallet</v-icon>
               </template>
-              <template v-slot:append v-if="!connectedWallet">
+              <template v-slot:append v-if="!wallet || !connectedWallet || (wallet !== connectedWallet)">
                 <v-icon @click="setWalletDialog(true)">
                   fas fa-plug
                 </v-icon>

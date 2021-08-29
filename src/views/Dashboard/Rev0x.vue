@@ -45,7 +45,6 @@
                         <v-tooltip top>
                           <template v-slot:activator="{ on, attrs }">
                             <v-icon
-                              v-if="connectedWallet && connectedWallet == wallet"
                               color="#5e72e4"
                               v-bind="attrs"
                               v-on="on"
@@ -106,7 +105,7 @@ export default {
           value: 'contractId',
         },
         {
-          text: 'Amount',
+          text: 'Approval Amount',
           align: 'center',
           sortable: true,
           value: 'lastTx.amount',
@@ -147,12 +146,16 @@ export default {
                 if (!approval.contractsArr) approval.contractsArr = [];
                 contract.contractId = contractId;
                 if (contract.tx && contract.tx.length > 1) {
-                  contract.lastTx = contract.tx[contract.tx.length - 1][0];
+                  const lastTx = contract.tx[contract.tx.length - 1][0];
+                  if (lastTx.amount) contract.lastTx = lastTx;
                 } else if (contract.tx && contract.tx.length === 1) {
-                  contract.lastTx = contract.tx[0][0];
+                  const lastTx = contract.tx[0];
+                  if (lastTx.amount) contract.lastTx = lastTx;
                 }
-                delete contract.tx;
-                approval.contractsArr.push(contract);
+                if (contract.lastTx) {
+                  delete contract.tx;
+                  approval.contractsArr.push(contract);
+                }
               }
             }
             delete approval.contracts;

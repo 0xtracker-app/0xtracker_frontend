@@ -86,13 +86,12 @@ const walletStore = {
     async claimReward({ commit, getters }, { contractAddress, poolIndex, rawTokens, claimFunction }) {
       try {
         commit('SET_LOADING', true);
-        console.log(contractAddress, poolIndex, rawTokens, claimFunction)
         if (!getters.connectedWalletProvider) throw 'No wallet provider detected.'
         const signer = getters.connectedWalletProvider.getSigner()
         const contract = new ethers.Contract(contractAddress, ERC20_ABI, signer)
         if (rawTokens > 0) {
           if (claimFunction) {
-            contract.claimFunction(poolIndex, {gasLimit: 500000})
+            contract.claimFunction(poolIndex, { gasLimit: 500000 })
             .then(async (t) => {
               await getters.connectedWalletProvider.waitForTransaction(t.hash);
               commit('generalStore/ADD_ALERT', `Transaction "${t.hash}" completed.`, { root: true });
@@ -105,7 +104,7 @@ const walletStore = {
               return Promise.reject(error);
             })
           } else {
-            contract.deposit(poolIndex, 0, {gasLimit: 500000})
+            contract.deposit(poolIndex, 0, { gasLimit: 500000 })
             .then(async (t) => {
               await getters.connectedWalletProvider.waitForTransaction(t.hash);
               commit('generalStore/ADD_ALERT', `Transaction "${t.hash}" completed.`, { root: true });
@@ -135,6 +134,7 @@ const walletStore = {
           const address = await signer.getAddress();
           commit('SET_WALLET', address);
           commit('SET_CONNECTED_WALLET', address);
+          commit('approvalsStore/SET_WALLET', address, { root: true });
           commit('SET_WALLET_PROVIDER', provider);
           commit('SET_CONNECTED_WALLET_NETWORK', await dispatch('networkStore/networkNameFromID', networkId, { root: true }));
           commit('generalStore/ADD_ALERT', 'Wallet connected successfully with address ' + state.connectedWallet + ' and network "' + state.connectedWalletNetwork + '".', { root: true });

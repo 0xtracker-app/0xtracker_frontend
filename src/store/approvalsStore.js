@@ -1,5 +1,8 @@
 import Vue from "vue";
 import axios from "axios";
+import { ethers } from "ethers";
+
+import { providerState } from './providerState';
 
 // If we get CORS errors we can override them with this
 axios.interceptors.response.use((response) => response, (error) => {
@@ -18,6 +21,7 @@ const approvalsStore = {
       value => (value && value.length >= 1) || 'Min 1 network.',
     ],
     selectedNetwork: '',
+    wallet: '',
   },
   getters: {
     approvals: state => state.approvals,
@@ -54,14 +58,14 @@ const approvalsStore = {
         commit('SET_LOADING', false);
       }
     },
-    revokePermissions({ rootGetters }, { token, spender }) {
+    revokePermissions({ commit, rootGetters }, { token, spender }) {
       try {
         commit('SET_LOADING', true);
-        if (!rootGetters['walletStore/connectedWalletProvider']) throw 'No wallet provider detected.'
+        if (!rootGetters['walletStore/connectedWalletProvider']) throw 'No wallet provider detected. Did you connect your Wallet?'
 
         const signer = rootGetters['walletStore/connectedWalletProvider'].getSigner();
         const contract = new ethers.Contract(token, APPROVAL_ABI, signer);
-        contract.approve(spender, 0, {gasLimit: 500000})
+        contract.approve(spender, 0, { gasLimit: 500000 })
         .then(async (t) => {
           await store.walletData.provider.waitForTransaction(t.hash);
           commit('generalStore/ADD_ALERT', 'Permissions revoked successfully.  Give it some time to reflect in the UI.', { root: true });
