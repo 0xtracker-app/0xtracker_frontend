@@ -49,8 +49,8 @@ const approvalsStore = {
     async getApprovals({ commit }, { wallet, network} ) {
       try {
         commit('SET_LOADING', true);
-          commit('SET_APPROVALS', {});
-          const requestBody = { wallet, network };
+        commit('SET_APPROVALS', {});
+        const requestBody = { wallet, network };
         const response = await axios.post(process.env.VUE_APP_APPROVALS_URL, requestBody);
         if (!response || !response.data || response.data.error) throw `There was an error in the response when attempting to get approvals. ${response.data.error}`;
         if (Object.keys(response.data && response.data.approvals).length) {
@@ -77,7 +77,12 @@ const approvalsStore = {
           commit('generalStore/ADD_ALERT', 'Permissions revoked successfully.  Give it some time to reflect in the UI.', { root: true });
           commit('SET_LOADING', false);
           return Promise.resolve(true);
-        });
+        })
+        .catch((error) => {
+          commit('generalStore/ADD_ALERT', `An error occurred with the transaction. Error: ${error.message || error}`, { root: true });
+          commit('SET_LOADING', false);
+          return Promise.reject(error);
+        })
       } catch (error) {
         commit('generalStore/ADD_ALERT', error, { root: true });
         commit('SET_LOADING', false);
