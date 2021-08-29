@@ -2,8 +2,6 @@ import Vue from "vue";
 import axios from "axios";
 import { ethers } from "ethers";
 
-import { providerState } from './providerState';
-
 // If we get CORS errors we can override them with this
 axios.interceptors.response.use((response) => response, (error) => {
   if (typeof error.response === 'undefined') 'override undefined error response (cors)';
