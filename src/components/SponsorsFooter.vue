@@ -3,7 +3,7 @@
     <v-row class="mt-0">
       <v-col cols="12" lg="12" class="pt-6">
         <v-card class="card-shadow mb-6" :dark="darkmode">
-          <div class="card-header-padding card-border-bottom">
+          <div class="card-header-padding card-border-bottom card-shadow">
             <p class="font-weight-600 text-h3 mb-0 text-center" :class="{'text-muted': !darkmode}">
               Check Out Our Sponsors!
             </p>
