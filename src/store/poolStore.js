@@ -92,8 +92,8 @@ const poolStore = {
     async getPoolsForSelectedFarm({ commit, rootState }, { key, selectedFarm }) {
       try {
         commit('SET_LOADING', true);
-        commit('farmStore/REMOVE_FROM_FARMS_WITH_DATA', key);
-        commit('farmStore/REMOVE_FROM_FARMS_WITHOUT_DATA', key);
+        commit('farmStore/REMOVE_FROM_FARMS_WITH_DATA', key, { root: true });
+        commit('farmStore/REMOVE_FROM_FARMS_WITHOUT_DATA', key, { root: true });
         const requestBody = {
           wallet : rootState.walletStore.wallet,
           farms : [key]

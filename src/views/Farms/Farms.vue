@@ -13,7 +13,7 @@
               <Farm :farm="farm" />
               <v-card-actions>
                 <v-spacer></v-spacer>
-                  <v-icon @click="getPoolsForSelectedFarm(farm.contract, farm)">
+                  <v-icon @click="getPoolsForSelectedFarm({ key: farm.contract, selectedFarm: farm })">
                     fas fa-redo
                   </v-icon>
               </v-card-actions>
