@@ -44,16 +44,17 @@
                       <template v-slot:item.management="{ item }" class="text-center">
                         <v-tooltip top>
                           <template v-slot:activator="{ on, attrs }">
-                            <v-icon
-                              color="#5e72e4"
-                              v-bind="attrs"
-                              v-on="on"
-                              size="14"
-                              class="text-muted me-2 cursor-pointer"
-                              @click="revokePermissions({ token: approval.tokenID, spender: item.contractId })"
-                              >
-                              fas fa-ban
-                            </v-icon>
+                            <v-btn icon :color="searchedWallet === connectedWallet ? '#5e72e4' : ''">
+                              <v-icon
+                                v-bind="attrs"
+                                v-on="on"
+                                size="14"
+                                class="me-2 cursor-pointer"
+                                @click="revokePermissions({ token: approval.tokenID, spender: item.contractId })"
+                                >
+                                fas fa-ban
+                              </v-icon>
+                            </v-btn>
                           </template>
                           <span>Revoke Permissions</span>
                         </v-tooltip>
@@ -128,7 +129,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('approvalsStore', ['wallet']),
+    ...mapGetters('approvalsStore', ['searchedWallet', 'wallet']),
     ...mapGetters('generalStore', ['darkmode']),
     ...mapGetters('walletStore', ['connectedWallet']),
     loading: function() {
