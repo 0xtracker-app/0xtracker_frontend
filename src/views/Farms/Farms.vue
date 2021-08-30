@@ -87,7 +87,7 @@ export default {
     },
   },
   async created() {
-    if (this.$route?.params?.loadFarms) this.getPoolsForSingleFarm();
+    if (this.$route?.params?.loadFarms) this.getPoolsForSelectedFarms();
   },
   watch: {
     total: function (val) {
