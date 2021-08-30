@@ -89,7 +89,7 @@ const poolStore = {
         commit('SET_LOADING', false);
       }
     },
-    async getPoolsForSelectedFarm({ commit, rootState }, { key, selectedFarm }) {
+    async getPoolsForSingleFarm({ commit, rootState }, { key, selectedFarm }) {
       try {
         commit('SET_LOADING', true);
         commit('farmStore/REMOVE_FROM_FARMS_WITH_DATA', key, { root: true });

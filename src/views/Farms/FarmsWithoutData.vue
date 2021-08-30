@@ -15,7 +15,7 @@
       close
       close-icon="fas fa-redo"
       :disabled="loading"
-      @click:close="getPoolsForSelectedFarm(key, farm)"
+      @click:close="getPoolsForSingleFarm({ key, selectedFarm: farm })"
     >
       <v-icon left v-if="farm.error">
         fas fa-exclamation-circle
@@ -39,7 +39,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions('poolStore', ['getPoolsForSelectedFarm']),
+    ...mapActions('poolStore', ['getPoolsForSingleFarm']),
   },
 };
 </script>

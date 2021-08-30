@@ -1,5 +1,6 @@
 <template>
   <div>
+    <NoDataCard v-if="loading || Object.keys(farmsWithData).length === 0" :loading="loading" />
     <v-card class="card-shadow">
       <v-card-text v-if="Object.keys(farmsWithData).length" class="px-0 py-0">
         <v-expansion-panels accordion hover multiple :value="panelsArray">
@@ -13,7 +14,7 @@
               <Farm :farm="farm" />
               <v-card-actions>
                 <v-spacer></v-spacer>
-                  <v-icon @click="getPoolsForSelectedFarm({ key: farm.contract, selectedFarm: farm })">
+                  <v-icon @click="getPoolsForSingleFarm({ key: farm.contract, selectedFarm: farm })">
                     fas fa-redo
                   </v-icon>
               </v-card-actions>
@@ -22,7 +23,6 @@
         </v-expansion-panels>
       </v-card-text>
     </v-card>
-    <NoDataCard v-if="Object.keys(farmsWithData).length === 0" :loading="loading" />
   </div>
 </template>
 <script>
@@ -87,7 +87,7 @@ export default {
     },
   },
   async created() {
-    if (this.$route?.params?.loadFarms) this.getPoolsForSelectedFarms();
+    if (this.$route?.params?.loadFarms) this.getPoolsForSingleFarm();
   },
   watch: {
     total: function (val) {
@@ -99,7 +99,7 @@ export default {
   },
   methods: {
     ...mapActions('farmStore', ['setFarmsValue']),
-    ...mapActions('poolStore', ['getPoolsForSelectedFarms', 'getPoolsForSelectedFarm', 'setPendingRewardsValue']),
+    ...mapActions('poolStore', ['getPoolsForSelectedFarms', 'getPoolsForSingleFarm', 'setPendingRewardsValue']),
   },
 };
 </script>
