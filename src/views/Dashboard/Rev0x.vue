@@ -17,7 +17,7 @@
                   v-for="(approval, key) in approvalsSortedByAmount" :key="key"
                 >
                   <v-expansion-panel-header>
-                    {{ approval.tokenData.tkn0s }} ({{ $t(approval.network) }}){{ approval.balance ? ' - ' + approval.balance : '' }}
+                    {{ approval.tokenData.tkn0s }}{{approval.tokenData.tkn1s ? '/' + approval.tokenData.tkn1s : ''}} ({{ $t(approval.network) }}){{ approval.balance ? ' - ' + approval.balance : '' }}
                   </v-expansion-panel-header>
                   <v-expansion-panel-content>
                     <v-data-table
