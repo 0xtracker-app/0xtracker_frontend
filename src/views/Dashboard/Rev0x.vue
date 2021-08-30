@@ -11,13 +11,13 @@
                 Rev0x
               </p>
             </div>
-            <v-card-text v-if="approvals.length" class="px-0 py-0">
+            <v-card-text v-if="approvalsSortedByAmount.length" class="px-0 py-0">
               <v-expansion-panels accordion hover multiple>
                 <v-expansion-panel
-                  v-for="(approval, key) in approvals" :key="key"
+                  v-for="(approval, key) in approvalsSortedByAmount" :key="key"
                 >
                   <v-expansion-panel-header>
-                    {{ approval.tokenData.tkn0s }} ({{ $t(approval.network) }}) - {{ approval.balance }}
+                    {{ approval.tokenData.tkn0s }} ({{ $t(approval.network) }}){{ approval.balance ? ' - ' + approval.balance : '' }}
                   </v-expansion-panel-header>
                   <v-expansion-panel-content>
                     <v-data-table
@@ -30,7 +30,7 @@
                       @page-count="pageCount = $event"
                     >
                       <template v-slot:item.contractId="{ item }">
-                        {{ item.contractId }}
+                        {{ item.friendlyName || item.contractId }}
                         <v-btn v-if="approval.network === 'bsc'" :href="'https://bscscan.com/address/' + item.contractId" target="_blank" icon color="#5e72e4">
                           <v-icon size="14">fas fa-external-link-alt</v-icon>
                         </v-btn>
@@ -130,10 +130,11 @@ export default {
   },
   computed: {
     ...mapGetters('approvalsStore', ['searchedWallet', 'wallet']),
+    ...mapGetters('farmStore', ['farms']),
     ...mapGetters('generalStore', ['darkmode']),
     ...mapGetters('walletStore', ['connectedWallet']),
     loading: function() {
-      return this.$store.state.approvalsStore.loading;
+      return this.$store.state.farmStore.loading || this.$store.state.approvalsStore.loading;
     },
     approvals() {
       let approvals = [];
@@ -148,10 +149,30 @@ export default {
                 contract.contractId = contractId;
                 if (contract.tx && contract.tx.length > 1) {
                   const lastTx = contract.tx[contract.tx.length - 1][0];
-                  if (lastTx.amount) contract.lastTx = lastTx;
+                  if (lastTx.amount) {
+                    for (const farm in this.farms) {
+                      if (Object.hasOwnProperty.call(this.farms, farm)) {
+                        const farmData = this.farms[farm];
+                        if (farmData.sendValue.toLowerCase() === lastTx.contractApproved.toLowerCase()) {
+                          contract.friendlyName = farmData.name;
+                        }
+                      }
+                    }
+                    contract.lastTx = lastTx;
+                  }
                 } else if (contract.tx && contract.tx.length === 1) {
                   const lastTx = contract.tx[0];
-                  if (lastTx.amount) contract.lastTx = lastTx;
+                  if (lastTx.amount) {
+                    for (const farm in this.farms) {
+                      if (Object.hasOwnProperty.call(this.farms, farm)) {
+                        const farmData = this.farms[farm];
+                        if (farmData.sendValue.toLowerCase() === lastTx.contractApproved.toLowerCase(), farmData.sendValue.toLowerCase() === lastTx.contractApproved.toLowerCase()) {
+                          contract.friendlyName = farmData.name;
+                        }
+                      }
+                    }
+                    contract.lastTx = lastTx;
+                  }
                 }
                 if (contract.lastTx) {
                   delete contract.tx;
@@ -160,15 +181,22 @@ export default {
               }
             }
             delete approval.contracts;
-            approvals.push(this.$store.state.approvalsStore.approvals[tokenId])
+            if (approval.contractsArr.length) approvals.push(this.$store.state.approvalsStore.approvals[tokenId])
           }
         }
       }
       return approvals;
+    },
+    approvalsSortedByAmount() {
+      return this.approvals.sort((a,b) => (a.balance < b.balance) ? 1 : ((b.balance < a.balance) ? -1 : 0));
     }
+  },
+  created() {
+    this.getFarms();
   },
   methods: {
     ...mapActions('approvalsStore', ['revokePermissions']),
+    ...mapActions('farmStore', ['getFarms']),
   },
 };
 </script>

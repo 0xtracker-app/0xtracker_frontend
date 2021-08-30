@@ -102,7 +102,7 @@ export default {
     ...mapGetters('approvalsStore', ['approvals', 'selectedNetwork', 'wallet']),
     ...mapGetters('walletStore', ['connectedWallet']),
     loading: function() {
-      return this.$store.state.approvalsStore.loading;
+      return this.$store.state.farmStore.loading || this.$store.state.approvalsStore.loading;
     },
     wallet: {
       get () {
