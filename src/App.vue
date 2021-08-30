@@ -4,7 +4,6 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import { store, mutations } from '@/store-old.js';
 
 export default {
   name: 'App',
@@ -14,8 +13,11 @@ export default {
     ...mapGetters('generalStore', ['darkmode']),
   },
   created() {
-    mutations.initStore();
+    this.initStore();
     console.log("Ask not that events should happen as you will, but let your will be that events should happen as they do, and you shall have peace.")
   },
+  methods: {
+    ...mapActions('generalStore', ['initStore'])
+  }
 };
 </script>

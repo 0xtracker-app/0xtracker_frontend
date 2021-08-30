@@ -74,6 +74,7 @@ const farmStore = {
     },
     setSelectedFarms({ commit }, selectedFarms) {
       commit('SET_SELECTED_FARMS', selectedFarms);
+      this.dispatch('generalStore/saveSession');
     },
   }
 };

@@ -18,8 +18,7 @@ const walletStore = {
     connectedWalletNetwork: '',
     loading: false,
     walletValue: 0,
-    // wallet: '0x60f44Efd5dbFF4998b653a05D8A2a1531fA4c44B',
-    wallet: '0x72Dc7f18ff4B59143ca3D21d73fA6e40D286751f',
+    wallet: '',
     walletBalancesList: [],
     walletRules: [
       value => !!value || 'Required.',
@@ -180,6 +179,7 @@ const walletStore = {
     },
     setWallet({ commit }, wallet) {
       commit('SET_WALLET', wallet);
+      this.dispatch('generalStore/saveSession');
     },
     setWalletValue({ commit }, newValue) {
       commit('SET_WALLET_VALUE', newValue);
