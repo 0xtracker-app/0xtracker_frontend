@@ -70,6 +70,33 @@
             Close
           </v-btn>
         </v-card-actions>
+        <v-overlay
+          :absolute="absolute"
+          opacity="0.95"
+          :value="overlay"
+          class="text-center"
+        >
+          <p class="mx-5">Please note that wallet functionality is still in BETA and you use it at your own risk. Contract functions have not been verified and might end up in a failed transaction.  If you experience this please come to our Telegram channel (<a class="text-white" href="https://t.me/bsc0xtracker" target="_blank">t.me/bsc0xtracker</a>) to report.</p>
+          <v-checkbox
+            v-model="termsAccepted"
+            label="I understand the risks associated with the wallet functionality and would like to continue."
+            class="mx-10"
+          ></v-checkbox>
+          <v-spacer></v-spacer>
+          <v-btn
+            :disabled="!termsAccepted"
+            class="mx-5"
+            @click="overlay = false"
+          >
+            Proceed
+          </v-btn>
+          <v-btn
+            class="mx-5"
+            @click="setWalletDialog(false)"
+          >
+            Cancel
+          </v-btn>
+        </v-overlay>
       </v-card>
     </v-dialog>
   </v-row>
@@ -79,6 +106,11 @@
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
+  data: () => ({
+    absolute: true,
+    overlay: true,
+    termsAccepted: false,
+  }),
   computed: {
     ...mapGetters('generalStore', ['darkmode', 'walletDialog']),
     ...mapGetters('walletStore', ['connectedWallet', 'connectedWalletNetwork']),
