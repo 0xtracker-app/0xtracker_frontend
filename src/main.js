@@ -5,6 +5,7 @@ import vuetify from "./plugins/vuetify";
 import DashboardPlugin from "./plugins/dashboard-plugin";
 import i18n from "./i18n";
 import store from './store';
+import './filters/shortenContractFilter';
 import './filters/to2DecimalsFilter';
 import './filters/toCurrencyFilter';
 

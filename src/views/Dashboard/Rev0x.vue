@@ -26,11 +26,10 @@
                       hide-default-footer
                       :page.sync="page"
                       class="table"
-                      mobile-breakpoint="0"
                       @page-count="pageCount = $event"
                     >
                       <template v-slot:item.contractId="{ item }">
-                        {{ item.friendlyName || item.contractId }}
+                        {{ item.friendlyName || item.contractId | shortenContractFilter }}
                         <v-btn v-if="approval.network === 'bsc'" :href="'https://bscscan.com/address/' + item.contractId" target="_blank" icon color="#5e72e4">
                           <v-icon size="14">fas fa-external-link-alt</v-icon>
                         </v-btn>
