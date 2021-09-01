@@ -1,6 +1,6 @@
 <template>
   <v-card
-    class="mx-auto mx-5 pb-3"
+    class="mx-auto mx-5 pb-3 card-shadow"
     v-if="Object.keys(farmsWithoutData).length"
   >
     <v-card-text>
@@ -15,7 +15,7 @@
       close
       close-icon="fas fa-redo"
       :disabled="loading"
-      @click:close="refreshSingleFarm(key, farm)"
+      @click:close="getPoolsForSingleFarm({ key, selectedFarm: farm })"
     >
       <v-icon left v-if="farm.error">
         fas fa-exclamation-circle
@@ -26,22 +26,20 @@
 </template>
 
 <script>
-import { store, mutations } from '@/store.js';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: "FarmsWithoutData",
   computed: {
-    loading: function() {
-      return store.loadingPortfolio || store.loadingBalances;
-    },
     farmsWithoutData: function() {
-      return store.farmsWithoutData;
+      return this.$store.state.farmStore.farmsWithoutData;
+    },
+    loading: function() {
+      return this.$store.state.poolStore.loading;
     },
   },
   methods: {
-    async refreshSingleFarm(key, selectedFarm) {
-      mutations.refreshSingleFarm(key, selectedFarm);
-    },
+    ...mapActions('poolStore', ['getPoolsForSingleFarm']),
   },
 };
 </script>

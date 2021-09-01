@@ -2,11 +2,11 @@
   <v-card class="card-shadow mb-6" :dark="darkmode">
     <v-card-text class="card-stats-padding">
       <v-row no-gutters>
-        <v-col>
+        <v-col cols="12" lg="9" md="9">
           <div
             class="font-weight-600 text-muted text-uppercase text-h5"
           >
-            Farms Value
+            Farms
           </div>
           <p class="font-weight-600 text-h2 mb-0">
             {{ farmsValue | toCurrency(round) }}
@@ -40,22 +40,17 @@
 </template>
 
 <script>
-import { store } from '@/store.js';
+import { mapGetters } from 'vuex';
 
 export default {
   name: "Farms",
   computed: {
-    darkmode() {
-      return store.userData.darkmode;
-    },
+    ...mapGetters('generalStore', ['darkmode', 'round']),
     loading: function() {
-      return store.loadingPools;
+      return this.$store.state.poolStore.loading;
     },
     farmsValue: function() {
-      return store.totalFarmsValue;
-    },
-    round() {
-      return store.userData.round;
+      return this.$store.state.farmStore.farmsValue;
     },
   },
 }

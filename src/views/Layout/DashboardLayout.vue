@@ -31,8 +31,14 @@
       <fade-transition :duration="200" origin="center top" mode="out-in">
         <router-view></router-view>
       </fade-transition>
-      <SponsorsFooter class="mx-5 mb-5" />
+      <SponsorsFooter />
       <Footer v-if="!$route.meta.hideFooter" />
+      <v-snackbar
+        :value="alerts.length"
+        :timeout="-1"
+      >
+        <template v-for="(alert, index) in alerts"><p :key="index">{{alert}}</p></template>
+      </v-snackbar>
     </v-main>
   </v-app>
 </template>
@@ -56,7 +62,7 @@ function initScrollbar(className) {
   }
 }
 
-import { store } from '@/store.js';
+import { mapGetters } from 'vuex';
 import { FadeTransition } from "vue2-transitions";
 import Drawer from "@/components/Drawer.vue";
 import AppBar from "@/components/AppBar.vue";
@@ -77,9 +83,7 @@ export default {
     };
   },
   computed: {
-    darkmode() {
-      return store.userData.darkmode;
-    },
+    ...mapGetters('generalStore', ['alerts', 'darkmode']),
   },
   methods: {
     initScrollbar() {

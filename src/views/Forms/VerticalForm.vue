@@ -21,6 +21,16 @@
           <template slot="prepend-inner">
             <v-icon size=".875rem">fas fa-wallet</v-icon>
           </template>
+          <template v-slot:append v-if="!wallet || !connectedWallet || (wallet !== connectedWallet)">
+            <v-icon @click="setWalletDialog(true)">
+              fas fa-plug
+            </v-icon>
+          </template>
+          <template v-slot:append v-else-if="connectedWallet">
+            <v-icon @click="setWalletDialog(true)" color="green">
+              fas fa-plug
+            </v-icon>
+          </template>
         </v-text-field>
 
         <label for="" class="label-color font-weight-600 mb-2 d-block" :class="{'text-white': darkmode}">Farms</label>
@@ -48,8 +58,8 @@
                 <v-icon>fas fa-star</v-icon>
               </v-list-item-avatar>
               <v-list-item-content>
-                <v-list-item-title v-html="data.item.text"></v-list-item-title>
-                <v-list-item-subtitle v-html="`${data.item.group ? 'Featured' : ''}`"></v-list-item-subtitle>
+                <v-list-item-title v-html="data.item.text" />
+                <v-list-item-subtitle v-html="`${data.item.group ? 'Featured' : ''}`" />
               </v-list-item-content>
             </template>
           </template>
@@ -64,7 +74,7 @@
           height="43"
           class="font-weight-600 text-capitalize btn-primary py-3 px-6 rounded-sm mt-6"
           color="#5e72e4"
-          @click="viewPortfolio()"
+          @click="loadPortfolio()"
           >Go!</v-btn
         >
       </v-card-text>
@@ -79,27 +89,23 @@
           ></v-progress-circular>
         </div>
       </v-overlay>
+      <WalletConnectDialog />
     </v-card>
   </v-form>
 </template>
 
 <script>
-import { store, mutations } from '@/store.js';
+import { mapGetters, mapActions } from 'vuex';
+import WalletConnectDialog from '@/components/Wallet/WalletConnectDialog'
 
 export default {
-  name: "VerticalForm",
+  components: {
+    WalletConnectDialog,
+  },
   data() {
     return {
-      valid: true,
-      walletRules: [
-        value => !!value || 'Required.',
-        value => (value && value.length >= 3) || 'Min 3 characters.',
-      ],
-      farmRules: [
-        value => !!value || 'Required.',
-        value => (value && value.length >= 1) || 'Min 1 farm.',
-      ],
       farmSearchInput: '',
+      valid: true,
     };
   },
   mounted () {
@@ -109,38 +115,34 @@ export default {
     }
   },
   created () {
-    this.getFarmsList();
+    this.getFarms();
   },
   computed: {
-    darkmode() {
-      return store.userData.darkmode;
-    },
-    width() {
-      return store.userData.width;
-    },
+    ...mapGetters('generalStore', ['darkmode']),
+    ...mapGetters('farmStore', ['farmRules']),
+    ...mapGetters('walletStore', ['connectedWallet', 'walletRules']),
     loading: function() {
-      return store.loadingPools || store.loadingFarms || store.loadingWallet;
+      return this.$store.state.farmStore.loading || this.$store.state.walletStore.loading || this.$store.state.poolStore.loading;
     },
     wallet: {
       get () {
-        return store.userData.wallet;
+        return this.$store.state.walletStore.wallet;
       },
       set (value) {
-        mutations.setFarmsAndWallet(this.selectedFarms, value);
+        this.setWallet(value);
       }
     },
     selectedFarms: {
       get () {
-        return store.userData.selectedFarms;
+        return this.$store.state.farmStore.selectedFarms;
       },
       set (value) {
-        console.log("wallet", value)
-        mutations.setFarmsAndWallet(value, this.wallet);
+        this.setSelectedFarms(value);
       }
     },
     sortFarmsAlpha: function() {
       // make a new array as .sort modifies original array
-      const array = store.farmsList;
+      const array = JSON.parse(JSON.stringify(this.$store.state.farmStore.farms));
       return array.sort((a, b) => a.name.localeCompare(b.name));
     },
     allFeaturedFarms: function() {
@@ -153,20 +155,22 @@ export default {
       return this.allFeaturedFarms.concat(this.allRegularFarms);
     },
     farms: function() {
-      return this.joinedFarms.map(farm => {return { text: `${farm.name} (${farm.network})`, value: farm, network: farm.network, group: farm.featured === 1 ? 'Featured' : '' }});
+      return this.joinedFarms.map(farm => {return { text: `${farm.name} (${this.$t(farm.network)})`, value: farm, network: farm.network, group: farm.featured === 1 ? 'Featured' : '' }});
     },
   },
   methods: {
-    // TODO: Move to store
-    async getFarmsList() {
-      mutations.getFarms();
-    },
-    viewPortfolio() {
+    ...mapActions('farmStore', ['getFarms', 'setSelectedFarms']),
+    ...mapActions('generalStore', ['setWalletDialog']),
+    ...mapActions('poolStore', ['getPoolsForSelectedFarms']),
+    ...mapActions('walletStore', ['loadWallet', 'setWallet']),
+    loadPortfolio() {
       if (this.$refs.form.validate()) {
-        console.log("this.wallet", this.wallet)
-        mutations.setFarmsAndWallet(this.selectedFarms, this.wallet);
+        // .catch(()=>{}); to prevent error when navigating to the same component with the same params
         // pushing additional params to trigger loading of farms and wallets when navigating from this page
-        this.$router.push({ name: 'Portfolio', params: { wallet: this.wallet, loadFarms: true, loadWallet: true }});
+        this.$router.push({ name: 'Portfolio', params: { wallet: this.wallet, loadFarms: true, loadWallet: true }}).catch(()=>{
+          this.loadWallet();
+          this.getPoolsForSelectedFarms();
+        });;
       } else this.valid = false;
     },
   }

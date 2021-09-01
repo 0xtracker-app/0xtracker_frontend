@@ -32,7 +32,7 @@
       </v-list-item-content>
     </v-list-item>
     
-    <div class="border-bottom ma-0"></div>
+    <div class="border-bottom ma-0"/>
 
     <v-list nav dense>
       <v-list-item-group>
@@ -54,13 +54,39 @@
         </v-list-item>
       </v-list-item-group>
     </v-list>
+
+    <div class="border-bottom ma-0"/>
+
+    <v-list nav dense>
+      <v-list-item-group>
+        <v-list-item
+          @click="setWalletDialog(true)"
+          class="pb-1 no-default-hover"
+          :ripple="false"
+          active-class=""
+        >
+          <v-list-item-icon>
+            <v-icon v-if="connectedWallet" v-text="'fas fa-plug v-icon-drawer'" color="green" />
+            <v-icon v-else v-text="'fas fa-plug v-icon-drawer'" />
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title v-if="connectedWallet" :class="{'text-white': darkmode}">Connected: {{ connectedWalletShort }}</v-list-item-title>
+            <v-list-item-title v-else :class="{'text-white': darkmode}">Connect Wallet</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list-item-group>
+    </v-list>
+    <WalletConnectDialog />
   </v-navigation-drawer>
 </template>
 <script>
-import { store } from '@/store.js';
+import { mapActions, mapGetters } from 'vuex';
+import WalletConnectDialog from '@/components/Wallet/WalletConnectDialog'
 
 export default {
-  name: "Drawer",
+  components: {
+    WalletConnectDialog,
+  },
   props: {
     drawer: {
       type: Boolean,
@@ -68,13 +94,8 @@ export default {
     },
   },
   data: () => ({
-    portfolios: [
-    ],
-    selectedPortfolio: "",
     mini: false,
     togglerActive: false,
-    itemsDocs: [
-    ],
     itemsSimple: [
       {
         icon: "fa-home v-icon-drawer",
@@ -87,6 +108,16 @@ export default {
         title: "Portfolio",
       },
       {
+        icon: "fa-tractor v-icon-drawer",
+        link: "/farms",
+        title: "Supported Farms",
+      },
+      {
+        icon: "fa-ambulance v-icon-drawer",
+        link: "/rev0x",
+        title: "Rev0x",
+      },
+      {
         icon: "fa-cog v-icon-drawer",
         link: "/settings",
         title: "Settings",
@@ -97,16 +128,17 @@ export default {
     currentRoute() {
       return this.$route.name;
     },
-    darkmode() {
-      return store.userData.darkmode;
-    },
+    ...mapGetters('generalStore', ['darkmode']),
+    ...mapGetters('walletStore', ['connectedWallet', 'connectedWalletShort']),
   },
   watch: {
-    '$vuetify.breakpoint.mobile' (val) {
+    "$vuetify.breakpoint.mobile"(val) {
       if (val) this.mini = !val;
     },
   },
   methods: {
+    ...mapActions('generalStore', ['setWalletDialog']),
+    ...mapActions('walletStore', ['connectWallet']),
     minifyDrawer() {
       this.togglerActive = !this.togglerActive;
       this.mini = !this.mini;

@@ -28,7 +28,7 @@
                   fas fa-plug
                 </v-icon>
               </template>
-              <template v-slot:append v-else-if="connectedWallet">
+              <template v-slot:append v-else>
                 <v-icon @click="setWalletDialog(true)" color="green">
                   fas fa-plug
                 </v-icon>
@@ -36,40 +36,31 @@
             </v-text-field>
           </v-col>
           <v-col md="6" sm="12">
-            <label for="" class="font-weight-600 mb-2 d-block text-white">Farms</label>
+            <label for="" class="font-weight-600 mb-2 d-block text-white">Network</label>
             <v-autocomplete
               rounded
-              v-model="selectedFarms"
+              v-model="selectedNetwork"
               :disabled="loading"
-              :rules="farmRules"
-              :items="farms"
+              :rules="networkRules"
+              :items="networks"
               outlined
               chips
               small-chips
-              multiple
               deletable-chips
               solo
               class="font-size-input text-color-dark input-alternative input-focused-alternative input-icon mb-0"
               :dark="darkmode"
-              :search-input.sync="farmSearchInput"
-              @change="farmSearchInput=''"
+              :search-input.sync="networkSearchInput"
+              @change="networkSearchInput=''"
               :menu-props="darkmode ? 'dark' : 'light'"
             >
               <template v-slot:item="data">
-                <template>
-                  <v-list-item-avatar v-if="data.item.group">
-                    <v-icon>fas fa-star</v-icon>
-                  </v-list-item-avatar>
-                  <v-list-item-content>
-                    <v-list-item-title v-html="data.item.text" />
-                    <v-list-item-subtitle v-html="`${data.item.group ? 'Featured' : ''}`" />
-                  </v-list-item-content>
-                </template>
+                <v-list-item-content>
+                  <v-list-item-title>{{ $t(data.item.text) }} ({{ data.item.value.toUpperCase() }})</v-list-item-title>
+                </v-list-item-content>
               </template>
               <template slot="prepend-inner">
-                  <v-icon size=".875rem"
-                  >fas fa-tractor</v-icon
-                >
+                  <v-icon size=".875rem">fas fa-network-wired</v-icon>
               </template>
             </v-autocomplete>
           </v-col>
@@ -85,7 +76,7 @@
           min-width="40"
           width="40"
           class="font-weight-600 text-capitalize btn-ls btn-default me-2 my-2 rounded-circle"
-          @click="loadPortfolio()"
+          @click="loadApprovals()"
           :dark="darkmode"
         >
           <v-icon size="18" color="#5e72e4">fa-arrow-circle-right</v-icon>
@@ -101,72 +92,51 @@ import { mapActions, mapGetters } from 'vuex';
 export default {
   data() {
     return {
-      farmSearchInput: '',
       valid: true,
+      networks: [ {text: 'Binance Smart Chain', value: 'bsc' }, { text: 'Polygon Matic', value: 'matic' }, { text: 'Fantom', value: 'ftm' }],
+      networkSearchInput: '',
     };
-  },
-  mounted () {
-    if (this.$route.name === "Portfolio" && this.$route?.params?.wallet && this.$route?.params?.wallet != this.wallet) {
-      this.wallet = this.$route?.params?.wallet;
-      this.$router.push({ name: 'Portfolio', params: { wallet: this.wallet }}).catch(()=>{});
-    }
-  },
-  created () {
-    this.getFarms();
   },
   computed: {
     ...mapGetters('generalStore', ['darkmode']),
-    ...mapGetters('farmStore', ['farmRules']),
-    ...mapGetters('walletStore', ['connectedWallet', 'walletRules']),
+    ...mapGetters('approvalsStore', ['approvals', 'selectedNetwork', 'wallet']),
+    ...mapGetters('walletStore', ['connectedWallet']),
     loading: function() {
-      return this.$store.state.farmStore.loading || this.$store.state.walletStore.loading || this.$store.state.poolStore.loading;
+      return this.$store.state.farmStore.loading || this.$store.state.approvalsStore.loading;
     },
     wallet: {
       get () {
-        return this.$store.state.walletStore.wallet;
+        return this.$store.state.approvalsStore.wallet;
       },
       set (value) {
         this.setWallet(value);
       }
     },
-    selectedFarms: {
+    networkRules: function() {
+      return this.$store.state.approvalsStore.networkRules;
+    },
+    selectedNetwork: {
       get () {
-        return this.$store.state.farmStore.selectedFarms;
+        return this.$store.state.approvalsStore.selectedNetwork;
       },
       set (value) {
-        this.setSelectedFarms(value);
+        this.setSelectedNetwork(value);
       }
     },
-    sortFarmsAlpha: function() {
-      // make a new array as .sort modifies original array
-      const array = JSON.parse(JSON.stringify(this.$store.state.farmStore.farms));
-      return array.sort((a, b) => a.name.localeCompare(b.name));
-    },
-    allFeaturedFarms: function() {
-      return this.sortFarmsAlpha.filter(farm => farm.featured === 1)
-    },
-    allRegularFarms: function() {
-      return this.sortFarmsAlpha.filter(farm => farm.featured !== 1)
-    },
-    joinedFarms: function() {
-      return this.allFeaturedFarms.concat(this.allRegularFarms);
-    },
-    farms: function() {
-      return this.joinedFarms.map(farm => {return { text: `${farm.name} (${this.$t(farm.network)})`, value: farm, network: farm.network, group: farm.featured === 1 ? 'Featured' : '' }});
+    walletRules: function() {
+      return this.$store.state.walletStore.walletRules;
     },
   },
+  created() {
+    this.selectedNetwork = this.$store.state.approvalsStore.selectedNetwork;
+    if (!this.$store.state.approvalsStore.wallet) this.wallet = this.$store.state.walletStore.wallet;
+  },
   methods: {
-    ...mapActions('farmStore', ['getFarms', 'setSelectedFarms']),
+    ...mapActions('approvalsStore', ['getApprovals', 'setSelectedNetwork', 'setWallet']),
     ...mapActions('generalStore', ['setWalletDialog']),
-    ...mapActions('poolStore', ['getPoolsForSelectedFarms']),
-    ...mapActions('walletStore', ['loadWallet', 'setWallet']),
-    loadPortfolio() {
+    loadApprovals() {
       if (this.$refs.form.validate()) {
-        // .catch(()=>{}); to prevent error when navigating to the same component with the same params
-        // pushing additional params to trigger loading of farms and wallets when navigating from this page
-        this.$router.push({ name: 'Portfolio', params: { wallet: this.wallet, loadFarms: true, loadWallet: true }}).catch(()=>{});
-        this.loadWallet();
-        this.getPoolsForSelectedFarms();
+        this.getApprovals({ wallet: this.wallet, network: this.selectedNetwork });
       } else this.valid = false;
     },
   }

@@ -9,7 +9,7 @@
             <v-card-text>
               <v-chip
                 class="ma-2"
-                @click="darkmode = !darkmode"
+                @click="toggleDarkMode"
               >
                 <v-icon v-if="darkmode" class="pr-1">mdi-weather-night</v-icon>
                 <v-icon v-else class="pr-1">mdi-weather-sunny</v-icon>
@@ -17,7 +17,7 @@
               </v-chip>
               <v-chip
                 class="ma-2"
-                @click="round = !round"
+                @click="toggleRounding"
               >
                 <v-icon v-if="round" class="pr-1">mdi-decimal</v-icon>
                 <v-icon v-else class="pr-1">mdi-decimal-increase</v-icon>
@@ -25,7 +25,7 @@
               </v-chip>
               <v-chip
                 class="ma-2"
-                @click="smallValues = !smallValues"
+                @click="toggleSmallValues"
               >
                 <v-icon v-if="smallValues" class="pr-1">mdi-less-than</v-icon>
                 <v-icon v-else class="pr-1">mdi-greater-than</v-icon>
@@ -33,7 +33,7 @@
               </v-chip>
               <v-chip
                 class="ma-2"
-                @click="noLPPools = !noLPPools"
+                @click="toggleNoLPPools"
               >
                 <v-icon v-if="noLPPools" class="pr-1">mdi-water-plus</v-icon>
                 <v-icon v-else class="pr-1">mdi-water-minus</v-icon>
@@ -48,7 +48,7 @@
   </div>
 </template>
 <script>
-import { store, mutations } from '@/store.js';
+import { mapActions, mapGetters } from 'vuex';
 import HeaderTopDashboard from "@/components/HeaderTopDashboard.vue";
 
 export default {
@@ -57,38 +57,10 @@ export default {
     HeaderTopDashboard,
   },
   computed: {
-    darkmode: {
-      get () {
-        return store.userData.darkmode;
-      },
-      set () {
-        mutations.toggleDarkMode();
-      }
-    },
-    round: {
-      get () {
-        return store.userData.round;
-      },
-      set () {
-        mutations.toggleRounding();
-      }
-    },
-    smallValues: {
-      get () {
-        return store.userData.smallValues;
-      },
-      set () {
-        mutations.toggleSmallValues();
-      }
-    },
-    noLPPools: {
-      get () {
-        return store.userData.noLPPools;
-      },
-      set () {
-        mutations.toggleNoLPPools();
-      }
-    },
+    ...mapGetters('generalStore', ['darkmode', 'noLPPools', 'round', 'smallValues']),
   },
+  methods: {
+    ...mapActions('generalStore', ['toggleDarkMode', 'toggleNoLPPools', 'toggleRounding', 'toggleSmallValues']),
+  }
 };
 </script>

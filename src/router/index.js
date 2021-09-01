@@ -5,6 +5,8 @@ import SinglePageLayout from "@/views/Layout/SinglePageLayout";
 
 // Dashboard pages
 const Portfolio = () => import("../views/Dashboard/Portfolio.vue");
+const SupportedNetworksAndFarms = () => import("../views/Dashboard/SupportedNetworksAndFarms.vue");
+const Rev0x = () => import("../views/Dashboard/Rev0x.vue");
 const Settings = () => import("../views/Dashboard/Settings.vue");
 
 // Pages
@@ -43,12 +45,19 @@ const routes = [
         component: Portfolio,
       },
       {
+        path: "/farms",
+        name: "Supported Networks and Farms",
+        component: SupportedNetworksAndFarms,
+      },
+      {
+        path: "/rev0x",
+        name: "Rev0x",
+        component: Rev0x,
+      },
+      {
         path: "/settings",
         name: "Settings",
         component: Settings,
-        meta: {
-          groupName: "Dashboards",
-        },
       },
     ],
   },

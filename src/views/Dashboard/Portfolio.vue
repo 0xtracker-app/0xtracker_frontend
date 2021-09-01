@@ -72,17 +72,11 @@
         </v-col>
       </v-row>
     </v-container>
-    <v-snackbar
-      :value="alerts.length"
-      :timeout="-1"
-    >
-      {{ alerts.join(' ') }}
-    </v-snackbar>
   </div>
 </template>
 
 <script>
-import { store } from '@/store.js';
+import { mapGetters } from 'vuex';
 import HorizontalForm from '@/views/Forms/HorizontalForm.vue'
 import HeaderTopDashboard from "@/components/HeaderTopDashboard.vue";
 import ValueCards from "@/views/Dashboard/Widgets/ValueCards.vue";
@@ -107,15 +101,7 @@ export default {
     };
   },
   computed: {
-    alerts() {
-      return store.alerts;
-    },
-    darkmode() {
-      return store.userData.darkmode;
-    },
-    loading: function() {
-      return store.loadingPools || store.loadingFarms || store.loadingWallet;
-    },
+    ...mapGetters('generalStore', ['darkmode']),
   },
 };
 </script>
