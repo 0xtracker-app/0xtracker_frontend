@@ -164,10 +164,9 @@ export default {
       if (this.$refs.form.validate()) {
         // .catch(()=>{}); to prevent error when navigating to the same component with the same params
         // pushing additional params to trigger loading of farms and wallets when navigating from this page
-        this.$router.push({ name: 'Portfolio', params: { wallet: this.wallet, loadFarms: true, loadWallet: true }}).catch(()=>{
-          this.loadWallet();
-          this.getPoolsForSelectedFarms();
-        });;
+        this.$router.push({ name: 'Portfolio', params: { wallet: this.wallet, loadFarms: true, loadWallet: true }}).catch(()=>{});
+        this.loadWallet();
+        this.getPoolsForSelectedFarms();
       } else this.valid = false;
     },
   }
