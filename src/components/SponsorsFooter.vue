@@ -63,15 +63,15 @@
         >
           <v-col>
             <div class="text-center">
-              <a href="https://bundledao.org/" target="_blank">
+              <a href="https://polyquokka.finance/" target="_blank">
                 <v-avatar>
                   <v-img
                     max-height="50"
                     max-width="50"
-                    src="@/assets/images/sponsors-footer/bundle.svg"
+                    src="@/assets/images/sponsors-footer/quokka.svg"
                   ></v-img>
                 </v-avatar>
-                <p :class="{'text-white': darkmode}">Bundle</p>
+                <p :class="{'text-white': darkmode}">PolyQuokka</p>
               </a>
             </div>
           </v-col>
