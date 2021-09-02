@@ -29,7 +29,7 @@
           </v-col>
           <v-col>
             <div class="text-center">
-              <a href="https://pancakehunny.finance/" target="_blank">
+              <a href="https://pancakehunny.finance/?utm_source=0xtracker.app&utm_medium=logo&utm_campaign=sept_2021" target="_blank">
                 <v-avatar>
                   <v-img
                     max-height="50"

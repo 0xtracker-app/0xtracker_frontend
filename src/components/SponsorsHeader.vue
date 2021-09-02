@@ -40,7 +40,7 @@ export default {
         },
         {
           src: require('@/assets/images/sponsors-header/hunny.gif'),
-          href: 'https://pancakehunny.finance/',
+          href: 'https://pancakehunny.finance/?utm_source=0xtracker.app&utm_medium=banner&utm_campaign=sept_2021',
         },
       ],
       interval: '',
