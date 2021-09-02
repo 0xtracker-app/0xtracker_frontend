@@ -38,6 +38,10 @@ export default {
           src: require('@/assets/images/sponsors-header/koge.gif'),
           href: 'https://kogefarm.io/',
         },
+        {
+          src: require('@/assets/images/sponsors-header/hunny.gif'),
+          href: 'https://pancakehunny.finance/',
+        },
       ],
       interval: '',
     }
