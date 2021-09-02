@@ -29,15 +29,15 @@
           </v-col>
           <v-col>
             <div class="text-center">
-              <a href="https://iron.finance/" target="_blank">
+              <a href="https://pancakehunny.finance/" target="_blank">
                 <v-avatar>
                   <v-img
                     max-height="50"
                     max-width="50"
-                    src="@/assets/images/sponsors-footer/iron-finance.gif"
+                    src="@/assets/images/sponsors-footer/hunny.gif"
                   ></v-img>
                 </v-avatar>
-                <p :class="{'text-white': darkmode}">Iron Finance</p>
+                <p :class="{'text-white': darkmode}">Pancake Hunny</p>
               </a>
             </div>
           </v-col>
