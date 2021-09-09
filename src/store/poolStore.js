@@ -39,13 +39,9 @@ const poolStore = {
         commit('farmStore/SET_FARMS_WITH_DATA', {}, { root: true });
         commit('farmStore/SET_FARMS_WITHOUT_DATA', {}, { root: true });
         if (!rootState.farmStore.selectedFarms || rootState.farmStore.selectedFarms.length === 0) throw 'No farms selected, is this a bug?';
-        let requestArray = rootState.farmStore.selectedFarms.map(async selectedFarm => {
+        let requestArray = rootState.farmStore.farms.map(async selectedFarm => {
           return new Promise((resolve) => {
-            const requestBody = {
-              wallet : rootState.walletStore.wallet,
-              farms : [selectedFarm.sendValue]
-            };
-            axios.post(process.env.VUE_APP_MYFARM_URL, requestBody)
+            axios.get(`${process.env.VUE_APP_MYFARM_URL}${rootState.walletStore.wallet}/${selectedFarm.sendValue}`)
             .then(response => {
               if (!response || !response.data || response.data.error) {
                 commit('generalStore/ADD_ALERT', `No data returned for ${selectedFarm.name}, you might need to retry.`, { root: true });
@@ -60,10 +56,10 @@ const poolStore = {
                     const farm = response.data[contract];
                     if (farm?.total && farm.total > 0) {
                       commit('farmStore/ADD_TO_FARMS_WITH_DATA', { key: contract, value: Object.assign({name: farm.name, sendValue: selectedFarm.sendValue}, farm) }, { root: true });
-                    } else commit('farmStore/ADD_TO_FARMS_WITHOUT_DATA', { key: contract, value: selectedFarm }, { root: true });
+                    }
                   }
                 }
-              } else commit('farmStore/ADD_TO_FARMS_WITHOUT_DATA', { key: selectedFarm.sendValue, value: selectedFarm }, { root: true });
+              } 
                 resolve(true);
               })
             .catch(error => {
@@ -94,20 +90,18 @@ const poolStore = {
         commit('SET_LOADING', true);
         commit('farmStore/REMOVE_FROM_FARMS_WITH_DATA', key, { root: true });
         commit('farmStore/REMOVE_FROM_FARMS_WITHOUT_DATA', key, { root: true });
-        const requestBody = {
-          wallet : rootState.walletStore.wallet,
-          farms : [key]
-        }
-        const response = await axios.post(process.env.VUE_APP_MYFARM_URL, requestBody);
+        const response = await axios.get(`${process.env.VUE_APP_MYFARM_URL}${rootState.walletStore.wallet}/${key}`);
+        
+        
         if (!response || !response.data || response.data.error) throw `No data returned for some farms, you might need to retry.`;
         if (Object.keys(response.data).length) {
           for (const contract in response.data) {
             const farm = response.data[contract];
             if (farm?.total && farm.total > 0) {
               commit('farmStore/ADD_TO_FARMS_WITH_DATA', { key: contract, value: Object.assign({name: farm.name, sendValue: selectedFarm.sendValue}, farm) }, { root: true });
-            } else commit('farmStore/ADD_TO_FARMS_WITHOUT_DATA', { key: contract, value: selectedFarm }, { root: true });
+            } 
           }
-        } else commit('farmStore/ADD_TO_FARMS_WITHOUT_DATA', { key: key, value: selectedFarm }, { root: true });
+        } 
         commit('SET_LOADING', false);
       } catch (error) {
         commit('generalStore/ADD_ALERT', error, { root: true });

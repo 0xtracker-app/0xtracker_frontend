@@ -107,6 +107,22 @@
         >
           <v-card outlined class="card-shadow">
             <v-card-title class="font-weight-600 text-uppercase text-h3">
+              <v-avatar
+                size="30"
+              >
+                  <v-img
+                    :src="getTokenLogo(pool.network, pool.token0)"
+                  />
+              </v-avatar>
+              <v-avatar
+                size="30"
+                v-if="pool.token1"
+                class="z-index: 1"
+              >
+                  <v-img
+                    :src="getTokenLogo(pool.network, pool.token1)"
+                  />
+              </v-avatar>
               {{ pool.tokenPair }}
               <v-spacer />
               {{ (pool.lpPrice + pool.pendingAmount) | toCurrency(round) }}
@@ -183,9 +199,16 @@ export default {
         return pools;
       }
     },
-  },
+    },
   methods: {
     ...mapActions('walletStore', ['claimReward']),
+    getTokenLogo(network,token){
+      try{ 
+        return require(`@/assets/images/tokens/${network}/${token.toLowerCase()}.png`)
+      }catch(_){
+        return require(`@/assets/images/tokens/default.png`)
+      }
+    },
   },
 };
 </script>
