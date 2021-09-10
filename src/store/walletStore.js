@@ -20,6 +20,7 @@ const walletStore = {
     walletValue: 0,
     wallet: '',
     walletBalancesList: [],
+    walletNetworks: ["bsc", "oke", "matic", "ftm", "kcc", "eth", "harmony", "avax"],
     walletRules: [
       value => !!value || 'Required.',
       value => (value && value.length >= 3) || 'Min 3 characters.',
@@ -165,7 +166,7 @@ const walletStore = {
       try {
         commit('SET_LOADING', true);
         commit('SET_WALLET_BALANCES', []);
-        for (const network of ["bsc", "oke", "matic", "ftm", "kcc", "eth", "harmony", "avax"]) {
+        for (const network of state.walletNetworks) {
           const response = await axios.get(`${process.env.VUE_APP_URL}/wallet/${state.wallet}/${network}`);
           if (!response || !response.data || response.data.error) throw `No wallet data returned for network ${$t(network)}, you might need to retry.`;
           commit('SET_WALLET_BALANCES', [...state.walletBalancesList, ...response.data]);
