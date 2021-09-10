@@ -5,7 +5,7 @@
   >
     <v-card-text>
       <div>
-        Farms Without Data
+        Farms We Couldn't Check
       </div>
     </v-card-text>
     <v-chip
