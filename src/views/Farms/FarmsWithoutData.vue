@@ -20,7 +20,7 @@
       <v-icon left v-if="farm.error">
         fas fa-exclamation-circle
       </v-icon>
-      {{ farm.name }} ({{ farm.network }})
+      {{ farm.name }} ({{ $t(farm.network) }})
     </v-chip>
   </v-card>
 </template>
