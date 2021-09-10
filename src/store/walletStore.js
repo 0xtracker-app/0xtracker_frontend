@@ -169,7 +169,9 @@ const walletStore = {
         for (const network of state.walletNetworks) {
           const response = await axios.get(`${process.env.VUE_APP_URL}/wallet/${state.wallet}/${network}`);
           if (!response || !response.data || response.data.error) throw `No wallet data returned for network ${$t(network)}, you might need to retry.`;
-          commit('SET_WALLET_BALANCES', [...state.walletBalancesList, ...response.data]);
+          commit('SET_WALLET_BALANCES', [...state.walletBalancesList, ...response.data.map(walletBalance => {
+            return {...walletBalance, network}
+          })]);
         }
         commit('SET_LOADING', false);
       } catch (error) {

@@ -13,6 +13,15 @@
           sort-by="tokenValue"
           :sort-desc="true"
         >
+          <template v-slot:item.symbol="{ item }">
+            <v-avatar
+              size="25"
+              class="mr-1"
+            >
+              <v-img :src="getTokenLogo(item.network, item.tokenAddress)" />
+            </v-avatar>
+            {{ item.symbol }}
+          </template>
           <template v-slot:item.tokenBalance="{ item }">
             {{ item.tokenBalance | to2Decimals(round) }}
           </template>
@@ -73,7 +82,7 @@ export default {
       return this.$store.state.walletStore.walletBalancesList;
     },
     unfilteredBalances: function() {
-      return this.walletBalancesList.map(balance => {return { symbol: balance.symbol, tokenBalance: balance.tokenBalance, tokenPrice: balance.tokenPrice, tokenValue: balance.tokenBalance*balance.tokenPrice }});
+      return this.walletBalancesList.map(balance => {return { symbol: balance.symbol, tokenBalance: balance.tokenBalance, tokenPrice: balance.tokenPrice, tokenValue: balance.tokenBalance*balance.tokenPrice, tokenAddress: balance.token_address, network: balance.network }});
     },
     balances: function() {
       const unfilteredBalances =  this.unfilteredBalances;
@@ -97,6 +106,13 @@ export default {
   },
   methods: {
     ...mapActions('walletStore', ['loadWallet', 'setWalletValue']),
+    getTokenLogo(network, token) {
+      try {
+        return require(`@/assets/images/tokens/${network}/${token.toLowerCase()}.png`);
+      } catch (_) {
+        return require(`@/assets/images/tokens/default.png`);
+      }
+    },
   },
 };
 </script>

@@ -6,7 +6,7 @@
         align="center"
         justify="center"
       >
-        <v-col cols="12" sm="6">
+        <v-col cols="12" sm="12">
           <v-card outlined class="card-shadow">
             <v-card-text>
               <p
@@ -55,7 +55,10 @@
                   color="#5e72e4"
                 >
                   <strong>
-                    {{((farm.mintedFAI / loanAmount) * 100) | to2Decimals(round)}}%
+                    {{
+                      ((farm.mintedFAI / loanAmount) * 100)
+                        | to2Decimals(round)
+                    }}%
                   </strong>
                 </v-progress-linear>
                 {{ farm.mintedFAI | toCurrency(round) }} /
@@ -66,18 +69,11 @@
         </v-col>
       </v-row>
       <!-- Dynamic Lending Protocols -->
-      <v-row
-        v-if="farm.type === 'lending'"
-        align="center"
-        justify="center"
-      >
-        <v-col cols="12" sm="6">
+      <v-row v-if="farm.type === 'lending'" align="center" justify="center">
+        <v-col cols="12" sm="12">
           <v-card outlined class="card-shadow">
             <v-card-text>
-              <p
-                :set="(loanAmount = farm.availableLimit)"
-                class="text-center"
-              >
+              <p :set="(loanAmount = farm.availableLimit)" class="text-center">
                 <strong>Borrow / Credit Balance</strong>
                 <v-progress-linear
                   :value="(farm.totalBorrowed / loanAmount) * 100"
@@ -86,7 +82,10 @@
                   color="#5e72e4"
                 >
                   <strong>
-                    {{((farm.totalBorrowed / loanAmount) * 100) | to2Decimals(round)}}%
+                    {{
+                      ((farm.totalBorrowed / loanAmount) * 100)
+                        | to2Decimals(round)
+                    }}%
                   </strong>
                 </v-progress-linear>
                 {{ farm.totalBorrowed | toCurrency(round) }} /
@@ -102,35 +101,40 @@
           v-for="(pool, index) in poolsWithoutTotalLP"
           :key="index"
           cols="12"
-          sm="3"
-          
+          sm="4"
         >
           <v-card outlined class="card-shadow">
             <v-card-title class="font-weight-600 text-uppercase text-h3">
               <v-avatar
-                size="30"
-              >
-                  <v-img
-                    :src="getTokenLogo(pool.network, pool.token0)"
-                  />
-              </v-avatar>
-              <v-avatar
-                size="30"
+                style="position: absolute; left: 30px"
+                size="25"
                 v-if="pool.token1"
-                class="z-index: 1"
               >
-                  <v-img
-                    :src="getTokenLogo(pool.network, pool.token1)"
-                  />
+                <v-img :src="getTokenLogo(pool.network, pool.token1)" />
               </v-avatar>
+              <v-avatar size="25" class="mr-4">
+                <v-img :src="getTokenLogo(pool.network, pool.token0)" />
+              </v-avatar>
+
               {{ pool.tokenPair }}
               <v-spacer />
               {{ (pool.lpPrice + pool.pendingAmount) | toCurrency(round) }}
             </v-card-title>
             <v-card-text>
-              <p v-if="pool.staked"><strong>Total Staked:</strong> {{ pool.staked | to2Decimals(round) }}</p>
-              <p v-if="pool.borrowed"><strong>Total Borrowed:</strong> {{ pool.borrowed | to2Decimals(round) }} ({{ pool.borrowedUSD | toCurrency(round) }})</p>
-              <p v-if="pool.lpTotal"><strong>Total LP:</strong> {{ pool.lpTotal || 0 }} {{ pool.elevenBalance }}</p>
+              <p v-if="pool.staked">
+                <strong>Total Staked:</strong>
+                {{ pool.staked | to2Decimals(round) }}
+              </p>
+              <p v-if="pool.borrowed">
+                <strong>Total Borrowed:</strong>
+                {{ pool.borrowed | to2Decimals(round) }} ({{
+                  pool.borrowedUSD | toCurrency(round)
+                }})
+              </p>
+              <p v-if="pool.lpTotal">
+                <strong>Total LP:</strong> {{ pool.lpTotal || 0 }}
+                {{ pool.elevenBalance }}
+              </p>
               <div v-if="pool.gambitRewards && pool.gambitRewards.length">
                 <p v-for="(gReward, index) in pool.gambitRewards" :key="index">
                   <strong>Pending {{ gReward.symbol }}:</strong>
@@ -139,10 +143,32 @@
                   }})
                 </p>
               </div>
-              <p v-else-if="pool.pending > 0"><strong>Pending {{ pool.rewardSymbol || 'Rewards' }}:</strong> {{ pool.pending | to2Decimals(round) }} ({{ pool.pendingELE || pool.pendingRewardAmount || pool.pendingAmount | toCurrency(round) }})</p>
-              <p v-if="pool.pendingNerve"><strong>Pending 11NRV:</strong> {{ pool.pendingNerve | to2Decimals(round) }} ({{ pool.pendingNRVAmount | toCurrency(round) }})</p>
-              <p v-if="pool.pendingBunny"><strong>Pending BUNNY:</strong> {{ pool.pendingBunny | to2Decimals(round) }} ({{ pool.pendingBunnyAmount | toCurrency(round) }})</p>
-              <p v-if="pool.pendingMerlin"><strong>Pending MERLIN:</strong> {{ pool.pendingMerlin | to2Decimals(round) }} ({{ pool.pendingMerlinAmount | toCurrency(round) }})</p>
+              <p v-else-if="pool.pending > 0">
+                <strong>Pending {{ pool.rewardSymbol || "Rewards" }}:</strong>
+                {{ pool.pending | to2Decimals(round) }} ({{
+                  pool.pendingELE ||
+                  pool.pendingRewardAmount ||
+                  pool.pendingAmount | toCurrency(round)
+                }})
+              </p>
+              <p v-if="pool.pendingNerve">
+                <strong>Pending 11NRV:</strong>
+                {{ pool.pendingNerve | to2Decimals(round) }} ({{
+                  pool.pendingNRVAmount | toCurrency(round)
+                }})
+              </p>
+              <p v-if="pool.pendingBunny">
+                <strong>Pending BUNNY:</strong>
+                {{ pool.pendingBunny | to2Decimals(round) }} ({{
+                  pool.pendingBunnyAmount | toCurrency(round)
+                }})
+              </p>
+              <p v-if="pool.pendingMerlin">
+                <strong>Pending MERLIN:</strong>
+                {{ pool.pendingMerlin | to2Decimals(round) }} ({{
+                  pool.pendingMerlinAmount | toCurrency(round)
+                }})
+              </p>
             </v-card-text>
             <v-card-actions v-if="pool.contractAddress && pool.rawPending > 0">
               <v-spacer />
@@ -154,9 +180,23 @@
               </v-btn> -->
               <v-tooltip top>
                 <template v-slot:activator="{ on, attrs }">
-                  <v-btn text :disabled="!connectedWallet || pool.rawPending < 1 || farm.network != connectedWalletNetwork || farm.wallet !== connectedWallet">
+                  <v-btn
+                    text
+                    :disabled="
+                      !connectedWallet ||
+                      pool.rawPending < 1 ||
+                      farm.network != connectedWalletNetwork ||
+                      farm.wallet !== connectedWallet
+                    "
+                  >
                     <v-icon
-                      @click="claimReward({ contractAddress: pool.contractAddress, poolIndex: pool.poolID, rawTokens: pool.rawPending })"
+                      @click="
+                        claimReward({
+                          contractAddress: pool.contractAddress,
+                          poolIndex: pool.poolID,
+                          rawTokens: pool.rawPending,
+                        })
+                      "
                       v-bind="attrs"
                       v-on="on"
                       class="fa fa-shopping-basket"
@@ -175,7 +215,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters } from "vuex";
 
 export default {
   name: "Farm",
@@ -183,8 +223,8 @@ export default {
     farm: Object,
   },
   computed: {
-    ...mapGetters('generalStore', ['noLPPools', 'round']),
-    ...mapGetters('walletStore', ['connectedWallet', 'connectedWalletNetwork']),
+    ...mapGetters("generalStore", ["noLPPools", "round"]),
+    ...mapGetters("walletStore", ["connectedWallet", "connectedWalletNetwork"]),
     poolsWithoutTotalLP: function () {
       if (this.noLPPools) {
         return this.farm.userData;
@@ -199,19 +239,18 @@ export default {
         return pools;
       }
     },
-    },
+  },
   methods: {
-    ...mapActions('walletStore', ['claimReward']),
-    getTokenLogo(network,token){
-      try{ 
-        return require(`@/assets/images/tokens/${network}/${token.toLowerCase()}.png`)
-      }catch(_){
-        return require(`@/assets/images/tokens/default.png`)
+    ...mapActions("walletStore", ["claimReward"]),
+    getTokenLogo(network, token) {
+      try {
+        return require(`@/assets/images/tokens/${network}/${token.toLowerCase()}.png`);
+      } catch (_) {
+        return require(`@/assets/images/tokens/default.png`);
       }
     },
   },
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
