@@ -165,12 +165,11 @@ const walletStore = {
       try {
         commit('SET_LOADING', true);
         commit('SET_WALLET_BALANCES', []);
-        const requestBody = {
-          wallet : state.wallet,
+        for (const network of ["bsc", "oke", "matic", "ftm", "kcc", "eth", "harmony", "avax"]) {
+          const response = await axios.get(`${process.env.VUE_APP_URL}/wallet/${state.wallet}/${network}`);
+          if (!response || !response.data || response.data.error) throw `No wallet data returned for network ${$t(network)}, you might need to retry.`;
+          commit('SET_WALLET_BALANCES', [...state.walletBalancesList, ...response.data]);
         }
-        const response = await axios.post(process.env.VUE_APP_MYBALANCES_URL, requestBody);
-        if (!response || !response.data || response.data.error) throw `No wallet data returned, you might need to retry.`;
-        commit('SET_WALLET_BALANCES', response.data);
         commit('SET_LOADING', false);
       } catch (error) {
         commit('generalStore/ADD_ALERT', error, { root: true });
