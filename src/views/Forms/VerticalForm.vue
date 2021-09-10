@@ -33,7 +33,7 @@
           </template>
         </v-text-field>
 
-        <label for="" class="label-color font-weight-600 mb-2 d-block" :class="{'text-white': darkmode}">Farms</label>
+        <!-- <label for="" class="label-color font-weight-600 mb-2 d-block" :class="{'text-white': darkmode}">Farms</label>
         <v-autocomplete
           rounded
           v-model="selectedFarms"
@@ -66,13 +66,13 @@
           <template slot="prepend-inner">
             <v-icon size=".875rem">fas fa-tractor</v-icon>
           </template>
-        </v-autocomplete>
+        </v-autocomplete> -->
 
         <v-btn
           elevation="0"
           :ripple="false"
           height="43"
-          class="font-weight-600 text-capitalize btn-primary py-3 px-6 rounded-sm mt-6"
+          class="font-weight-600 text-capitalize btn-primary py-3 px-6 rounded-sm"
           color="#5e72e4"
           @click="loadPortfolio()"
           >Go!</v-btn

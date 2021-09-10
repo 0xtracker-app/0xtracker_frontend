@@ -8,7 +8,7 @@
     <v-row>
       <v-col md="11" sm="11">
         <v-row>
-          <v-col md="6" sm="12">
+          <v-col md="12" sm="12">
             <label for="" class="font-weight-600 mb-2 d-block text-white">Wallet Address</label>
             <v-text-field
               v-model="wallet"
@@ -35,7 +35,7 @@
               </template>
             </v-text-field>
           </v-col>
-          <v-col md="6" sm="12">
+          <!-- <v-col md="6" sm="12">
             <label for="" class="font-weight-600 mb-2 d-block text-white">Farms</label>
             <v-autocomplete
               rounded
@@ -72,7 +72,7 @@
                 >
               </template>
             </v-autocomplete>
-          </v-col>
+          </v-col> -->
         </v-row>
       </v-col>
       <v-col md="1" sm="1" class="text-center">
