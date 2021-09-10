@@ -80,7 +80,7 @@ export default {
     headerTitle() {
       switch (this.$route.name) {
         case "Home":
-          return "Enter your Wallet Address, Select your Farms, Go!";
+          return "Enter your Wallet Address, click Go!";
         default:
           break;
       }
