@@ -1,6 +1,7 @@
 import Vue from "vue";
 import axios from "axios";
 import { ethers } from "ethers";
+import i18n from '@/i18n'
 
 import { providerState, providerActions } from './providerState';
 
@@ -168,7 +169,7 @@ const walletStore = {
         commit('SET_WALLET_BALANCES', []);
         for (const network of state.walletNetworks) {
           const response = await axios.get(`${process.env.VUE_APP_URL}/wallet/${state.wallet}/${network}`);
-          if (!response || !response.data || response.data.error) throw `No wallet data returned for network ${$t(network)}, you might need to retry.`;
+          if (!response || !response.data || response.data.error) throw `No wallet data returned for ${i18n.t(network)}, you might need to retry.`;
           commit('SET_WALLET_BALANCES', [...state.walletBalancesList, ...response.data.map(walletBalance => {
             return {...walletBalance, network}
           })]);
