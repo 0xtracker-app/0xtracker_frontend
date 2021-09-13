@@ -7,6 +7,7 @@ import SinglePageLayout from "@/views/Layout/SinglePageLayout";
 const Portfolio = () => import("../views/Dashboard/Portfolio.vue");
 const SupportedNetworksAndFarms = () => import("../views/Dashboard/SupportedNetworksAndFarms.vue");
 const Rev0x = () => import("../views/Dashboard/Rev0x.vue");
+const EditProfile = () => import("../views/Dashboard/Profiles.vue");
 const Settings = () => import("../views/Dashboard/Settings.vue");
 
 // Pages
@@ -58,6 +59,11 @@ const routes = [
         path: "/settings",
         name: "Settings",
         component: Settings,
+      },
+      {
+        path: "/profiles/:id",
+        name: "Edit Profile",
+        component: EditProfile,
       },
     ],
   },

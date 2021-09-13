@@ -64,7 +64,7 @@ const generalStore = {
     TOGGLE_SMALL_VALUES(state) {
       state.smallValues = !state.smallValues;
     },
-  },
+  }, 
   actions: {
     initStore({ commit, state }) {
       try {
@@ -96,6 +96,7 @@ const generalStore = {
       if (sessionToRestore.version) commit('SET_VERSION', sessionToRestore.version)
       if (sessionToRestore.wallet) commit('walletStore/SET_WALLET', sessionToRestore.wallet, { root: true })
       if (sessionToRestore.selectedFarms) commit('farmStore/SET_SELECTED_FARMS', sessionToRestore.selectedFarms, { root: true })
+      if (sessionToRestore.userProfiles) commit('profileStore/SET_PROFILES', sessionToRestore.userProfiles, {root: true})
     },
     setWalletDialog({ commit }, value) {
       commit('SET_WALLET_DIALOG', value);
@@ -109,6 +110,7 @@ const generalStore = {
         version: state.version,
         wallet: rootState.walletStore.wallet,
         selectedFarms: rootState.farmStore.selectedFarms,
+        userProfiles: rootState.profileStore.userProfiles
       }
       localStorage.setItem('store', JSON.stringify(sessionToStore));
     },
