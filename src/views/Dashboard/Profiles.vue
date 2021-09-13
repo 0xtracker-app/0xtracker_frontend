@@ -25,7 +25,7 @@
                       .wallets"
                     :key="i"
                   >
-                    <v-list-item-icon> </v-list-item-icon>
+                    <v-list-item-icon>{{ wallet.walletType }}</v-list-item-icon>
                     <v-list-item-content append-icon="mdi-delete">
                       <v-list-item-title
                         v-text="wallet.walletAddress"
@@ -113,7 +113,7 @@
                 class="font-weight-600 text-h3 mb-0"
                 :class="{ 'text-muted': !darkmode }"
               >
-                Selected Farms
+                Selected Farms {{  userProfiles[$route.params.id].skipNetworks }} {{  userProfiles[$route.params.id].skipFarms }}  
               </p>
             </div>
 
@@ -123,21 +123,20 @@
             >
               <v-col cols="12" lg="12" class="pt-6">
                 {{ network }} <v-switch 
-                :value="checkNetwork($route.params.id, network)"
+                :input-value="checkNetwork($route.params.id, network)"
                 @change="toggleNetwork({'profileKey' : $route.params.id, 'network' : network})"></v-switch>
-                {{ userProfiles }}
+                
               </v-col>
-              <v-card>
-                <v-chip-group>
                   <v-chip
                     v-for="(farm, key) in networkWithFarms"
                     :key="key"
                     class="ma-2"
+                    label
+                    outlined
+                    @click="toggleFarm({'sendValue' : farm.sendValue, 'profileKey' : $route.params.id})"
                   >
                     {{ farm.name }}
                   </v-chip>
-                </v-chip-group>
-              </v-card>
             </v-row>
           </v-card>
         </v-col>
@@ -199,7 +198,7 @@ export default {
   },
   methods: {
     ...mapActions("farmStore", ["getFarms"]),
-    ...mapActions("profileStore", ["addWallet", "removeWallet", "toggleNetwork"]),
+    ...mapActions("profileStore", ["addWallet", "removeWallet", "toggleNetwork", "toggleFarm"]),
     checkNetwork(profileKey, network) {
       const networkArray = this.userProfiles[profileKey].skipNetworks;
       if (networkArray.includes(network)) {

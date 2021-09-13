@@ -29,6 +29,14 @@ const profileStore = {
                 state.userProfiles[value.profileKey].skipNetworks.push(value.network)
             }
         },
+        TOGGLE_SKIP_FARM(state, value) {
+            console.log(value)
+            if (state.userProfiles[value.profileKey].skipFarms.includes(value.sendValue)) {
+                state.userProfiles[value.profileKey].skipFarms.splice(state.userProfiles[value.profileKey].skipFarms.indexOf(value.sendValue), 1)
+            } else {
+                state.userProfiles[value.profileKey].skipFarms.push(value.sendValue)
+            }
+        },
     },
     actions: {
         createProfile({ commit }, value) {
@@ -49,6 +57,10 @@ const profileStore = {
         },
         toggleNetwork({ commit }, value) {
             commit('TOGGLE_SKIP_NETWORK', value);
+            this.dispatch('generalStore/saveSession');
+        },
+        toggleFarm({ commit }, value) {
+            commit('TOGGLE_SKIP_FARM', value);
             this.dispatch('generalStore/saveSession');
         },
     }
