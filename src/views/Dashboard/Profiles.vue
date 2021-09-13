@@ -26,9 +26,21 @@
                     :key="i"
                   >
                     <v-list-item-icon> </v-list-item-icon>
-                    <v-list-item-content>
-                      <v-list-item-title v-text="wallet.id"></v-list-item-title>
+                    <v-list-item-content append-icon="mdi-delete">
+                      <v-list-item-title
+                        v-text="wallet.walletAddress"
+                      ></v-list-item-title>
                     </v-list-item-content>
+                    <v-btn
+                      @click="
+                        removeWallet({
+                          walletKey: i,
+                          profileKey: $route.params.id,
+                        })
+                      "
+                    >
+                      <v-icon small>mdi-delete</v-icon>
+                    </v-btn>
                   </v-list-item>
                 </v-list-item-group>
               </v-list>
@@ -48,11 +60,9 @@
                         <v-row>
                           <v-col cols="12" md="4">
                             <v-select
-                              v-model="selectedWalletType"
+                              v-model="walletType"
                               :items="walletTypes"
                               label="Type"
-                              :search-input.sync="walletType"
-                              @change="walletType=''"
                               :menu-props="darkmode ? 'dark' : 'light'"
                             ></v-select>
                           </v-col>
@@ -77,7 +87,14 @@
                     <v-btn
                       color="primary"
                       text
-                      @click="addWallet(walletAddress, walletType, $route.params.id), (dialog = false)"
+                      @click="
+                        addWallet({
+                          walletAddress: walletAddress,
+                          walletType: walletType,
+                          walletID: $route.params.id,
+                        }),
+                          (dialog = false)
+                      "
                     >
                       Add Wallet
                     </v-btn>
@@ -99,6 +116,29 @@
                 Selected Farms
               </p>
             </div>
+
+            <v-row
+              v-for="(networkWithFarms, network) in farmsByNetwork"
+              :key="network"
+            >
+              <v-col cols="12" lg="12" class="pt-6">
+                {{ network }} <v-switch 
+                :value="checkNetwork($route.params.id, network)"
+                @change="toggleNetwork({'profileKey' : $route.params.id, 'network' : network})"></v-switch>
+                {{ userProfiles }}
+              </v-col>
+              <v-card>
+                <v-chip-group>
+                  <v-chip
+                    v-for="(farm, key) in networkWithFarms"
+                    :key="key"
+                    class="ma-2"
+                  >
+                    {{ farm.name }}
+                  </v-chip>
+                </v-chip-group>
+              </v-card>
+            </v-row>
           </v-card>
         </v-col>
       </v-row>
@@ -119,17 +159,55 @@ export default {
       dialog: false,
       walletAddress: "",
       walletType: "",
-      walletTypes: ['EVM', 'Solana'],
+      walletTypes: ["EVM", "Solana"],
     };
   },
   computed: {
     ...mapGetters("farmStore", ["farms"]),
     ...mapGetters("generalStore", ["darkmode"]),
     ...mapGetters("profileStore", ["userProfiles"]),
+    loading: function () {
+      return this.$store.state.farmStore.loading;
+    },
+    farmsByNetwork() {
+      let farmsByNetwork = {};
+      this.farms.forEach((farm) => {
+        if (
+          this.search &&
+          farm.name.toLowerCase().includes(this.search.toLowerCase())
+        ) {
+          if (farmsByNetwork.hasOwnProperty(farm.network)) {
+            farmsByNetwork[farm.network].push(farm);
+          } else {
+            farmsByNetwork[farm.network] = [];
+            farmsByNetwork[farm.network].push(farm);
+          }
+        } else if (!this.search) {
+          if (farmsByNetwork.hasOwnProperty(farm.network)) {
+            farmsByNetwork[farm.network].push(farm);
+          } else {
+            farmsByNetwork[farm.network] = [];
+            farmsByNetwork[farm.network].push(farm);
+          }
+        }
+      });
+      return farmsByNetwork;
+    },
+  },
+  created() {
+    this.getFarms();
   },
   methods: {
     ...mapActions("farmStore", ["getFarms"]),
-    ...mapActions("profileStore", ["addWallet"]),
+    ...mapActions("profileStore", ["addWallet", "removeWallet", "toggleNetwork"]),
+    checkNetwork(profileKey, network) {
+      const networkArray = this.userProfiles[profileKey].skipNetworks;
+      if (networkArray.includes(network)) {
+        return false
+      } else {
+        return true
+      }
+    }
   },
 };
 </script>
