@@ -58,11 +58,23 @@
                 </v-tooltip>
                 Farms
               </p>
+              <v-chip
+                class="ma-2"
+                @click="toggleCompactView"
+              >
+                <v-icon v-if="compactView" class="pr-1">mdi-grid-off</v-icon>
+                <v-icon v-else class="pr-1">mdi-grid</v-icon>
+                {{ compactView ? 'Compact View' : 'Card View'}}
+              </v-chip>
             </div>
 
             <v-card-text class="px-0 py-0">
               <v-slide-y-transition>
-                <div v-show="showFarms">
+                <div v-show="showFarms" v-if="compactView">
+                  <FarmsWithoutData />
+                  <FarmsCompact />
+                </div>
+                <div v-show="showFarms" v-else>
                   <FarmsWithoutData />
                   <Farms />
                 </div>
@@ -76,13 +88,14 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 import HorizontalForm from '@/views/Forms/HorizontalForm.vue'
 import HeaderTopDashboard from "@/components/HeaderTopDashboard.vue";
 import ValueCards from "@/views/Dashboard/Widgets/ValueCards.vue";
 import Wallet from "@/views/Wallet/Wallet.vue";
 import Farms from "@/views/Farms/Farms.vue";
 import FarmsWithoutData from "@/views/Farms/FarmsWithoutData.vue";
+import FarmsCompact from "@/views/Farms/FarmsCompact.vue"
 
 export default {
   name: "Dashboard",
@@ -93,6 +106,7 @@ export default {
     Wallet,
     Farms,
     FarmsWithoutData,
+    FarmsCompact
   },
   data: function () {
     return {
@@ -101,7 +115,10 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('generalStore', ['darkmode']),
+    ...mapGetters('generalStore', ['darkmode', 'compactView']),
   },
+  methods: {
+    ...mapActions('generalStore', ['toggleCompactView']),
+  }
 };
 </script>
