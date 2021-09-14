@@ -71,7 +71,7 @@
               </v-chip>
               <v-btn
                 text
-                @click="csvExport()"
+                @click="jsonExport()"
                 v-bind="attrs"
                 v-on="on"
                 elevation="2"
@@ -213,6 +213,16 @@ export default {
       const link = document.createElement("a");
       link.setAttribute("href", data);
       link.setAttribute("download", "export.csv");
+      link.click();
+    },
+    jsonExport() {
+      
+      let dataStr = JSON.stringify(this.farmsCsv);
+      let jsonContent = "data:application/json;charset=utf-8,"+ encodeURIComponent(dataStr);
+
+      const link = document.createElement("a");
+      link.setAttribute("href", jsonContent);
+      link.setAttribute("download", "export.json");
       link.click();
     },
   },
