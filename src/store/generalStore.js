@@ -9,6 +9,7 @@ const generalStore = {
     smallValues: true,
     version: 5,
     walletDialog: false,
+    compactView: true,
   },
   getters: {
     alerts: state => state.alerts,
@@ -19,6 +20,7 @@ const generalStore = {
     round: state => state.round,
     smallValues: state => state.smallValues,
     walletDialog: state => state.walletDialog,
+    compactView: state => state.compactView,
   },
   mutations: {
     ADD_ALERT(state, alert) {
@@ -52,6 +54,9 @@ const generalStore = {
     SET_WALLET_DIALOG(state, value) {
       state.walletDialog = value;
     },
+    SET_COMPACT_VIEW(state, value) {
+      state.compactView = value;
+    },
     TOGGLE_DARK_MODE(state) {
       state.darkmode = !state.darkmode;
     },
@@ -64,7 +69,10 @@ const generalStore = {
     TOGGLE_SMALL_VALUES(state) {
       state.smallValues = !state.smallValues;
     },
-  }, 
+    TOGGLE_COMPACT_VIEW(state) {
+      state.compactView = !state.compactView;
+    },
+  },
   actions: {
     initStore({ commit, state }) {
       try {
@@ -96,6 +104,7 @@ const generalStore = {
       if (sessionToRestore.version) commit('SET_VERSION', sessionToRestore.version)
       if (sessionToRestore.wallet) commit('walletStore/SET_WALLET', sessionToRestore.wallet, { root: true })
       if (sessionToRestore.selectedFarms) commit('farmStore/SET_SELECTED_FARMS', sessionToRestore.selectedFarms, { root: true })
+      if (sessionToRestore.compactView) commit('SET_COMPACT_VIEW', sessionToRestore.compactView);
       if (sessionToRestore.userProfiles) commit('profileStore/SET_PROFILES', sessionToRestore.userProfiles, {root: true})
     },
     setWalletDialog({ commit }, value) {
@@ -110,6 +119,7 @@ const generalStore = {
         version: state.version,
         wallet: rootState.walletStore.wallet,
         selectedFarms: rootState.farmStore.selectedFarms,
+        compactView: state.compactView,
         userProfiles: rootState.profileStore.userProfiles
       }
       localStorage.setItem('store', JSON.stringify(sessionToStore));
@@ -128,6 +138,10 @@ const generalStore = {
     },
     toggleSmallValues({ commit }) {
       commit('TOGGLE_SMALL_VALUES');
+      this.dispatch('generalStore/saveSession');
+    },
+    toggleCompactView({ commit }) {
+      commit('TOGGLE_COMPACT_VIEW');
       this.dispatch('generalStore/saveSession');
     },
   }
