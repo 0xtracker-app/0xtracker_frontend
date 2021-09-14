@@ -66,6 +66,17 @@
                 <v-icon v-else class="pr-1">mdi-grid</v-icon>
                 {{ compactView ? 'Compact View' : 'Card View'}}
               </v-chip>
+                  <v-btn
+                      text
+                      @click="csvExport()"
+                      v-bind="attrs"
+                      v-on="on"
+                      elevation="2"
+                      outlined
+                      x-small
+                  >
+                  EXPORT CSV
+                  </v-btn>
             </div>
 
             <v-card-text class="px-0 py-0">
@@ -116,9 +127,51 @@ export default {
   },
   computed: {
     ...mapGetters('generalStore', ['darkmode', 'compactView']),
+    farmsWithCompact: function() {
+        let array = [];
+        for (const contract in this.$store.state.farmStore.farmsWithData) {
+            if (Object.hasOwnProperty.call(this.$store.state.farmStore.farmsWithData, contract)) {
+            const farmData = this.$store.state.farmStore.farmsWithData[contract];
+            // just insert data you want in the pool data here
+            for (const pool in farmData.userData) {
+                if (Object.hasOwnProperty.call(farmData.userData, pool) && farmData.type != 'lending') {
+                const poolData = farmData.userData[pool];
+                console.log(poolData)
+                const flatPool = {
+                  'farmName' : farmData.name,
+                  'tokenPair' : poolData.tokenPair,
+                  'actualStaked' : poolData.actualStaked,
+                  'dollarValueStake' : poolData.lpPrice,
+                  'dollarValuePending' : poolData.pendingAmount,
+                  'totalDollarValue' : poolData.lpPrice + poolData.pendingAmount
+                  }
+                array.push(flatPool);
+                }
+            }
+            }
+        }
+        return array;
+        },
   },
   methods: {
     ...mapActions('generalStore', ['toggleCompactView']),
+    csvExport() {
+      let csvContent = "data:text/csv;charset=utf-8,";
+      let arrData = this.farmsWithCompact;
+      console.log(arrData)
+      csvContent += [
+        Object.keys(arrData[0]).join(";"),
+        ...arrData.map(item => Object.values(item).join(";"))
+      ]
+        .join("\n")
+        .replace(/(^\[)|(\]$)/gm, "");
+
+      const data = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", data);
+      link.setAttribute("download", "export.csv");
+      link.click();
+    }
   }
 };
 </script>
