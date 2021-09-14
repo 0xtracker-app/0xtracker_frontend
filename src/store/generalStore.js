@@ -105,6 +105,7 @@ const generalStore = {
       if (sessionToRestore.wallet) commit('walletStore/SET_WALLET', sessionToRestore.wallet, { root: true })
       if (sessionToRestore.selectedFarms) commit('farmStore/SET_SELECTED_FARMS', sessionToRestore.selectedFarms, { root: true })
       if (sessionToRestore.compactView) commit('SET_COMPACT_VIEW', sessionToRestore.compactView);
+      if (sessionToRestore.userProfiles) commit('profileStore/SET_PROFILES', sessionToRestore.userProfiles, {root: true})
     },
     setWalletDialog({ commit }, value) {
       commit('SET_WALLET_DIALOG', value);
@@ -119,6 +120,7 @@ const generalStore = {
         wallet: rootState.walletStore.wallet,
         selectedFarms: rootState.farmStore.selectedFarms,
         compactView: state.compactView,
+        userProfiles: rootState.profileStore.userProfiles
       }
       localStorage.setItem('store', JSON.stringify(sessionToStore));
     },
