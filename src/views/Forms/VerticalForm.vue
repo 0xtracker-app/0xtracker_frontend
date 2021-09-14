@@ -161,7 +161,7 @@ export default {
   methods: {
     ...mapActions('farmStore', ['getFarms', 'setSelectedFarms']),
     ...mapActions('generalStore', ['setWalletDialog']),
-    ...mapActions('poolStore', ['getPoolsForSelectedFarms']),
+    ...mapActions('poolStore', ['getPoolsForFarms']),
     ...mapActions('walletStore', ['loadWallet', 'setWallet']),
     loadPortfolio() {
       if (this.$refs.form.validate()) {
@@ -169,7 +169,7 @@ export default {
         // pushing additional params to trigger loading of farms and wallets when navigating from this page
         this.$router.push({ name: 'Portfolio', params: { wallet: this.wallet, loadFarms: true, loadWallet: true }}).catch(()=>{
           this.loadWallet();
-          this.getPoolsForSelectedFarms();
+          this.getPoolsForFarms();
         });;
       } else this.valid = false;
     },

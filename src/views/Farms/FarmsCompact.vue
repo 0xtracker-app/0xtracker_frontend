@@ -2,7 +2,7 @@
   <div>
     <v-data-table
         :headers="headers"
-        :items="farmsWithCompact"
+        :items="farmsWithData"
         :loading="loading"
         hide-default-footer
         :items-per-page=-1
@@ -86,12 +86,10 @@
   </div>
 </template>
 <script>
-import { mapActions, mapGetters } from 'vuex';
-import NoDataCard from '@/components/Cards/NoDataCard.vue';
+import { mapGetters } from 'vuex';
 export default {
-  name: "FarmsCompact",
   props: {
-    farmsCompact: Object,
+    farmsWithData: Array,
   },
   data() {
     return {
@@ -113,64 +111,13 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('generalStore', ['darkmode', 'round']),
+    ...mapGetters('generalStore', ['round']),
     ...mapGetters("walletStore", ["connectedWallet", "connectedWalletNetwork"]),
     loading: function() {
       return this.$store.state.poolStore.loading;
     },
-    farmsWithCompact: function() {
-        let array = [];
-        for (const contract in this.$store.state.farmStore.farmsWithData) {
-            if (Object.hasOwnProperty.call(this.$store.state.farmStore.farmsWithData, contract)) {
-            const farmData = this.$store.state.farmStore.farmsWithData[contract];
-            // just insert data you want in the pool data here
-            for (const pool in farmData.userData) {
-                if (Object.hasOwnProperty.call(farmData.userData, pool) && farmData.type != 'lending') {
-                const poolData = farmData.userData[pool];
-                poolData.farmName = farmData.name;
-                poolData.farmID = farmData.sendValue;
-                poolData.wallet = farmData.wallet;
-                poolData.farmAssetTotal = farmData.poolTotal;
-                poolData.farmPendingTotal = farmData.pendingTotal;
-                poolData.farmTotal = farmData.total;
-                array.push(poolData);
-                }
-            }
-            }
-        }
-        return array;
-        },
-    total: function() {
-      let total = 0;
-      for (const contract in this.farmsWithData) {
-        const farm = this.farmsWithData[contract];
-        total += farm.total;
-      }
-      return total;
-    },
-    panelsArray: function() {
-      return Array.from({length: Object.keys(this.farmsWithData).length}, (e, i)=> i);
-    },
-    pendingRewards: function() {
-      let pendingTotal = 0;
-      for (const contract in this.farmsWithData) {
-        const farm = this.farmsWithData[contract];
-        pendingTotal += farm.pendingTotal;
-      }
-      return pendingTotal;
-    },
-  },
-  watch: {
-    total: function (val) {
-      this.setFarmsValue(val);
-    },
-    pendingRewards: function (val) {
-      this.setPendingRewardsValue(val);
-    },
   },
   methods: {
-    ...mapActions('farmStore', ['setFarmsValue']),
-    ...mapActions('poolStore', ['getPoolsForSelectedFarms', 'getPoolsForSingleFarm', 'setPendingRewardsValue']),
     getTokenLogo(network, token) {
       try {
         return require(`@/assets/images/tokens/${network}/${token.toLowerCase()}.png`);

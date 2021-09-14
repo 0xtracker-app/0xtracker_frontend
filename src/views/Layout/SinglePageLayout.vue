@@ -24,7 +24,7 @@
               <v-spacer />
             </v-col>
             <v-col cols="12" md="5" class="mx-auto py-0">
-              <h1 class="text-h1 font-weight-600 text-center mb-2" :class="{'text-black': darkmode, 'text-white': !darkmode}">
+              <h1 class="text-h1 font-weight-600 text-center mb-2" :class="{'header-dark': darkmode, 'text-white': !darkmode}">
                 {{ headerTitle() }}
               </h1>
             </v-col>
@@ -88,3 +88,9 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.header-dark {
+  color: #333333;
+}
+</style>

@@ -31,15 +31,14 @@ const poolStore = {
     },
   },
   actions: {
-    async getPoolsForSelectedFarms({ commit, rootState }) {
+    async getPoolsForFarms({ commit, dispatch, rootState }, selectedFarms) {
       try {
         commit('SET_LOADING', true);
-        const response = await axios.get(process.env.VUE_APP_FARMS_URL);
-        commit('SET_FARMS', response.data);
         commit('farmStore/SET_FARMS_WITH_DATA', {}, { root: true });
         commit('farmStore/SET_FARMS_WITHOUT_DATA', {}, { root: true });
-        //if (!rootState.farmStore.selectedFarms || rootState.farmStore.selectedFarms.length === 0) throw 'No farms selected, is this a bug?';
-        let requestArray = rootState.farmStore.farms.map(async selectedFarm => {
+        await dispatch('farmStore/getFarms', null, { root: true });
+        const farmsArray = selectedFarms && selectedFarms.length ? selectedFarms : rootState.farmStore.farms;
+        let requestArray = farmsArray.map(async selectedFarm => {
           return new Promise((resolve) => {
             axios.get(`${process.env.VUE_APP_MYFARM_URL}${rootState.walletStore.wallet}/${selectedFarm.sendValue}`)
             .then(response => {

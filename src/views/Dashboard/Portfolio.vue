@@ -41,40 +41,50 @@
         <v-col cols="12" lg="12" class="pt-6">
           <v-card class="card-shadow mb-6" :dark="darkmode">
             <div class="card-header-padding card-border-bottom">
-              <p class="font-weight-600 text-h3 mb-0" :class="{'text-muted': !darkmode}">
-                <v-tooltip bottom>
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-icon
-                      @click="showFarms = !showFarms"
-                      v-bind="attrs"
-                      v-on="on"
-                      class="mr-1 pb-1"
-                    >
-                      {{ showFarms ? 'fas fa-eye-slash' : 'fas fa-eye' }}
-                    </v-icon>
-                  </template>
-                  <span v-if="showFarms">Hide Farms Details</span>
-                  <span v-else>Show Farms Details</span>
-                </v-tooltip>
-                Farms
-              </p>
-              <v-chip
-                class="ma-2"
-                @click="toggleCompactView"
-              >
-                <v-icon v-if="compactView" class="pr-1">mdi-grid-off</v-icon>
-                <v-icon v-else class="pr-1">mdi-grid</v-icon>
-                {{ compactView ? 'Compact View' : 'Card View'}}
-              </v-chip>
+              <v-row>
+                <v-col>
+                  <p class="font-weight-600 text-h3 mb-0" :class="{'text-muted': !darkmode}">
+                    <v-tooltip bottom>
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-icon
+                          @click="showFarms = !showFarms"
+                          v-bind="attrs"
+                          v-on="on"
+                          class="mr-1 pb-1"
+                        >
+                          {{ showFarms ? 'fas fa-eye-slash' : 'fas fa-eye' }}
+                        </v-icon>
+                      </template>
+                      <span v-if="showFarms">Hide Farms Details</span>
+                      <span v-else>Show Farms Details</span>
+                    </v-tooltip>
+                    Farms
+                  </p>
+                </v-col>
+                <v-col class="text-right">
+                  <p class="font-weight-600 text-h3 mb-0" :class="{'text-muted': !darkmode}">
+                    <v-tooltip bottom>
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-icon
+                          @click="toggleCompactView()"
+                          v-bind="attrs"
+                          v-on="on"
+                          class="mr-1 pb-1"
+                        >
+                          {{ compactView ? 'fas fa-list' : 'fas fa-th-large' }}
+                        </v-icon>
+                      </template>
+                      <span v-if="compactView">Toggle Card View</span>
+                      <span v-else>Toggle List View</span>
+                    </v-tooltip>
+                  </p>
+                </v-col>
+              </v-row>
             </div>
 
             <v-card-text class="px-0 py-0">
               <v-slide-y-transition>
-                <div v-show="showFarms" v-if="compactView">
-                  <FarmsWithoutData />
-                  <FarmsCompact />
-                </div>
-                <div v-show="showFarms" v-else>
+                <div v-show="showFarms">
                   <FarmsWithoutData />
                   <Farms />
                 </div>
@@ -115,7 +125,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('generalStore', ['darkmode', 'compactView']),
+    ...mapGetters('generalStore', ['compactView', 'darkmode']),
   },
   methods: {
     ...mapActions('generalStore', ['toggleCompactView']),

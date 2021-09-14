@@ -9,6 +9,14 @@
             <v-card-text>
               <v-chip
                 class="ma-2"
+                @click="toggleCompactView"
+              >
+                <v-icon v-if="compactView" class="pr-1">mdi-view-list</v-icon>
+                <v-icon v-else class="pr-1">mdi-view-compact</v-icon>
+                {{ compactView ? 'List View' : 'Card View' }} Mode
+              </v-chip>
+              <v-chip
+                class="ma-2"
                 @click="toggleDarkMode"
               >
                 <v-icon v-if="darkmode" class="pr-1">mdi-weather-night</v-icon>
@@ -132,11 +140,11 @@ export default {
     HeaderTopDashboard,
   },
   computed: {
-    ...mapGetters('generalStore', ['darkmode', 'noLPPools', 'round', 'smallValues']),
+    ...mapGetters('generalStore', ['compactView', 'darkmode', 'noLPPools', 'round', 'smallValues']),
     ...mapGetters('profileStore', ['userProfiles']),
   },
   methods: {
-    ...mapActions('generalStore', ['toggleDarkMode', 'toggleNoLPPools', 'toggleRounding', 'toggleSmallValues']),
+    ...mapActions('generalStore', ['toggleCompactView', 'toggleDarkMode', 'toggleNoLPPools', 'toggleRounding', 'toggleSmallValues']),
     ...mapActions('profileStore', ['createProfile', 'removeProfile']),
   }
 };

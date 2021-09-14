@@ -51,11 +51,11 @@ export default {
     },
   },
   methods: {
-    ...mapActions('poolStore', ['getPoolsForSelectedFarms']),
+    ...mapActions('poolStore', ['getPoolsForFarms']),
     ...mapActions('walletStore', ['loadWallet']),
     loadPortfolio() {
       if (this.$store.state.walletStore.wallet && this.$store.state.farmStore.selectedFarms && this.$store.state.farmStore.selectedFarms.length) {
-        this.getPoolsForSelectedFarms();
+        this.getPoolsForFarms();
         this.loadWallet();
       }
     },

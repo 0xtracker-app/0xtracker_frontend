@@ -124,6 +124,10 @@ const generalStore = {
       }
       localStorage.setItem('store', JSON.stringify(sessionToStore));
     },
+    toggleCompactView({ commit }) {
+      commit('TOGGLE_COMPACT_VIEW');
+      this.dispatch('generalStore/saveSession');
+    },
     toggleDarkMode({ commit }) {
       commit('TOGGLE_DARK_MODE');
       this.dispatch('generalStore/saveSession');
@@ -138,10 +142,6 @@ const generalStore = {
     },
     toggleSmallValues({ commit }) {
       commit('TOGGLE_SMALL_VALUES');
-      this.dispatch('generalStore/saveSession');
-    },
-    toggleCompactView({ commit }) {
-      commit('TOGGLE_COMPACT_VIEW');
       this.dispatch('generalStore/saveSession');
     },
   }
