@@ -168,7 +168,7 @@ const walletStore = {
         commit('SET_LOADING', true);
         commit('SET_WALLET_BALANCES', []);
         for (const network of state.walletNetworks) {
-          const response = await axios.get(`${process.env.VUE_APP_MYBALANCES_URL}/${state.wallet}/${network}`);
+          const response = await axios.get(`${process.env.VUE_APP_MYBALANCES_URL}${state.wallet}/${network}`);
           if (!response || !response.data || response.data.error) throw `No wallet data returned for ${i18n.t(network)}, you might need to retry.`;
           commit('SET_WALLET_BALANCES', [...state.walletBalancesList, ...response.data.map(walletBalance => {
             return {...walletBalance, network}
@@ -185,7 +185,7 @@ const walletStore = {
         commit('SET_LOADING', true);
         commit('SET_WALLET_BALANCES', []);
         for (const network of state.walletNetworks) {
-          const response = await axios.get(`${process.env.VUE_APP_MYBALANCES_URL}/${params.wallet}/${network}`);
+          const response = await axios.get(`${process.env.VUE_APP_MYBALANCES_URL}${params.wallet}/${network}`);
           if (!response || !response.data || response.data.error) throw `No wallet data returned for ${i18n.t(network)}, you might need to retry.`;
           commit('SET_WALLET_BALANCES', [...state.walletBalancesList, ...response.data.map(walletBalance => {
             return {...walletBalance, network}
