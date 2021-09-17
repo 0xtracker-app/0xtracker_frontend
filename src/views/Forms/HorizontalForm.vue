@@ -174,7 +174,7 @@ export default {
   methods: {
     ...mapActions("farmStore", ["getFarms", "setSelectedFarms"]),
     ...mapActions("generalStore", ["setWalletDialog"]),
-    ...mapActions("poolStore", ["getPoolsForFarms"]),
+    ...mapActions("poolStore", ["getPoolsForFarms", "newGetPoolsForFarms"]),
     ...mapActions("walletStore", ["loadWallet", "setWallet"]),
     loadPortfolio() {
       if (this.$refs.form.validate()) {
@@ -196,12 +196,14 @@ export default {
       skipFarmsValues.map((farms) =>
         farms.map((farm) => skipFarmsData.push(farm))
       );
-
       selected.wallets.map((wallet) => {
         if (wallet.walletType === "EVM") {
           this.selectedFarms.map((selectFarm) => {
             if (!skipFarmsData.includes(selectFarm.sendValue)) {
-              this.getPoolsForFarms(selectFarm.sendValue);
+              this.newGetPoolsForFarms({
+                walletAddress: wallet.walletAddress,
+                selectFarm,
+              });
             }
           });
         }

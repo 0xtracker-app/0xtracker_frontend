@@ -91,6 +91,61 @@ const poolStore = {
         commit('SET_LOADING', false);
       }
     },
+    async newGetPoolsForFarms({ commit, dispatch, rootState }, params) {
+      const walletAddress = params.walletAddress;
+      const selectedFarms = params.selectFarm;
+      try {
+        commit('SET_LOADING', true);
+        commit('farmStore/SET_FARMS_WITH_DATA', {}, { root: true });
+        commit('farmStore/SET_FARMS_WITHOUT_DATA', {}, { root: true });
+        await dispatch('farmStore/getFarms', null, { root: true });
+        const farmsArray = selectedFarms && selectedFarms.length ? selectedFarms : rootState.farmStore.farms;
+        let requestArray = farmsArray.map(async selectedFarm => {
+          return new Promise((resolve) => {
+            axios.get(`${process.env.VUE_APP_MYFARM_URL}${walletAddress}/${selectedFarm.sendValue}`)
+            .then(response => {
+              if (!response || !response.data || response.data.error) {
+                commit('generalStore/ADD_ALERT', `No data returned for ${selectedFarm.name}, you might need to retry.`, { root: true });
+                const selectedFarmTemp = {};
+                // require the .assign to prevent modifying original state
+                Object.assign(selectedFarmTemp, selectedFarm);
+                selectedFarmTemp.error = true;
+                commit('farmStore/ADD_TO_FARMS_WITHOUT_DATA', { key: selectedFarm.sendValue, value: selectedFarmTemp }, { root: true });
+              } else if (Object.keys(response.data).length) {
+                for (const contract in response.data) {
+                  if (Object.hasOwnProperty.call(response.data, contract)) {
+                    const farm = response.data[contract];
+                    if (farm?.total && farm.total > 0) {
+                      commit('farmStore/ADD_TO_FARMS_WITH_DATA', { key: `${rootState.walletStore.wallet}_${contract}`, value: Object.assign({name: farm.name, sendValue: selectedFarm.sendValue}, farm) }, { root: true });
+                    }
+                  }
+                }
+              } 
+                resolve(true);
+              })
+            .catch(error => {
+              commit('generalStore/ADD_ALERT', 'An error occurred when getting Farm data, error: ' + error, { root: true });
+              const selectedFarmTemp = {};
+              // require the .assign to prevent modifying original state
+              Object.assign(selectedFarmTemp, selectedFarm);
+              selectedFarmTemp.error = true;
+              commit('farmStore/ADD_TO_FARMS_WITHOUT_DATA', { key: selectedFarm.sendValue, value: selectedFarmTemp }, { root: true });
+              resolve(true);
+            });
+          }) 
+        })
+        try {
+          await Promise.all(requestArray);
+        } catch (error) {
+          commit('generalStore/ADD_ALERT', error, { root: true });
+        } finally {
+          commit('SET_LOADING', false);
+        }
+      } catch (error) {
+        commit('generalStore/ADD_ALERT', error, { root: true });
+        commit('SET_LOADING', false);
+      }
+    },
     async getPoolsForSingleFarm({ commit, rootState }, { key, selectedFarm }) {
       try {
         commit('SET_LOADING', true);
