@@ -91,7 +91,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapState, mapActions, mapGetters } from "vuex";
 
 export default {
   data() {
@@ -117,6 +117,7 @@ export default {
     this.getFarms();
   },
   computed: {
+    ...mapState("farmStore", ["farms"]),
     ...mapGetters("generalStore", ["darkmode"]),
     ...mapGetters("farmStore", ["farmRules"]),
     ...mapGetters("walletStore", ["connectedWallet", "walletRules"]),
@@ -160,16 +161,6 @@ export default {
     joinedFarms: function () {
       return this.allFeaturedFarms.concat(this.allRegularFarms);
     },
-    farms: function () {
-      return this.joinedFarms.map((farm) => {
-        return {
-          text: `${farm.name} (${this.$t(farm.network)})`,
-          value: farm,
-          network: farm.network,
-          group: farm.featured === 1 ? "Featured" : "",
-        };
-      });
-    },
   },
   methods: {
     ...mapActions("farmStore", ["getFarms", "setSelectedFarms"]),
@@ -196,9 +187,10 @@ export default {
       skipFarmsValues.map((farms) =>
         farms.map((farm) => skipFarmsData.push(farm))
       );
+
       selected.wallets.map((wallet) => {
         if (wallet.walletType === "EVM") {
-          this.selectedFarms.map((selectFarm) => {
+          this.farms.map((selectFarm) => {
             if (!skipFarmsData.includes(selectFarm.sendValue)) {
               this.newGetPoolsForFarms({
                 walletAddress: wallet.walletAddress,
