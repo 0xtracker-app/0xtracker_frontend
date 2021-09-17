@@ -8,7 +8,7 @@
     <v-row>
       <v-col md="11" sm="11">
         <v-row>
-          <v-col md="12" sm="12">
+          <v-col md="8" sm="12">
             <label for="" class="font-weight-600 mb-2 d-block text-white"
               >Wallet Address</label
             >
@@ -38,7 +38,7 @@
               </template>
             </v-text-field>
           </v-col>
-          <v-col md="6" sm="12">
+          <v-col md="4" sm="12">
             <label for="" class="font-weight-600 mb-2 d-block text-white"
               >Profiles</label
             >
@@ -55,7 +55,7 @@
               :menu-props="darkmode ? 'dark' : 'light'"
               return-object
               class="font-size-input text-color-dark input-alternative input-focused-alternative input-icon mb-0"
-              @change="loadProfile"
+              @input="loadProfile"
             >
               <!-- <template v-slot:item="data">
                 <template>
@@ -166,7 +166,7 @@ export default {
     ...mapActions("farmStore", ["getFarms", "setSelectedFarms"]),
     ...mapActions("generalStore", ["setWalletDialog"]),
     ...mapActions("poolStore", ["getPoolsForFarms", "newGetPoolsForFarms"]),
-    ...mapActions("walletStore", ["loadWallet", "setWallet"]),
+    ...mapActions("walletStore", ["loadWallet", "setWallet", "loadWallets"]),
     loadPortfolio() {
       if (this.$refs.form.validate()) {
         // .catch(()=>{}); to prevent error when navigating to the same component with the same params
@@ -182,6 +182,7 @@ export default {
       } else this.valid = false;
     },
     loadProfile(selected) {
+      this.$store.commit('poolStore/SET_LOADING', true, { root: true });
       let skipFarmsData = [];
       const skipFarmsValues = Object.values(selected.skipFarms);
       skipFarmsValues.map((farms) =>
@@ -190,6 +191,7 @@ export default {
 
       selected.wallets.map((wallet) => {
         if (wallet.walletType === "EVM") {
+          this.loadWallets({'wallet' : wallet.walletAddress});
           this.farms.map((selectFarm) => {
             if (!skipFarmsData.includes(selectFarm.sendValue)) {
               this.newGetPoolsForFarms({
@@ -200,8 +202,12 @@ export default {
           });
         }
       });
+      this.$store.commit('poolStore/SET_LOADING', false, { root: true });
+      
     },
   },
+  actions : {
+  }
 };
 </script>
 

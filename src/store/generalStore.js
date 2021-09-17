@@ -10,7 +10,7 @@ const generalStore = {
     version: 5,
     walletDialog: false,
     singleFarmDialog: false,
-    compactView: true,
+    compactView: false,
   },
   getters: {
     alerts: state => state.alerts,

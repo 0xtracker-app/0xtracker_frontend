@@ -75,7 +75,7 @@ const poolStore = {
               Object.assign(selectedFarmTemp, selectedFarm);
               selectedFarmTemp.error = true;
               commit('farmStore/ADD_TO_FARMS_WITHOUT_DATA', { key: selectedFarm.sendValue, value: selectedFarmTemp }, { root: true });
-              resolve(true);
+              resolve(true);         
             });
           }) 
         })
@@ -93,13 +93,11 @@ const poolStore = {
     },
     async newGetPoolsForFarms({ commit, dispatch, rootState }, params) {
       const walletAddress = params.walletAddress;
-      const selectedFarms = params.selectFarm;
+      const selectedFarms = [params.selectFarm];
       try {
-        commit('SET_LOADING', true);
         commit('farmStore/SET_FARMS_WITH_DATA', {}, { root: true });
         commit('farmStore/SET_FARMS_WITHOUT_DATA', {}, { root: true });
-        await dispatch('farmStore/getFarms', null, { root: true });
-        const farmsArray = selectedFarms && selectedFarms.length ? selectedFarms : rootState.farmStore.farms;
+        const farmsArray = selectedFarms
         let requestArray = farmsArray.map(async selectedFarm => {
           return new Promise((resolve) => {
             axios.get(`${process.env.VUE_APP_MYFARM_URL}${walletAddress}/${selectedFarm.sendValue}`)
@@ -139,11 +137,9 @@ const poolStore = {
         } catch (error) {
           commit('generalStore/ADD_ALERT', error, { root: true });
         } finally {
-          commit('SET_LOADING', false);
         }
       } catch (error) {
         commit('generalStore/ADD_ALERT', error, { root: true });
-        commit('SET_LOADING', false);
       }
     },
     async getPoolsForSingleFarm({ commit, rootState }, { key, selectedFarm }) {
@@ -176,7 +172,7 @@ const poolStore = {
     },
     async getPoolItemDetails({ commit, rootState }, { item }) {
         commit('generalStore/SET_SINGLE_FARM_DIALOG', true, { root: true });
-        const response = await await axios.get(`${process.env.VUE_APP_URL}/historical-transactions/${item.network}/${item.wallet}/${item.contractAddress}/${item.want}`);
+        const response = await await axios.get(`${process.env.VUE_APP_HISTORICAL_URL}${item.network}/${item.wallet}/${item.contractAddress}/${item.want}`);
         commit('SET_FARM_DETAILS', {'transactions' : response.data, 'poolData' : item});
     },
     setPendingRewardsValue({ commit }, newValue) {
