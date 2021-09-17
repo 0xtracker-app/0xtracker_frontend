@@ -9,7 +9,10 @@
         <v-col cols="12" lg="12" class="pt-6">
           <v-card class="card-shadow mb-6" :dark="darkmode">
             <div class="card-header-padding card-border-bottom">
-              <p class="font-weight-600 text-h3 mb-0" :class="{'text-muted': !darkmode}">
+              <p
+                class="font-weight-600 text-h3 mb-0"
+                :class="{ 'text-muted': !darkmode }"
+              >
                 <v-tooltip bottom>
                   <template v-slot:activator="{ on, attrs }">
                     <v-icon
@@ -18,7 +21,7 @@
                       v-on="on"
                       class="mr-1 pb-1"
                     >
-                      {{ showWallet ? 'fas fa-eye-slash' : 'fas fa-eye' }}
+                      {{ showWallet ? "fas fa-eye-slash" : "fas fa-eye" }}
                     </v-icon>
                   </template>
                   <span v-if="showWallet">Hide Wallet Details</span>
@@ -43,7 +46,10 @@
             <div class="card-header-padding card-border-bottom">
               <v-row>
                 <v-col>
-                  <p class="font-weight-600 text-h3 mb-0" :class="{'text-muted': !darkmode}">
+                  <p
+                    class="font-weight-600 text-h3 mb-0"
+                    :class="{ 'text-muted': !darkmode }"
+                  >
                     <v-tooltip bottom>
                       <template v-slot:activator="{ on, attrs }">
                         <v-icon
@@ -52,7 +58,7 @@
                           v-on="on"
                           class="mr-1 pb-1"
                         >
-                          {{ showFarms ? 'fas fa-eye-slash' : 'fas fa-eye' }}
+                          {{ showFarms ? "fas fa-eye-slash" : "fas fa-eye" }}
                         </v-icon>
                       </template>
                       <span v-if="showFarms">Hide Farms Details</span>
@@ -62,7 +68,10 @@
                   </p>
                 </v-col>
                 <v-col class="text-right">
-                  <p class="font-weight-600 text-h3 mb-0" :class="{'text-muted': !darkmode}">
+                  <p
+                    class="font-weight-600 text-h3 mb-0"
+                    :class="{ 'text-muted': !darkmode }"
+                  >
                     <v-tooltip bottom>
                       <template v-slot:activator="{ on, attrs }">
                         <v-icon
@@ -71,7 +80,7 @@
                           v-on="on"
                           class="mr-1 pb-1"
                         >
-                          {{ compactView ? 'fas fa-list' : 'fas fa-th-large' }}
+                          {{ compactView ? "fas fa-list" : "fas fa-th-large" }}
                         </v-icon>
                       </template>
                       <span v-if="compactView">Toggle Card View</span>
@@ -98,14 +107,13 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
-import HorizontalForm from '@/views/Forms/HorizontalForm.vue'
+import { mapGetters, mapActions } from "vuex";
+import HorizontalForm from "@/views/Forms/HorizontalForm.vue";
 import HeaderTopDashboard from "@/components/HeaderTopDashboard.vue";
 import ValueCards from "@/views/Dashboard/Widgets/ValueCards.vue";
 import Wallet from "@/views/Wallet/Wallet.vue";
 import Farms from "@/views/Farms/Farms.vue";
 import FarmsWithoutData from "@/views/Farms/FarmsWithoutData.vue";
-import FarmsCompact from "@/views/Farms/FarmsCompact.vue"
 
 export default {
   name: "Dashboard",
@@ -116,7 +124,6 @@ export default {
     Wallet,
     Farms,
     FarmsWithoutData,
-    FarmsCompact
   },
   data: function () {
     return {
@@ -125,10 +132,10 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('generalStore', ['compactView', 'darkmode']),
+    ...mapGetters("generalStore", ["compactView", "darkmode"]),
   },
   methods: {
-    ...mapActions('generalStore', ['toggleCompactView']),
-  }
+    ...mapActions("generalStore", ["toggleCompactView"]),
+  },
 };
 </script>

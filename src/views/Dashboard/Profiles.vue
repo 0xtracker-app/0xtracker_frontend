@@ -113,31 +113,51 @@
                 class="font-weight-600 text-h3 mb-0"
                 :class="{ 'text-muted': !darkmode }"
               >
-                Selected Farms 
+                Selected Farms
               </p>
             </div>
 
-            <v-row
+            <v-col
               v-for="(networkWithFarms, network) in farmsByNetwork"
               :key="network"
             >
-              <v-col cols="12" lg="12" class="pt-6">
-                {{ network }} <v-switch 
-                :input-value="checkNetwork($route.params.id, network, networkWithFarms)"
-                @change="toggleNetwork({'profileKey' : $route.params.id, 'allFarms' : networkWithFarms, 'network' : network})"></v-switch>
-                
-              </v-col>
-                  <v-chip
-                    v-for="(farm, key) in networkWithFarms"
-                    :key="key"
-                    class="ma-2"
-                    label
-                    :outlined="checkFarm($route.params.id, farm.sendValue, network)"
-                    @click="toggleFarm({'sendValue' : farm.sendValue, 'profileKey' : $route.params.id, 'network' : network})"
-                  >
-                    {{ farm.name }}
-                  </v-chip>
-            </v-row>
+              <v-row class="mx-0 my-0 px-3 pt-3">
+                {{ network }}
+                <v-switch
+                  :input-value="
+                    checkNetwork($route.params.id, network, networkWithFarms)
+                  "
+                  @change="
+                    toggleNetwork({
+                      profileKey: $route.params.id,
+                      allFarms: networkWithFarms,
+                      network: network,
+                    })
+                  "
+                />
+              </v-row>
+
+              <div class="chips-grid">
+                <v-chip
+                  v-for="(farm, key) in networkWithFarms"
+                  :key="key"
+                  class="ma-2"
+                  label
+                  :outlined="
+                    checkFarm($route.params.id, farm.sendValue, network)
+                  "
+                  @click="
+                    toggleFarm({
+                      sendValue: farm.sendValue,
+                      profileKey: $route.params.id,
+                      network: network,
+                    })
+                  "
+                >
+                  {{ farm.name }}
+                </v-chip>
+              </div>
+            </v-col>
           </v-card>
         </v-col>
       </v-row>
@@ -198,32 +218,50 @@ export default {
   },
   methods: {
     ...mapActions("farmStore", ["getFarms"]),
-    ...mapActions("profileStore", ["addWallet", "removeWallet", "toggleNetwork", "toggleFarm"]),
+    ...mapActions("profileStore", [
+      "addWallet",
+      "removeWallet",
+      "toggleNetwork",
+      "toggleFarm",
+    ]),
     checkNetwork(profileKey, network, allFarms) {
       const farmObj = this.userProfiles[profileKey].skipFarms;
-      const farmLength = allFarms.length
+      const farmLength = allFarms.length;
       if (farmObj.hasOwnProperty(network)) {
         if (farmObj[network].length == farmLength) {
-          return false
+          return false;
         } else {
-          return true
+          return true;
         }
       } else {
-        return true
+        return true;
       }
     },
-      checkFarm(profileKey, farm, network) {
+    checkFarm(profileKey, farm, network) {
       const farmObj = this.userProfiles[profileKey].skipFarms;
       if (farmObj.hasOwnProperty(network)) {
         if (farmObj[network].includes(farm)) {
-          return true
+          return true;
         } else {
-          return false
+          return false;
         }
       } else {
-        return false
+        return false;
       }
-    }
+    },
   },
 };
 </script>
+
+<style scoped>
+.v-input--selection-controls {
+  margin-top: 0;
+  padding-top: 0;
+  margin-left: 20px;
+}
+
+.chips-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+</style>
