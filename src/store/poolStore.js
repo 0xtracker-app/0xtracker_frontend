@@ -136,7 +136,6 @@ const poolStore = {
           await Promise.all(requestArray);
         } catch (error) {
           commit('generalStore/ADD_ALERT', error, { root: true });
-        } finally {
         }
       } catch (error) {
         commit('generalStore/ADD_ALERT', error, { root: true });
@@ -181,7 +180,10 @@ const poolStore = {
     setSelectedFarms({ commit }, selectedFarms) {
       commit('SET_SELECTED_FARMS', selectedFarms);
     },
-  }
+    setLoading({ commit }, loading) {
+      commit("SET_LOADING", loading);
+    },
+  },
 };
 
 export default poolStore;

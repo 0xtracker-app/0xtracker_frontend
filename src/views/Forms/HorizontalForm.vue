@@ -182,7 +182,8 @@ export default {
       } else this.valid = false;
     },
     loadProfile(selected) {
-      this.$store.commit('poolStore/SET_LOADING', true, { root: true });
+      this.$store.dispatch("setLoading", true);
+
       let skipFarmsData = [];
       const skipFarmsValues = Object.values(selected.skipFarms);
       skipFarmsValues.map((farms) =>
@@ -202,12 +203,10 @@ export default {
           });
         }
       });
-      this.$store.commit('poolStore/SET_LOADING', false, { root: true });
-      
+
+      this.$store.dispatch("setLoading", false);
     },
   },
-  actions : {
-  }
 };
 </script>
 
