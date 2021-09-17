@@ -10,11 +10,15 @@ const poolStore = {
   state: {
     loading: false,
     pendingRewardsValue: 0,
+    farmInfo : {},
+    farmInfoNetworks : ['bsc', 'eth', 'ftm', 'matic', 'avax']
   },
   getters: {
     farms: state => state.farms,
     selectedFarms: state => state.selectedFarms,
     farmRules: state => state.farmRules,
+    farmInfo: state => state.farmInfo,
+    farmInfoNetworks: state => state.farmInfoNetworks
   },
   mutations: {
     SET_FARMS(state, farms) {
@@ -28,6 +32,9 @@ const poolStore = {
     },
     SET_LOADING(state, loading) {
       state.loading = loading;
+    },
+    SET_FARM_DETAILS(state, value) {
+      state.farmInfo = value;
     },
   },
   actions: {
@@ -54,7 +61,7 @@ const poolStore = {
                   if (Object.hasOwnProperty.call(response.data, contract)) {
                     const farm = response.data[contract];
                     if (farm?.total && farm.total > 0) {
-                      commit('farmStore/ADD_TO_FARMS_WITH_DATA', { key: contract, value: Object.assign({name: farm.name, sendValue: selectedFarm.sendValue}, farm) }, { root: true });
+                      commit('farmStore/ADD_TO_FARMS_WITH_DATA', { key: `${rootState.walletStore.wallet}_${contract}`, value: Object.assign({name: farm.name, sendValue: selectedFarm.sendValue}, farm) }, { root: true });
                     }
                   }
                 }
@@ -111,6 +118,11 @@ const poolStore = {
         selectedFarmTemp.error = true;
         commit('farmStore/ADD_TO_FARMS_WITHOUT_DATA', { key: key, value: selectedFarmTemp }, { root: true });
       }
+    },
+    async getPoolItemDetails({ commit, rootState }, { item }) {
+        commit('generalStore/SET_SINGLE_FARM_DIALOG', true, { root: true });
+        const response = await await axios.get(`${process.env.VUE_APP_URL}/historical-transactions/${item.network}/${item.wallet}/${item.contractAddress}/${item.want}`);
+        commit('SET_FARM_DETAILS', {'transactions' : response.data, 'poolData' : item});
     },
     setPendingRewardsValue({ commit }, newValue) {
       commit('SET_PENDING_REWARDS_VALUE', newValue);

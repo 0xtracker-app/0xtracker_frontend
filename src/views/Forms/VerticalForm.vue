@@ -33,23 +33,14 @@
           </template>
         </v-text-field>
 
-        <!-- <label for="" class="label-color font-weight-600 mb-2 d-block" :class="{'text-white': darkmode}">Farms</label>
-        <v-autocomplete
+        <!-- <label for="" class="label-color font-weight-600 mb-2 d-block" :class="{'text-white': darkmode}">Profile</label>
+        <v-select
           rounded
-          v-model="selectedFarms"
+          v-model="selectedProfile"
           :disabled="loading"
-          :rules="farmRules"
           :items="farms"
-          outlined
-          chips
-          small-chips
-          multiple
-          deletable-chips
-          solo
           class="font-size-input text-color-dark input-alternative input-focused-alternative input-icon mb-0"
           :dark="darkmode"
-          :search-input.sync="farmSearchInput"
-          @change="farmSearchInput=''"
           :menu-props="darkmode ? 'dark' : 'light'"
         >
           <template v-slot:item="data">
@@ -66,7 +57,7 @@
           <template slot="prepend-inner">
             <v-icon size=".875rem">fas fa-tractor</v-icon>
           </template>
-        </v-autocomplete> -->
+        </v-select> -->
 
         <v-btn
           elevation="0"

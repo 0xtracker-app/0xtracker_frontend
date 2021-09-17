@@ -1,3 +1,5 @@
+import Vue from "vue";
+
 const profileStore = {
     namespaced: true,
     state: {
@@ -11,7 +13,7 @@ const profileStore = {
             state.userProfiles = value
         },
         CREATE_PROFILE(state, value) {
-            state.userProfiles.push({ 'name': value, 'wallets': [], 'skipNetworks': [], 'skipFarms': [] })
+            state.userProfiles.push({ 'name': value, 'wallets': [], 'skipNetworks': [], 'skipFarms': {} })
         },
         REMOVE_PROFILE(state, value) {
             state.userProfiles.splice(value, 1);
@@ -23,20 +25,31 @@ const profileStore = {
             state.userProfiles[value.profileKey].wallets.splice(value.walletKey, 1);
         },
         TOGGLE_SKIP_NETWORK(state, value) {
-            if (state.userProfiles[value.profileKey].skipNetworks.includes(value.network)) {
-                state.userProfiles[value.profileKey].skipNetworks.splice(state.userProfiles[value.profileKey].skipNetworks.indexOf(value.network), 1)
+            const contractList = value.allFarms.map(x => x.sendValue);
+            const selectedNetwork = value.network;
+            if (state.userProfiles[value.profileKey].skipFarms[selectedNetwork]) {
+                if (state.userProfiles[value.profileKey].skipFarms[selectedNetwork].length == contractList.length) {
+                    Vue.delete(state.userProfiles[value.profileKey].skipFarms, selectedNetwork)
+                } else {
+                    Vue.set(state.userProfiles[value.profileKey].skipFarms, selectedNetwork, contractList)
+                }
             } else {
-                state.userProfiles[value.profileKey].skipNetworks.push(value.network)
+                Vue.set(state.userProfiles[value.profileKey].skipFarms, selectedNetwork, contractList)
             }
         },
         TOGGLE_SKIP_FARM(state, value) {
-            console.log(value)
-            if (state.userProfiles[value.profileKey].skipFarms.includes(value.sendValue)) {
-                state.userProfiles[value.profileKey].skipFarms.splice(state.userProfiles[value.profileKey].skipFarms.indexOf(value.sendValue), 1)
+            const farmObj = state.userProfiles[value.profileKey].skipFarms;
+            if (farmObj.hasOwnProperty(value.network)) {
+              if (farmObj[value.network].includes(value.sendValue)) {
+                  const farmArray = state.userProfiles[value.profileKey].skipFarms[value.network]
+                  farmArray.splice(farmArray.indexOf(value.sendValue), 1)
+              } else {
+                state.userProfiles[value.profileKey].skipFarms[value.network].push(value.sendValue)
+              }
             } else {
-                state.userProfiles[value.profileKey].skipFarms.push(value.sendValue)
+                Vue.set(state.userProfiles[value.profileKey].skipFarms, value.network, [value.sendValue])
             }
-        },
+          }
     },
     actions: {
         createProfile({ commit }, value) {

@@ -10,7 +10,7 @@
         :sort-desc="true"
     >
         <template v-slot:item.actions="{ item }">
-            <v-card-actions v-if="item.contractAddress && item.rawPending > 0">
+            <v-card-actions v-if="item.contractAddress && item.rawPending > 0  && item.poolID">
               <v-spacer />
               <v-tooltip top>
                 <template v-slot:activator="{ on, attrs }">
@@ -52,7 +52,16 @@
                 </div>
         </template>
         <template v-slot:item.info="{ item }">
-            <v-icon>mdi-information-outline</v-icon>
+            <v-btn
+            text
+            icon
+            @click="getPoolItemDetails({'item' : item})"
+            v-if="item.contractAddress && farmInfoNetworks.includes(item.network)"
+            >
+              <v-icon>
+                mdi-information-outline
+              </v-icon>
+            </v-btn>
         </template>
         <template v-slot:item.tokenPair="{ item }">
               <!-- <v-avatar
@@ -83,11 +92,17 @@
         </template>
     
     </v-data-table>
+    <SingleFarmHistory />
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
+import SingleFarmHistory from '@/components/FarmDetails/SingleFarmHistory'
+
 export default {
+  components: {
+    SingleFarmHistory,
+  },
   props: {
     farmsWithData: Array,
   },
@@ -113,11 +128,14 @@ export default {
   computed: {
     ...mapGetters('generalStore', ['round']),
     ...mapGetters("walletStore", ["connectedWallet", "connectedWalletNetwork"]),
+    ...mapGetters("poolStore", ["farmInfoNetworks"]),
     loading: function() {
       return this.$store.state.poolStore.loading;
     },
   },
   methods: {
+    ...mapActions('generalStore', ['setSingleFarmDialog']),
+    ...mapActions('poolStore', ['getPoolItemDetails']),
     getTokenLogo(network, token) {
       try {
         return require(`@/assets/images/tokens/${network}/${token.toLowerCase()}.png`);

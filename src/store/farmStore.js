@@ -33,6 +33,7 @@ const farmStore = {
       state.farmsValue = newValue;
     },
     ADD_TO_FARMS_WITH_DATA(state, { key, value }) {
+      console.log(state.farmsWithData)
       Vue.set(state.farmsWithData, key, value);
     },
     ADD_TO_FARMS_WITHOUT_DATA(state, { key, value }) {

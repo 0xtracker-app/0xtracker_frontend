@@ -35,44 +35,32 @@
               </template>
             </v-text-field>
           </v-col>
-          <!-- <v-col md="6" sm="12">
-            <label for="" class="font-weight-600 mb-2 d-block text-white">Farms</label>
-            <v-autocomplete
+          <v-col md="6" sm="12">
+            <label for="" class="font-weight-600 mb-2 d-block text-white">Profiles</label>
+            <v-select
               rounded
-              v-model="selectedFarms"
-              :disabled="loading"
-              :rules="farmRules"
-              :items="farms"
               outlined
-              chips
-              small-chips
-              multiple
-              deletable-chips
               solo
-              class="font-size-input text-color-dark input-alternative input-focused-alternative input-icon mb-0"
+              v-model="selectedProfile"
+              item-text="name"
+              :disabled="loading"
+              :items="userProfiles"
+              placeholder="Select Profile"
               :dark="darkmode"
-              :search-input.sync="farmSearchInput"
-              @change="farmSearchInput=''"
               :menu-props="darkmode ? 'dark' : 'light'"
+              return-object
+              class="font-size-input text-color-dark input-alternative input-focused-alternative input-icon mb-0"
+              @change="loadProfile()"
             >
-              <template v-slot:item="data">
+              <!-- <template v-slot:item="data">
                 <template>
-                  <v-list-item-avatar v-if="data.item.group">
-                    <v-icon>fas fa-star</v-icon>
-                  </v-list-item-avatar>
                   <v-list-item-content>
-                    <v-list-item-title v-html="data.item.text" />
-                    <v-list-item-subtitle v-html="`${data.item.group ? 'Featured' : ''}`" />
+                    <v-list-item-title v-html="data.item.name" />
                   </v-list-item-content>
                 </template>
-              </template>
-              <template slot="prepend-inner">
-                  <v-icon size=".875rem"
-                  >fas fa-tractor</v-icon
-                >
-              </template>
-            </v-autocomplete>
-          </v-col> -->
+              </template> -->
+            </v-select>
+          </v-col>
         </v-row>
       </v-col>
       <v-col md="1" sm="1" class="text-center">
@@ -101,6 +89,7 @@ import { mapActions, mapGetters } from 'vuex';
 export default {
   data() {
     return {
+      selectedProfile: {},
       farmSearchInput: '',
       valid: true,
     };
@@ -118,6 +107,7 @@ export default {
     ...mapGetters('generalStore', ['darkmode']),
     ...mapGetters('farmStore', ['farmRules']),
     ...mapGetters('walletStore', ['connectedWallet', 'walletRules']),
+    ...mapGetters("profileStore", ["userProfiles"]),
     loading: function() {
       return this.$store.state.farmStore.loading || this.$store.state.walletStore.loading || this.$store.state.poolStore.loading;
     },
@@ -169,6 +159,9 @@ export default {
         this.getPoolsForFarms();
       } else this.valid = false;
     },
+    loadProfile(){
+      console.log(this)
+    } 
   }
 };
 </script>

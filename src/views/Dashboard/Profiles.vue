@@ -113,7 +113,7 @@
                 class="font-weight-600 text-h3 mb-0"
                 :class="{ 'text-muted': !darkmode }"
               >
-                Selected Farms {{  userProfiles[$route.params.id].skipNetworks }} {{  userProfiles[$route.params.id].skipFarms }}  
+                Selected Farms 
               </p>
             </div>
 
@@ -123,8 +123,8 @@
             >
               <v-col cols="12" lg="12" class="pt-6">
                 {{ network }} <v-switch 
-                :input-value="checkNetwork($route.params.id, network)"
-                @change="toggleNetwork({'profileKey' : $route.params.id, 'network' : network})"></v-switch>
+                :input-value="checkNetwork($route.params.id, network, networkWithFarms)"
+                @change="toggleNetwork({'profileKey' : $route.params.id, 'allFarms' : networkWithFarms, 'network' : network})"></v-switch>
                 
               </v-col>
                   <v-chip
@@ -132,8 +132,8 @@
                     :key="key"
                     class="ma-2"
                     label
-                    outlined
-                    @click="toggleFarm({'sendValue' : farm.sendValue, 'profileKey' : $route.params.id})"
+                    :outlined="checkFarm($route.params.id, farm.sendValue, network)"
+                    @click="toggleFarm({'sendValue' : farm.sendValue, 'profileKey' : $route.params.id, 'network' : network})"
                   >
                     {{ farm.name }}
                   </v-chip>
@@ -199,12 +199,29 @@ export default {
   methods: {
     ...mapActions("farmStore", ["getFarms"]),
     ...mapActions("profileStore", ["addWallet", "removeWallet", "toggleNetwork", "toggleFarm"]),
-    checkNetwork(profileKey, network) {
-      const networkArray = this.userProfiles[profileKey].skipNetworks;
-      if (networkArray.includes(network)) {
-        return false
+    checkNetwork(profileKey, network, allFarms) {
+      const farmObj = this.userProfiles[profileKey].skipFarms;
+      const farmLength = allFarms.length
+      if (farmObj.hasOwnProperty(network)) {
+        if (farmObj[network].length == farmLength) {
+          return false
+        } else {
+          return true
+        }
       } else {
         return true
+      }
+    },
+      checkFarm(profileKey, farm, network) {
+      const farmObj = this.userProfiles[profileKey].skipFarms;
+      if (farmObj.hasOwnProperty(network)) {
+        if (farmObj[network].includes(farm)) {
+          return true
+        } else {
+          return false
+        }
+      } else {
+        return false
       }
     }
   },
