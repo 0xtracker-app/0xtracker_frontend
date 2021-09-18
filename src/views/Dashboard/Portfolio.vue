@@ -78,7 +78,7 @@
                           @click="toggleCompactView()"
                           v-bind="attrs"
                           v-on="on"
-                          class="mr-1 pb-1"
+                          class="mr-1 pb-1 toggle"
                         >
                           {{ compactView ? "fas fa-list" : "fas fa-th-large" }}
                         </v-icon>
@@ -90,7 +90,6 @@
                 </v-col>
               </v-row>
             </div>
-
             <v-card-text class="px-0 py-0">
               <v-slide-y-transition>
                 <div v-show="showFarms">
@@ -139,3 +138,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.toggle.v-icon:focus::after {
+  background-color: transparent;
+}
+</style>

@@ -10,7 +10,7 @@
             {{ pendingRewardsValue | toCurrency(round) }}
           </p>
         </v-col>
-        <v-col cols="12" lg="3" md="3" class="text-right">
+        <v-col class="text-right">
           <v-avatar color="bg-gradient-purple">
             <v-icon size="20" class="text-white">
               fas fa-hourglass-half
@@ -39,7 +39,10 @@ export default {
   computed: {
     ...mapGetters("generalStore", ["darkmode", "round"]),
     loading: function () {
-      return this.$store.state.poolStore.loading;
+      return (
+        this.$store.state.poolStore.loading ||
+        this.$store.state.walletStore.loading
+      );
     },
     pendingRewardsValue: function () {
       return this.$store.state.poolStore.pendingRewardsValue;

@@ -1,7 +1,7 @@
 <template>
   <div>
     <NoDataCard
-      v-if="Object.keys(farmsWithData).length === 0 || loading"
+      v-if="Object.keys(farmsWithData).length === 0 && loading"
       :loading="loading"
     />
     <FarmsCards
@@ -32,7 +32,7 @@ export default {
   computed: {
     ...mapGetters("generalStore", ["compactView", "darkmode", "round"]),
     loading: function () {
-      return this.$store.state.poolStore.loading;
+      return this.$store.state.walletStore.loading;
     },
     farmsWithData: function () {
       // getting object keys and sorting them highest to lowest into an array based on value of total,

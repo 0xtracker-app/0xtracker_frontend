@@ -128,7 +128,7 @@ export default {
     ...mapGetters("walletStore", ["connectedWallet", "connectedWalletNetwork"]),
     ...mapGetters("poolStore", ["farmInfoNetworks"]),
     loading: function () {
-      return this.$store.state.poolStore.loading;
+      return this.$store.state.walletStore.loading;
     },
   },
   methods: {

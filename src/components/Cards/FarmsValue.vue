@@ -37,7 +37,10 @@ export default {
   computed: {
     ...mapGetters("generalStore", ["darkmode", "round"]),
     loading: function () {
-      return this.$store.state.poolStore.loading;
+      return (
+        this.$store.state.poolStore.loading ||
+        this.$store.state.walletStore.loading
+      );
     },
     farmsValue: function () {
       return this.$store.state.farmStore.farmsValue;
