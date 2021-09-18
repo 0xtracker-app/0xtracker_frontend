@@ -45,7 +45,7 @@
           <v-card class="card-shadow mb-6" :dark="darkmode">
             <div class="card-header-padding card-border-bottom">
               <v-row>
-                <v-col>
+                <v-col cols="12" sm="6">
                   <p
                     class="font-weight-600 text-h3 mb-0"
                     :class="{ 'text-muted': !darkmode }"
@@ -67,7 +67,44 @@
                     Farms
                   </p>
                 </v-col>
-                <v-col class="text-right">
+                <v-col
+                  cols="12"
+                  sm="6"
+                  class="text-right d-flex align-center justify-start justify-sm-end"
+                >
+                  <span class="font-weight-bold text-subtitle-2 mr-2">
+                    Export:
+                  </span>
+                  <v-btn
+                    text
+                    @click="csvExport()"
+                    v-bind="attrs"
+                    v-on="on"
+                    flat
+                    outlined
+                    x-small
+                    class="mr-2"
+                    :disabled="loading"
+                  >
+                    CSV
+                  </v-btn>
+                  <v-btn
+                    text
+                    @click="jsonExport()"
+                    v-bind="attrs"
+                    v-on="on"
+                    flat
+                    outlined
+                    x-small
+                    class="mr-6"
+                    :disabled="loading"
+                  >
+                    JSON
+                  </v-btn>
+
+                  <span class="font-weight-bold text-subtitle-2 mr-2">
+                    View:
+                  </span>
                   <p
                     class="font-weight-600 text-h3 mb-0"
                     :class="{ 'text-muted': !darkmode }"
@@ -87,17 +124,6 @@
                       <span v-else>Toggle List View</span>
                     </v-tooltip>
                   </p>
-                  <v-btn
-                    text
-                    @click="jsonExport()"
-                    v-bind="attrs"
-                    v-on="on"
-                    elevation="2"
-                    outlined
-                    x-small
-                  >
-                    EXPORT CSV
-                  </v-btn>
                 </v-col>
               </v-row>
             </div>
@@ -145,6 +171,12 @@ export default {
   },
   computed: {
     ...mapGetters("generalStore", ["darkmode", "compactView"]),
+    loading() {
+      return (
+        this.$store.state.poolStore.loading ||
+        this.$store.state.walletStore.loading
+      );
+    },
     walletBalancesList: function () {
       return this.$store.state.walletStore.walletBalancesList;
     },
