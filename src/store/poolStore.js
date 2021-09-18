@@ -16,6 +16,7 @@ const poolStore = {
     pendingRewardsValue: 0,
     farmInfo: {},
     farmInfoNetworks: ["bsc", "eth", "ftm", "matic", "avax"],
+    singleFarmLoading: false,
   },
   getters: {
     farms: (state) => state.farms,
@@ -39,6 +40,9 @@ const poolStore = {
     },
     SET_FARM_DETAILS(state, value) {
       state.farmInfo = value;
+    },
+    SET_SINGLE_FARM_LOADING(state, loading) {
+      state.singleFarmLoading = loading;
     },
   },
   actions: {
@@ -257,6 +261,7 @@ const poolStore = {
       }
     },
     async getPoolItemDetails({ commit }, { item }) {
+      commit("SET_SINGLE_FARM_LOADING", true);
       commit("generalStore/SET_SINGLE_FARM_DIALOG", true, { root: true });
       const response = await await axios.get(
         `${process.env.VUE_APP_HISTORICAL_URL}${item.network}/${item.wallet}/${item.contractAddress}/${item.want}`
@@ -265,6 +270,7 @@ const poolStore = {
         transactions: response.data,
         poolData: item,
       });
+      commit("SET_SINGLE_FARM_LOADING", false);
     },
     setPendingRewardsValue({ commit }, newValue) {
       commit("SET_PENDING_REWARDS_VALUE", newValue);
