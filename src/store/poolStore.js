@@ -180,9 +180,6 @@ const poolStore = {
     setSelectedFarms({ commit }, selectedFarms) {
       commit('SET_SELECTED_FARMS', selectedFarms);
     },
-    setLoading({ commit }, loading) {
-      commit("SET_LOADING", loading);
-    },
   },
 };
 
