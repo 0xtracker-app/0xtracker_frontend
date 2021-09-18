@@ -1,5 +1,14 @@
 <template>
   <div>
+    <v-progress-linear
+      v-show="loading"
+      :indeterminate="loading"
+      color="#5e72e4"
+      slot="progress"
+    ></v-progress-linear>
+    <v-overlay :absolute="true" :value="loading">
+      <div class="text-center"></div>
+    </v-overlay>
     <v-data-table
       :headers="headers"
       :items="farmsWithData"

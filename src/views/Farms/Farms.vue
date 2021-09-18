@@ -1,7 +1,7 @@
 <template>
   <div>
     <NoDataCard
-      v-if="Object.keys(farmsWithData).length === 0 && loading"
+      v-if="Object.keys(farmsWithData).length === 0"
       :loading="loading"
     />
     <FarmsCards

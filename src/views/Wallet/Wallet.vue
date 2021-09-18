@@ -1,7 +1,16 @@
 <template>
   <div>
-    <v-card v-if="balances.length" class="card-shadow">
+    <v-card v-if="balances.length">
       <v-card-text class="px-0 py-0">
+        <v-progress-linear
+          v-show="loading"
+          :indeterminate="loading"
+          color="#5e72e4"
+          slot="progress"
+        ></v-progress-linear>
+        <v-overlay :absolute="true" :value="loading">
+          <div class="text-center"></div>
+        </v-overlay>
         <v-data-table
           :headers="headers"
           :items="balances"
@@ -124,3 +133,9 @@ export default {
   },
 };
 </script>
+
+<style>
+.v-data-table__progress .column {
+  padding: 0px !important;
+}
+</style>

@@ -30,7 +30,7 @@
                 Wallet
               </p>
             </div>
-
+            <v-divider></v-divider>
             <v-card-text class="px-0 py-0">
               <v-slide-y-transition>
                 <div v-show="showWallet">
@@ -90,10 +90,12 @@
                 </v-col>
               </v-row>
             </div>
+            <v-divider></v-divider>
             <v-card-text class="px-0 py-0">
               <v-slide-y-transition>
                 <div v-show="showFarms">
                   <FarmsWithoutData />
+                  <v-divider></v-divider>
                   <Farms />
                 </div>
               </v-slide-y-transition>
