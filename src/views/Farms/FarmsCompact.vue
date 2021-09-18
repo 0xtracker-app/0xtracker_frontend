@@ -73,17 +73,19 @@
         </v-btn>
       </template>
       <template v-slot:item.tokenPair="{ item }">
-        <!-- <v-avatar
-                size="20"
-                v-if="item.token1"
-              >
-                <v-img :src="getTokenLogo(item.network, item.token1)" />
-              </v-avatar>
-              <v-avatar size="20">
-                <v-img :src="getTokenLogo(item.network, item.token0)" />
-              </v-avatar> -->
-        <div>
-          {{ item.tokenPair }}
+        <div class="d-flex">
+          <div
+            style="width: 30px"
+            class="d-flex justify-center align-center mr-2"
+          >
+            <v-avatar size="20" class="mr-n2" v-if="item.token1">
+              <v-img :src="getTokenLogo(item.network, item.token1)" />
+            </v-avatar>
+            <v-avatar size="20">
+              <v-img :src="getTokenLogo(item.network, item.token0)" />
+            </v-avatar>
+          </div>
+          <span class="font-weight-bold">{{ item.tokenPair }}</span>
         </div>
       </template>
       <template v-slot:item.poolValue="{ item }">

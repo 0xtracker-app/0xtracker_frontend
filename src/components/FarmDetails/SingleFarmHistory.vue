@@ -7,7 +7,8 @@
       max-width="600"
     >
       <v-card :dark="darkmode" class="pt-5">
-        <p class="text-h1 text-center mb-10">Info</p>
+        <p class="text-h1 text-center">Info</p>
+        <v-divider></v-divider>
         <v-card-text
           v-if="farmInfo.transactions"
           :set="
@@ -110,7 +111,6 @@
               </v-list>
             </v-col>
           </v-row>
-          {{ farmInfo.transactions }}
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -119,7 +119,6 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-import axios from "axios";
 
 export default {
   data: () => ({}),
