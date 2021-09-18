@@ -168,7 +168,6 @@ export default {
     ...mapActions("poolStore", [
       "getPoolsForFarms",
       "newGetPoolsForFarms",
-      "setLoading",
     ]),
     ...mapActions("walletStore", ["loadWallet", "setWallet", "loadWallets"]),
     loadPortfolio() {
@@ -186,8 +185,6 @@ export default {
       } else this.valid = false;
     },
     loadProfile(selected) {
-      this.setLoading(true);
-
       let skipFarmsData = [];
       const skipFarmsValues = Object.values(selected.skipFarms);
       skipFarmsValues.map((farms) =>
@@ -207,8 +204,6 @@ export default {
           });
         }
       });
-
-      this.setLoading(false);
     },
   },
 };
