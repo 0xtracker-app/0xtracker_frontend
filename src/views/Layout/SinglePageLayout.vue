@@ -24,7 +24,10 @@
               <v-spacer />
             </v-col>
             <v-col cols="12" md="5" class="mx-auto py-0">
-              <h1 class="text-h1 font-weight-600 text-center mb-2" :class="{'header-dark': darkmode, 'text-white': !darkmode}">
+              <h1
+                class="text-h1 font-weight-600 text-center mb-2"
+                :class="{ 'header-dark': darkmode, 'text-white': !darkmode }"
+              >
                 {{ headerTitle() }}
               </h1>
             </v-col>
@@ -56,7 +59,7 @@
   </v-app>
 </template>
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters } from "vuex";
 import SponsorsHeader from "@/components/SponsorsHeader.vue";
 import { FadeTransition } from "vue2-transitions";
 import ContentFooter from "@/components/Footer.vue";
@@ -74,7 +77,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('generalStore', ['darkmode']),
+    ...mapGetters("generalStore", ["darkmode"]),
   },
   methods: {
     headerTitle() {

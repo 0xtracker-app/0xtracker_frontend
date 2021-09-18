@@ -14,10 +14,7 @@
           :sort-desc="true"
         >
           <template v-slot:item.symbol="{ item }">
-            <v-avatar
-              size="25"
-              class="mr-1"
-            >
+            <v-avatar size="25" class="mr-1">
               <v-img :src="getTokenLogo(item.network, item.tokenAddress)" />
             </v-avatar>
             {{ item.symbol }}
@@ -49,8 +46,8 @@
   </div>
 </template>
 <script>
-import { mapActions, mapGetters } from 'vuex';
-import NoDataCard from '@/components/Cards/NoDataCard.vue';
+import { mapActions, mapGetters } from "vuex";
+import NoDataCard from "@/components/Cards/NoDataCard.vue";
 
 export default {
   components: {
@@ -60,35 +57,46 @@ export default {
     return {
       headers: [
         {
-          text: 'Ticker',
-          align: 'start',
+          text: "Ticker",
+          align: "start",
           sortable: true,
-          value: 'symbol',
+          value: "symbol",
         },
-        { text: 'Balance', value: 'tokenBalance' },
-        { text: 'Price', value: 'tokenPrice' },
-        { text: 'Value', value: 'tokenValue' },
+        { text: "Balance", value: "tokenBalance" },
+        { text: "Price", value: "tokenPrice" },
+        { text: "Value", value: "tokenValue" },
       ],
       page: 1,
       pageCount: 0,
     };
   },
   computed: {
-    ...mapGetters('generalStore', ['darkmode', 'smallValues', 'round']),
-    loading: function() {
+    ...mapGetters("generalStore", ["darkmode", "smallValues", "round"]),
+    loading: function () {
       return this.$store.state.walletStore.loading;
     },
-    walletBalancesList: function() {
+    walletBalancesList: function () {
       return this.$store.state.walletStore.walletBalancesList;
     },
-    unfilteredBalances: function() {
-      return this.walletBalancesList.map(balance => {return { symbol: balance.symbol, tokenBalance: balance.tokenBalance, tokenPrice: balance.tokenPrice, tokenValue: balance.tokenBalance*balance.tokenPrice, tokenAddress: balance.token_address, network: balance.network }});
+    unfilteredBalances: function () {
+      return this.walletBalancesList.map((balance) => {
+        return {
+          symbol: balance.symbol,
+          tokenBalance: balance.tokenBalance,
+          tokenPrice: balance.tokenPrice,
+          tokenValue: balance.tokenBalance * balance.tokenPrice,
+          tokenAddress: balance.token_address,
+          network: balance.network,
+        };
+      });
     },
-    balances: function() {
-      const unfilteredBalances =  this.unfilteredBalances;
-      return unfilteredBalances.filter(balance => this.smallValues || balance.tokenValue > 1);
+    balances: function () {
+      const unfilteredBalances = this.unfilteredBalances;
+      return unfilteredBalances.filter(
+        (balance) => this.smallValues || balance.tokenValue > 1
+      );
     },
-    total: function() {
+    total: function () {
       let total = 0;
       for (const balance of this.unfilteredBalances) {
         total += balance.tokenValue;
@@ -105,7 +113,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions('walletStore', ['loadWallet', 'setWalletValue']),
+    ...mapActions("walletStore", ["loadWallet", "setWalletValue"]),
     getTokenLogo(network, token) {
       try {
         return require(`@/assets/images/tokens/${network}/${token.toLowerCase()}.png`);

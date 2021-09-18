@@ -4,15 +4,9 @@
       <p v-if="loading"></p>
       <p v-else>No data available...</p>
     </v-card-text>
-    <v-overlay
-      :absolute="true"
-      :value="loading"
-    >
+    <v-overlay :absolute="true" :value="loading">
       <div class="text-center">
-        <v-progress-circular
-          indeterminate
-          color="white"
-        ></v-progress-circular>
+        <v-progress-circular indeterminate color="white"></v-progress-circular>
       </div>
     </v-overlay>
     <v-progress-linear
@@ -27,5 +21,5 @@ export default {
   props: {
     loading: Boolean,
   },
-}
+};
 </script>

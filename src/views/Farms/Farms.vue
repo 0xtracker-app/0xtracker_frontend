@@ -1,20 +1,27 @@
 <template>
   <div>
-    <NoDataCard v-if="Object.keys(farmsWithData).length === 0 || loading" :loading="loading" />
-    <FarmsCards v-if="Object.keys(farmsWithData).length > 0 && !compactView" :farmsWithData="farmsWithData" />
-    <FarmsCompact v-else-if="Object.keys(farmsWithData).length > 0 && compactView" :farmsWithData="farmsWithDataCompact" />
+    <NoDataCard
+      v-if="Object.keys(farmsWithData).length === 0 || loading"
+      :loading="loading"
+    />
+    <FarmsCards
+      v-if="Object.keys(farmsWithData).length > 0 && !compactView"
+      :farmsWithData="farmsWithData"
+    />
+    <FarmsCompact
+      v-else-if="Object.keys(farmsWithData).length > 0 && compactView"
+      :farmsWithData="farmsWithDataCompact"
+    />
   </div>
 </template>
 <script>
-import { mapActions, mapGetters } from 'vuex';
-import Farm from './Farm.vue';
-import FarmsCards from './FarmsCards.vue';
-import FarmsCompact from './FarmsCompact.vue';
-import NoDataCard from '@/components/Cards/NoDataCard.vue';
+import { mapActions, mapGetters } from "vuex";
+import FarmsCards from "./FarmsCards.vue";
+import FarmsCompact from "./FarmsCompact.vue";
+import NoDataCard from "@/components/Cards/NoDataCard.vue";
 
 export default {
   components: {
-    Farm,
     FarmsCards,
     FarmsCompact,
     NoDataCard,
@@ -23,24 +30,43 @@ export default {
     heading: String,
   },
   computed: {
-    ...mapGetters('generalStore', ['compactView', 'darkmode', 'round']),
-    loading: function() {
+    ...mapGetters("generalStore", ["compactView", "darkmode", "round"]),
+    loading: function () {
       return this.$store.state.poolStore.loading;
     },
-    farmsWithData: function() {
+    farmsWithData: function () {
       // getting object keys and sorting them highest to lowest into an array based on value of total,
       // then adding the contract to the object so that it can be mapped back and removed from the
       // farmsWith/Without objects when a single refresh is done 😬
-      return Object.keys(this.$store.state.farmStore.farmsWithData).sort((a,b) => (this.$store.state.farmStore.farmsWithData[a].total < this.$store.state.farmStore.farmsWithData[b].total) ? 1 : -1).map(contract => {let farm = this.$store.state.farmStore.farmsWithData[contract];farm.contract = contract;return farm});
+      return Object.keys(this.$store.state.farmStore.farmsWithData)
+        .sort((a, b) =>
+          this.$store.state.farmStore.farmsWithData[a].total <
+          this.$store.state.farmStore.farmsWithData[b].total
+            ? 1
+            : -1
+        )
+        .map((contract) => {
+          let farm = this.$store.state.farmStore.farmsWithData[contract];
+          farm.contract = contract;
+          return farm;
+        });
     },
-    farmsWithDataCompact: function() {
+    farmsWithDataCompact: function () {
       let array = [];
       for (const contract in this.$store.state.farmStore.farmsWithData) {
-        if (Object.hasOwnProperty.call(this.$store.state.farmStore.farmsWithData, contract)) {
+        if (
+          Object.hasOwnProperty.call(
+            this.$store.state.farmStore.farmsWithData,
+            contract
+          )
+        ) {
           const farmData = this.$store.state.farmStore.farmsWithData[contract];
           // just insert data you want in the pool data here
           for (const pool in farmData.userData) {
-            if (Object.hasOwnProperty.call(farmData.userData, pool) && farmData.type != 'lending') {
+            if (
+              Object.hasOwnProperty.call(farmData.userData, pool) &&
+              farmData.type != "lending"
+            ) {
               const poolData = farmData.userData[pool];
               poolData.farmName = farmData.name;
               poolData.farmID = farmData.sendValue;
@@ -55,7 +81,7 @@ export default {
       }
       return array;
     },
-    total: function() {
+    total: function () {
       let total = 0;
       for (const contract in this.farmsWithData) {
         const farm = this.farmsWithData[contract];
@@ -63,7 +89,7 @@ export default {
       }
       return total;
     },
-    pendingRewards: function() {
+    pendingRewards: function () {
       let pendingTotal = 0;
       for (const contract in this.farmsWithData) {
         const farm = this.farmsWithData[contract];
@@ -84,8 +110,12 @@ export default {
     },
   },
   methods: {
-    ...mapActions('farmStore', ['setFarmsValue']),
-    ...mapActions('poolStore', ['getPoolsForFarms', 'getPoolsForSingleFarm', 'setPendingRewardsValue']),
+    ...mapActions("farmStore", ["setFarmsValue"]),
+    ...mapActions("poolStore", [
+      "getPoolsForFarms",
+      "getPoolsForSingleFarm",
+      "setPendingRewardsValue",
+    ]),
   },
 };
 </script>

@@ -4,10 +4,10 @@ import router from "./router";
 import vuetify from "./plugins/vuetify";
 import DashboardPlugin from "./plugins/dashboard-plugin";
 import i18n from "./i18n";
-import store from './store';
-import './filters/shortenContractFilter';
-import './filters/to2DecimalsFilter';
-import './filters/toCurrencyFilter';
+import store from "./store";
+import "./filters/shortenContractFilter";
+import "./filters/to2DecimalsFilter";
+import "./filters/toCurrencyFilter";
 
 Vue.config.productionTip = false;
 
@@ -15,7 +15,7 @@ Vue.config.productionTip = false;
 const plugin = {
   install(Vue) {
     Vue.prototype.$eventHub = new Vue();
-  }
+  },
 };
 
 Vue.use(plugin);

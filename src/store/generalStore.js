@@ -13,23 +13,23 @@ const generalStore = {
     compactView: false,
   },
   getters: {
-    alerts: state => state.alerts,
-    darkmode: state => state.darkmode,
+    alerts: (state) => state.alerts,
+    darkmode: (state) => state.darkmode,
     // TODO: reference all loading states in this loading state
-    loading: state => state.loading,
-    noLPPools: state => state.noLPPools,
-    round: state => state.round,
-    smallValues: state => state.smallValues,
-    walletDialog: state => state.walletDialog,
-    singleFarmDialog: state => state.singleFarmDialog,
-    compactView: state => state.compactView,
+    loading: (state) => state.loading,
+    noLPPools: (state) => state.noLPPools,
+    round: (state) => state.round,
+    smallValues: (state) => state.smallValues,
+    walletDialog: (state) => state.walletDialog,
+    singleFarmDialog: (state) => state.singleFarmDialog,
+    compactView: (state) => state.compactView,
   },
   mutations: {
     ADD_ALERT(state, alert) {
       state.alerts.push(alert);
       const timer = window.setInterval(() => {
         if (state.alerts.length > 0) {
-          this.commit('generalStore/REMOVE_ALERT', null, { root: true });
+          this.commit("generalStore/REMOVE_ALERT", null, { root: true });
         } else {
           window.clearInterval(timer);
         }
@@ -81,42 +81,61 @@ const generalStore = {
   actions: {
     initStore({ commit, state }) {
       try {
-        if (localStorage.getItem('store')) {
-          const storedStore = JSON.parse(localStorage.getItem('store'));
+        if (localStorage.getItem("store")) {
+          const storedStore = JSON.parse(localStorage.getItem("store"));
           if (!storedStore.version || storedStore.version < state.version) {
-            localStorage.removeItem('store');
-          } else this.dispatch('generalStore/restoreSession', storedStore);
-          this.dispatch('generalStore/saveSession');
+            localStorage.removeItem("store");
+          } else this.dispatch("generalStore/restoreSession", storedStore);
+          this.dispatch("generalStore/saveSession");
         } else {
           // Check if system theme is dark
           const darkThemeMq = window.matchMedia("(prefers-color-scheme: dark)");
           if (darkThemeMq.matches) {
-            commit('SET_DARK_MODE', true);
+            commit("SET_DARK_MODE", true);
           } else {
-            commit('SET_DARK_MODE', false);
+            commit("SET_DARK_MODE", false);
           }
-          this.dispatch('generalStore/saveSession');
+          this.dispatch("generalStore/saveSession");
         }
       } catch (error) {
-        commit('generalStore/ADD_ALERT', 'An error occurred when attempting to initialise the app. ', { root: true });
+        commit(
+          "generalStore/ADD_ALERT",
+          "An error occurred when attempting to initialise the app. ",
+          { root: true }
+        );
       }
     },
     restoreSession({ commit }, sessionToRestore) {
-      if (sessionToRestore.darkmode) commit('SET_DARK_MODE', sessionToRestore.darkmode)
-      if (sessionToRestore.noLPPools) commit('SET_NO_LP_POOLS', sessionToRestore.noLPPools)
-      if (sessionToRestore.round) commit('SET_ROUNDING', sessionToRestore.round)
-      if (sessionToRestore.smallValues) commit('SET_SMALL_VALUES', sessionToRestore.smallValues)
-      if (sessionToRestore.version) commit('SET_VERSION', sessionToRestore.version)
-      if (sessionToRestore.wallet) commit('walletStore/SET_WALLET', sessionToRestore.wallet, { root: true })
-      if (sessionToRestore.selectedFarms) commit('farmStore/SET_SELECTED_FARMS', sessionToRestore.selectedFarms, { root: true })
-      if (sessionToRestore.compactView) commit('SET_COMPACT_VIEW', sessionToRestore.compactView);
-      if (sessionToRestore.userProfiles) commit('profileStore/SET_PROFILES', sessionToRestore.userProfiles, {root: true})
+      if (sessionToRestore.darkmode)
+        commit("SET_DARK_MODE", sessionToRestore.darkmode);
+      if (sessionToRestore.noLPPools)
+        commit("SET_NO_LP_POOLS", sessionToRestore.noLPPools);
+      if (sessionToRestore.round)
+        commit("SET_ROUNDING", sessionToRestore.round);
+      if (sessionToRestore.smallValues)
+        commit("SET_SMALL_VALUES", sessionToRestore.smallValues);
+      if (sessionToRestore.version)
+        commit("SET_VERSION", sessionToRestore.version);
+      if (sessionToRestore.wallet)
+        commit("walletStore/SET_WALLET", sessionToRestore.wallet, {
+          root: true,
+        });
+      if (sessionToRestore.selectedFarms)
+        commit("farmStore/SET_SELECTED_FARMS", sessionToRestore.selectedFarms, {
+          root: true,
+        });
+      if (sessionToRestore.compactView)
+        commit("SET_COMPACT_VIEW", sessionToRestore.compactView);
+      if (sessionToRestore.userProfiles)
+        commit("profileStore/SET_PROFILES", sessionToRestore.userProfiles, {
+          root: true,
+        });
     },
     setWalletDialog({ commit }, value) {
-      commit('SET_WALLET_DIALOG', value);
+      commit("SET_WALLET_DIALOG", value);
     },
     setSingleFarmDialog({ commit }, value) {
-      commit('SET_SINGLE_FARM_DIALOG', value);
+      commit("SET_SINGLE_FARM_DIALOG", value);
     },
     saveSession({ rootState, state }) {
       const sessionToStore = {
@@ -128,31 +147,31 @@ const generalStore = {
         wallet: rootState.walletStore.wallet,
         selectedFarms: rootState.farmStore.selectedFarms,
         compactView: state.compactView,
-        userProfiles: rootState.profileStore.userProfiles
-      }
-      localStorage.setItem('store', JSON.stringify(sessionToStore));
+        userProfiles: rootState.profileStore.userProfiles,
+      };
+      localStorage.setItem("store", JSON.stringify(sessionToStore));
     },
     toggleCompactView({ commit }) {
-      commit('TOGGLE_COMPACT_VIEW');
-      this.dispatch('generalStore/saveSession');
+      commit("TOGGLE_COMPACT_VIEW");
+      this.dispatch("generalStore/saveSession");
     },
     toggleDarkMode({ commit }) {
-      commit('TOGGLE_DARK_MODE');
-      this.dispatch('generalStore/saveSession');
+      commit("TOGGLE_DARK_MODE");
+      this.dispatch("generalStore/saveSession");
     },
     toggleNoLPPools({ commit }) {
-      commit('TOGGLE_NO_LP_POOLS');
-      this.dispatch('generalStore/saveSession');
+      commit("TOGGLE_NO_LP_POOLS");
+      this.dispatch("generalStore/saveSession");
     },
     toggleRounding({ commit }) {
-      commit('TOGGLE_ROUNDING');
-      this.dispatch('generalStore/saveSession');
+      commit("TOGGLE_ROUNDING");
+      this.dispatch("generalStore/saveSession");
     },
     toggleSmallValues({ commit }) {
-      commit('TOGGLE_SMALL_VALUES');
-      this.dispatch('generalStore/saveSession');
+      commit("TOGGLE_SMALL_VALUES");
+      this.dispatch("generalStore/saveSession");
     },
-  }
+  },
 };
 
 export default generalStore;

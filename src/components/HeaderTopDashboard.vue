@@ -1,7 +1,10 @@
 <template>
   <v-container fluid class="pt-0 px-6 pb-16">
     <v-row no-gutters class="py-3">
-      <v-col cols="6" v-if="$route.name === 'Portfolio' || $route.name === 'Rev0x'">
+      <v-col
+        cols="6"
+        v-if="$route.name === 'Portfolio' || $route.name === 'Rev0x'"
+      >
         <!-- <h2
           class="text-h2 font-weight-600 text-white"
         >
@@ -10,7 +13,7 @@
       </v-col>
       <v-col cols="12" v-else>
         <h2
-          class="text-h2 font-weight-600 text-white text-center"
+          class="text-h1 text-uppercase font-weight-bold text-white text-center"
         >
           <template v-if="$route.name === 'Dashboard'">Dashboard</template>
           <template v-else>{{ $route.name }}</template>
@@ -27,7 +30,9 @@
           @click="loadPortfolio()"
           :dark="darkmode"
         >
-          <v-icon size=".875rem" class="mr-2" color="#5e72e4">fas fa-redo</v-icon>
+          <v-icon size=".875rem" class="mr-2" color="#5e72e4"
+            >fas fa-redo</v-icon
+          >
           Refresh
         </v-btn>
       </v-col>
@@ -37,7 +42,7 @@
   </v-container>
 </template>
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "header-top",
@@ -45,20 +50,28 @@ export default {
     showRefresh: Boolean,
   },
   computed: {
-    ...mapGetters('generalStore', ['darkmode']),
-    loading: function() {
-      return this.$store.state.farmStore.loading || this.$store.state.walletStore.loading || this.$store.state.poolStore.loading;
+    ...mapGetters("generalStore", ["darkmode"]),
+    loading: function () {
+      return (
+        this.$store.state.farmStore.loading ||
+        this.$store.state.walletStore.loading ||
+        this.$store.state.poolStore.loading
+      );
     },
   },
   methods: {
-    ...mapActions('poolStore', ['getPoolsForFarms']),
-    ...mapActions('walletStore', ['loadWallet']),
+    ...mapActions("poolStore", ["getPoolsForFarms"]),
+    ...mapActions("walletStore", ["loadWallet"]),
     loadPortfolio() {
-      if (this.$store.state.walletStore.wallet && this.$store.state.farmStore.selectedFarms && this.$store.state.farmStore.selectedFarms.length) {
+      if (
+        this.$store.state.walletStore.wallet &&
+        this.$store.state.farmStore.selectedFarms &&
+        this.$store.state.farmStore.selectedFarms.length
+      ) {
         this.getPoolsForFarms();
         this.loadWallet();
       }
     },
-  }
+  },
 };
 </script>

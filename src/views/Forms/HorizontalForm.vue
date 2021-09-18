@@ -165,10 +165,7 @@ export default {
   methods: {
     ...mapActions("farmStore", ["getFarms", "setSelectedFarms"]),
     ...mapActions("generalStore", ["setWalletDialog"]),
-    ...mapActions("poolStore", [
-      "getPoolsForFarms",
-      "newGetPoolsForFarms",
-    ]),
+    ...mapActions("poolStore", ["getPoolsForFarms", "newGetPoolsForFarms"]),
     ...mapActions("walletStore", ["loadWallet", "setWallet", "loadWallets"]),
     loadPortfolio() {
       if (this.$refs.form.validate()) {
