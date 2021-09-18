@@ -41,7 +41,7 @@
               <v-col cols="12" md="6">
                 <div
                   class="copyright text-body-2 ls-0"
-                  :class="{'text-muted': darkmode, 'text-white': !darkmode}"
+                  :class="{ 'text-muted': darkmode, 'text-white': !darkmode }"
                 >
                   &copy; {{ new Date().getFullYear() }} 0xTracker
                 </div>
@@ -57,10 +57,14 @@
                     <a
                       :href="item.link"
                       class="text-decoration-none text-body-2 ls-0"
-                      :class="{'text-muted btn-dark-hover no-default-hover': darkmode, 'text-white': !darkmode}"
+                      :class="{
+                        'text-muted btn-dark-hover no-default-hover': darkmode,
+                        'text-white': !darkmode,
+                      }"
                       target="_blank"
-                      >{{ item.linkName }}</a
                     >
+                      {{ item.linkName }}
+                    </a>
                   </li>
                 </ul>
               </v-col>
@@ -72,7 +76,7 @@
   </span>
 </template>
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters } from "vuex";
 
 export default {
   name: "content-footer",
@@ -92,7 +96,8 @@ export default {
         },
         {
           linkName: "Donate",
-          link: "https://bscscan.com/address/0xE0d0a6F70f13dB9193a815793242C98C3092a932",
+          link:
+            "https://bscscan.com/address/0xE0d0a6F70f13dB9193a815793242C98C3092a932",
         },
         {
           linkName: "Bugs/Request",
@@ -102,7 +107,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('generalStore', ['darkmode']),
+    ...mapGetters("generalStore", ["darkmode"]),
   },
 };
 </script>

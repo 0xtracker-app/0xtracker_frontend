@@ -19,10 +19,19 @@
   }
 }
 
-.btn-dark-hover {
-  &:hover,
-  &:focus {
-    color: rgba($gray-100, 1) !important;
+.btn {
+  &-dark-hover {
+    &:hover,
+    &:focus {
+      color: rgba($gray-100, 1) !important;
+    }
+  }
+
+  &-light-hover {
+    &:hover,
+    &:focus {
+      color: rgba($black, 1) !important;
+    }
   }
 }
 
@@ -31,7 +40,7 @@
     .btn-#{$name} {
       &:not(.shadow-none) {
         box-shadow: $btn-shadow !important;
-      }  
+      }
 
       @if $name == "neutral" {
         color: map-get($theme-colors, "primary");
@@ -39,13 +48,13 @@
         color: $dark;
       } @else {
         color: $white;
-      }   
+      }
 
       &:not(.shadow-none):focus,
-      &:not(.shadow-none):hover, {
+      &:not(.shadow-none):hover {
         box-shadow: $btn-shadow-hover !important;
       }
-      
+
       &:hover,
       &:focus {
         transform: translateY($btn-hover-raised);
@@ -54,7 +63,7 @@
           color: $dark;
         } @else {
           color: $white;
-        }    
+        }
       }
     }
 
@@ -90,7 +99,7 @@
       background-color: $btn-toggle-active-bg !important;
     }
 
-    &.v-btn-toggle .v-btn { 
+    &.v-btn-toggle .v-btn {
       opacity: 1;
     }
 
@@ -124,7 +133,7 @@
   &:hover,
   &:focus {
     color: $white;
-  } 
+  }
 }
 
 

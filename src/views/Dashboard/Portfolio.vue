@@ -30,7 +30,7 @@
                 Wallet
               </p>
             </div>
-
+            <v-divider></v-divider>
             <v-card-text class="px-0 py-0">
               <v-slide-y-transition>
                 <div v-show="showWallet">
@@ -44,52 +44,69 @@
         <v-col cols="12" lg="12" class="pt-6">
           <v-card class="card-shadow mb-6" :dark="darkmode">
             <div class="card-header-padding card-border-bottom">
-              <p
-                class="font-weight-600 text-h3 mb-0"
-                :class="{ 'text-muted': !darkmode }"
-              >
-                <v-tooltip bottom>
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-icon
-                      @click="showFarms = !showFarms"
-                      v-bind="attrs"
-                      v-on="on"
-                      class="mr-1 pb-1"
-                    >
-                      {{ showFarms ? "fas fa-eye-slash" : "fas fa-eye" }}
-                    </v-icon>
-                  </template>
-                  <span v-if="showFarms">Hide Farms Details</span>
-                  <span v-else>Show Farms Details</span>
-                </v-tooltip>
-                Farms
-              </p>
-              <v-chip class="ma-2" @click="toggleCompactView">
-                <v-icon v-if="compactView" class="pr-1">mdi-grid-off</v-icon>
-                <v-icon v-else class="pr-1">mdi-grid</v-icon>
-                {{ compactView ? "Compact View" : "Card View" }}
-              </v-chip>
-              <v-btn
-                text
-                @click="jsonExport()"
-                v-bind="attrs"
-                v-on="on"
-                elevation="2"
-                outlined
-                x-small
-              >
-                EXPORT CSV
-              </v-btn>
+              <v-row>
+                <v-col>
+                  <p
+                    class="font-weight-600 text-h3 mb-0"
+                    :class="{ 'text-muted': !darkmode }"
+                  >
+                    <v-tooltip bottom>
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-icon
+                          @click="showFarms = !showFarms"
+                          v-bind="attrs"
+                          v-on="on"
+                          class="mr-1 pb-1"
+                        >
+                          {{ showFarms ? "fas fa-eye-slash" : "fas fa-eye" }}
+                        </v-icon>
+                      </template>
+                      <span v-if="showFarms">Hide Farms Details</span>
+                      <span v-else>Show Farms Details</span>
+                    </v-tooltip>
+                    Farms
+                  </p>
+                </v-col>
+                <v-col class="text-right">
+                  <p
+                    class="font-weight-600 text-h3 mb-0"
+                    :class="{ 'text-muted': !darkmode }"
+                  >
+                    <v-tooltip bottom>
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-icon
+                          @click="toggleCompactView()"
+                          v-bind="attrs"
+                          v-on="on"
+                          class="mr-1 pb-1 toggle"
+                        >
+                          {{ compactView ? "fas fa-list" : "fas fa-th-large" }}
+                        </v-icon>
+                      </template>
+                      <span v-if="compactView">Toggle Card View</span>
+                      <span v-else>Toggle List View</span>
+                    </v-tooltip>
+                  </p>
+                  <v-btn
+                    text
+                    @click="jsonExport()"
+                    v-bind="attrs"
+                    v-on="on"
+                    elevation="2"
+                    outlined
+                    x-small
+                  >
+                    EXPORT CSV
+                  </v-btn>
+                </v-col>
+              </v-row>
             </div>
-
+            <v-divider></v-divider>
             <v-card-text class="px-0 py-0">
               <v-slide-y-transition>
-                <div v-show="showFarms" v-if="compactView">
+                <div v-show="showFarms">
                   <FarmsWithoutData />
-                  <FarmsCompact />
-                </div>
-                <div v-show="showFarms" v-else>
-                  <FarmsWithoutData />
+                  <v-divider></v-divider>
                   <Farms />
                 </div>
               </v-slide-y-transition>
@@ -109,7 +126,6 @@ import ValueCards from "@/views/Dashboard/Widgets/ValueCards.vue";
 import Wallet from "@/views/Wallet/Wallet.vue";
 import Farms from "@/views/Farms/Farms.vue";
 import FarmsWithoutData from "@/views/Farms/FarmsWithoutData.vue";
-import FarmsCompact from "@/views/Farms/FarmsCompact.vue";
 
 export default {
   name: "Dashboard",
@@ -120,7 +136,6 @@ export default {
     Wallet,
     Farms,
     FarmsWithoutData,
-    FarmsCompact,
   },
   data: function () {
     return {
@@ -169,7 +184,7 @@ export default {
             ) {
               const poolData = farmData.userData[pool];
               const flatPool = {
-                network : farmData.network,
+                network: farmData.network,
                 farmName: farmData.name,
                 tokenPair: poolData.tokenPair,
                 actualStaked: poolData.actualStaked,
@@ -184,8 +199,8 @@ export default {
       }
       for (const walletBalance in this.balances) {
         const flatPool = {
-          network : this.balances[walletBalance].network,
-          farmName: 'wallet',
+          network: this.balances[walletBalance].network,
+          farmName: "wallet",
           tokenPair: this.balances[walletBalance].symbol,
           actualStaked: this.balances[walletBalance].tokenBalance,
           dollarValueStake: this.balances[walletBalance].tokenValue,
@@ -216,9 +231,9 @@ export default {
       link.click();
     },
     jsonExport() {
-      
       let dataStr = JSON.stringify(this.farmsCsv);
-      let jsonContent = "data:application/json;charset=utf-8,"+ encodeURIComponent(dataStr);
+      let jsonContent =
+        "data:application/json;charset=utf-8," + encodeURIComponent(dataStr);
 
       const link = document.createElement("a");
       link.setAttribute("href", jsonContent);
@@ -228,3 +243,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.toggle.v-icon:focus::after {
+  background-color: transparent;
+}
+</style>
