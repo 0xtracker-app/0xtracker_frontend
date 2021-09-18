@@ -165,7 +165,11 @@ export default {
   methods: {
     ...mapActions("farmStore", ["getFarms", "setSelectedFarms"]),
     ...mapActions("generalStore", ["setWalletDialog"]),
-    ...mapActions("poolStore", ["getPoolsForFarms", "newGetPoolsForFarms"]),
+    ...mapActions("poolStore", [
+      "getPoolsForFarms",
+      "newGetPoolsForFarms",
+      "setLoading",
+    ]),
     ...mapActions("walletStore", ["loadWallet", "setWallet", "loadWallets"]),
     loadPortfolio() {
       if (this.$refs.form.validate()) {
@@ -182,7 +186,7 @@ export default {
       } else this.valid = false;
     },
     loadProfile(selected) {
-      this.$store.dispatch("setLoading", true);
+      this.setLoading(true);
 
       let skipFarmsData = [];
       const skipFarmsValues = Object.values(selected.skipFarms);
@@ -192,7 +196,7 @@ export default {
 
       selected.wallets.map((wallet) => {
         if (wallet.walletType === "EVM") {
-          this.loadWallets({'wallet' : wallet.walletAddress});
+          this.loadWallets({ wallet: wallet.walletAddress });
           this.farms.map((selectFarm) => {
             if (!skipFarmsData.includes(selectFarm.sendValue)) {
               this.newGetPoolsForFarms({
@@ -204,7 +208,7 @@ export default {
         }
       });
 
-      this.$store.dispatch("setLoading", false);
+      this.setLoading(false);
     },
   },
 };
