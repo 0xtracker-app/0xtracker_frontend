@@ -45,7 +45,7 @@
           <v-card class="card-shadow mb-6" :dark="darkmode">
             <div class="card-header-padding card-border-bottom">
               <v-row>
-                <v-col>
+                <v-col cols="12" sm="6">
                   <p
                     class="font-weight-600 text-h3 mb-0"
                     :class="{ 'text-muted': !darkmode }"
@@ -67,7 +67,44 @@
                     Farms
                   </p>
                 </v-col>
-                <v-col class="text-right">
+                <v-col
+                  cols="12"
+                  sm="6"
+                  class="text-right d-flex align-center justify-start justify-sm-end"
+                >
+                  <span class="font-weight-bold text-subtitle-2 mr-2">
+                    Export:
+                  </span>
+                  <v-btn
+                    text
+                    @click="csvExport()"
+                    v-bind="attrs"
+                    v-on="on"
+                    flat
+                    outlined
+                    x-small
+                    class="mr-2"
+                    :disabled="loading"
+                  >
+                    CSV
+                  </v-btn>
+                  <v-btn
+                    text
+                    @click="jsonExport()"
+                    v-bind="attrs"
+                    v-on="on"
+                    flat
+                    outlined
+                    x-small
+                    class="mr-6"
+                    :disabled="loading"
+                  >
+                    JSON
+                  </v-btn>
+
+                  <span class="font-weight-bold text-subtitle-2 mr-2">
+                    View:
+                  </span>
                   <p
                     class="font-weight-600 text-h3 mb-0"
                     :class="{ 'text-muted': !darkmode }"
@@ -133,10 +170,108 @@ export default {
     };
   },
   computed: {
-    ...mapGetters("generalStore", ["compactView", "darkmode"]),
+    ...mapGetters("generalStore", ["darkmode", "compactView"]),
+    loading() {
+      return (
+        this.$store.state.poolStore.loading ||
+        this.$store.state.walletStore.loading
+      );
+    },
+    walletBalancesList: function () {
+      return this.$store.state.walletStore.walletBalancesList;
+    },
+    unfilteredBalances: function () {
+      return this.walletBalancesList.map((balance) => {
+        return {
+          symbol: balance.symbol,
+          tokenBalance: balance.tokenBalance,
+          tokenPrice: balance.tokenPrice,
+          tokenValue: balance.tokenBalance * balance.tokenPrice,
+          tokenAddress: balance.token_address,
+          network: balance.network,
+        };
+      });
+    },
+    balances: function () {
+      const unfilteredBalances = this.unfilteredBalances;
+      return unfilteredBalances.filter(
+        (balance) => this.smallValues || balance.tokenValue > 1
+      );
+    },
+    farmsCsv: function () {
+      let array = [];
+      for (const contract in this.$store.state.farmStore.farmsWithData) {
+        if (
+          Object.hasOwnProperty.call(
+            this.$store.state.farmStore.farmsWithData,
+            contract
+          )
+        ) {
+          const farmData = this.$store.state.farmStore.farmsWithData[contract];
+          // just insert data you want in the pool data here
+          for (const pool in farmData.userData) {
+            if (
+              Object.hasOwnProperty.call(farmData.userData, pool) &&
+              farmData.type != "lending"
+            ) {
+              const poolData = farmData.userData[pool];
+              const flatPool = {
+                network: farmData.network,
+                farmName: farmData.name,
+                tokenPair: poolData.tokenPair,
+                actualStaked: poolData.actualStaked,
+                dollarValueStake: poolData.lpPrice,
+                dollarValuePending: poolData.pendingAmount,
+                totalDollarValue: poolData.lpPrice + poolData.pendingAmount,
+              };
+              array.push(flatPool);
+            }
+          }
+        }
+      }
+      for (const walletBalance in this.balances) {
+        const flatPool = {
+          network: this.balances[walletBalance].network,
+          farmName: "wallet",
+          tokenPair: this.balances[walletBalance].symbol,
+          actualStaked: this.balances[walletBalance].tokenBalance,
+          dollarValueStake: this.balances[walletBalance].tokenValue,
+          dollarValuePending: 0,
+          totalDollarValue: this.balances[walletBalance].tokenValue,
+        };
+        array.push(flatPool);
+      }
+      return array;
+    },
   },
   methods: {
     ...mapActions("generalStore", ["toggleCompactView"]),
+    csvExport() {
+      let csvContent = "data:text/csv;charset=utf-8,";
+      let arrData = this.farmsCsv;
+      csvContent += [
+        Object.keys(arrData[0]).join(","),
+        ...arrData.map((item) => Object.values(item).join(",")),
+      ]
+        .join("\n")
+        .replace(/(^\[)|(\]$)/gm, "");
+
+      const data = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", data);
+      link.setAttribute("download", "export.csv");
+      link.click();
+    },
+    jsonExport() {
+      let dataStr = JSON.stringify(this.farmsCsv);
+      let jsonContent =
+        "data:application/json;charset=utf-8," + encodeURIComponent(dataStr);
+
+      const link = document.createElement("a");
+      link.setAttribute("href", jsonContent);
+      link.setAttribute("download", "export.json");
+      link.click();
+    },
   },
 };
 </script>

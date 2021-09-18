@@ -175,7 +175,7 @@
             </v-row>
           </div>
           <div v-else>
-            <v-skeleton-loader type="card"></v-skeleton-loader>
+            <v-skeleton-loader type="article"></v-skeleton-loader>
           </div>
         </v-card-text>
       </v-card>
