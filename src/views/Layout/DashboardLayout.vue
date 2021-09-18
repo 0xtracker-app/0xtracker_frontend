@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <drawer :drawer="drawer"></drawer>
-    <v-main :class="{'darkmodebg': darkmode, 'bg-gradient-primary': !darkmode}">
+    <v-main :class="{ darkmodebg: darkmode, 'bg-gradient-primary': !darkmode }">
       <div
         @click="drawer = false"
         v-if="drawer"
@@ -33,11 +33,10 @@
       </fade-transition>
       <SponsorsFooter />
       <Footer v-if="!$route.meta.hideFooter" />
-      <v-snackbar
-        :value="alerts.length"
-        :timeout="-1"
-      >
-        <template v-for="(alert, index) in alerts"><p :key="index">{{alert}}</p></template>
+      <v-snackbar :value="alerts.length" :timeout="-1">
+        <template v-for="(alert, index) in alerts">
+          <p :key="index">{{ alert }}</p>
+        </template>
       </v-snackbar>
     </v-main>
   </v-app>
@@ -62,7 +61,7 @@ function initScrollbar(className) {
   }
 }
 
-import { mapGetters } from 'vuex';
+import { mapGetters } from "vuex";
 import { FadeTransition } from "vue2-transitions";
 import Drawer from "@/components/Drawer.vue";
 import AppBar from "@/components/AppBar.vue";
@@ -83,7 +82,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('generalStore', ['alerts', 'darkmode']),
+    ...mapGetters("generalStore", ["alerts", "darkmode"]),
   },
   methods: {
     initScrollbar() {

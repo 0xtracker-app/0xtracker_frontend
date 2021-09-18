@@ -16,22 +16,26 @@
           />
         </v-col>
       </v-row>
-      <v-row v-if="!loading && farmsByNetwork && Object.keys(farmsByNetwork).length">
-        <v-col v-for="(networkWithFarms, network) in farmsByNetwork" :key="network" class="mx-auto pt-0" lg="8">
-          <SupportedNetworkAndFarms :network="network" :farms="networkWithFarms" />
+      <v-row
+        v-if="!loading && farmsByNetwork && Object.keys(farmsByNetwork).length"
+      >
+        <v-col
+          v-for="(networkWithFarms, network) in farmsByNetwork"
+          :key="network"
+          class="mx-auto pt-0"
+          lg="8"
+        >
+          <SupportedNetworkAndFarms
+            :network="network"
+            :farms="networkWithFarms"
+          />
         </v-col>
       </v-row>
       <v-row v-else>
         <v-col class="mx-auto pt-0" lg="8">
-          <v-overlay
-            :absolute="true"
-            :value="loading"
-          >
+          <v-overlay :absolute="true" :value="loading">
             <div class="text-center">
-              <v-progress-circular
-                indeterminate
-                color="white"
-              />
+              <v-progress-circular indeterminate color="white" />
             </div>
           </v-overlay>
         </v-col>
@@ -40,7 +44,7 @@
   </div>
 </template>
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters } from "vuex";
 import HeaderTopDashboard from "@/components/HeaderTopDashboard.vue";
 import SupportedNetworkAndFarms from "@/components/SupportedNetworksAndFarms/SupportedNetworkAndFarms.vue";
 
@@ -50,19 +54,22 @@ export default {
     HeaderTopDashboard,
     SupportedNetworkAndFarms,
   },
-  data: () => ({      
-    search: '',
+  data: () => ({
+    search: "",
   }),
   computed: {
-    ...mapGetters('generalStore', ['darkmode']),
-    ...mapGetters('farmStore', ['farms']),
-    loading: function() {
+    ...mapGetters("generalStore", ["darkmode"]),
+    ...mapGetters("farmStore", ["farms"]),
+    loading: function () {
       return this.$store.state.farmStore.loading;
     },
     farmsByNetwork() {
       let farmsByNetwork = {};
-      this.farms.forEach(farm => {
-        if (this.search && farm.name.toLowerCase().includes(this.search.toLowerCase())) {
+      this.farms.forEach((farm) => {
+        if (
+          this.search &&
+          farm.name.toLowerCase().includes(this.search.toLowerCase())
+        ) {
           if (farmsByNetwork.hasOwnProperty(farm.network)) {
             farmsByNetwork[farm.network].push(farm);
           } else {
@@ -85,7 +92,7 @@ export default {
     this.getFarms();
   },
   methods: {
-    ...mapActions('farmStore', ['getFarms']),
+    ...mapActions("farmStore", ["getFarms"]),
   },
 };
 </script>

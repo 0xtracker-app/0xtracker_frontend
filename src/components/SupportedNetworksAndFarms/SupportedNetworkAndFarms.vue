@@ -6,7 +6,7 @@
           <p class="font-weight-600 text-h3 mb-0">{{ $t(network) }}</p>
         </v-col>
         <v-col class="text-right">
-          {{ $tc('farm', farms.length, { count: farms.length }) }}
+          {{ $tc("farm", farms.length, { count: farms.length }) }}
         </v-col>
       </v-row>
     </div>
@@ -24,7 +24,9 @@
           :sort-desc="false"
         >
           <template v-slot:item.featured="{ item }">
-            <v-icon color="green" v-if="item.featured === 1" class="pr-1">mdi-star-face</v-icon>
+            <v-icon color="green" v-if="item.featured === 1" class="pr-1"
+              >mdi-star-face</v-icon
+            >
             <v-icon v-else class="pr-1">mdi-emoticon-sad</v-icon>
           </template>
         </v-data-table>
@@ -41,21 +43,15 @@
         ></v-pagination>
       </div>
     </v-card-text>
-    <v-overlay
-      :absolute="true"
-      :value="loading"
-    >
+    <v-overlay :absolute="true" :value="loading">
       <div class="text-center">
-        <v-progress-circular
-          indeterminate
-          color="white"
-        ></v-progress-circular>
+        <v-progress-circular indeterminate color="white"></v-progress-circular>
       </div>
     </v-overlay>
   </v-card>
 </template>
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters } from "vuex";
 
 export default {
   name: "SupportedNetworkAndFarms",
@@ -67,21 +63,21 @@ export default {
     return {
       headers: [
         {
-          text: 'Name',
-          align: 'center',
+          text: "Name",
+          align: "center",
           sortable: true,
-          value: 'name',
+          value: "name",
         },
         // { text: 'Network', value: 'network', align: 'center', },
-        { text: 'Featured', value: 'featured', align: 'center', },
+        { text: "Featured", value: "featured", align: "center" },
       ],
       page: 1,
       pageCount: 0,
     };
   },
   computed: {
-    ...mapGetters('generalStore', ['darkmode']),
-    loading: function() {
+    ...mapGetters("generalStore", ["darkmode"]),
+    loading: function () {
       return this.$store.state.farmStore.loading;
     },
   },

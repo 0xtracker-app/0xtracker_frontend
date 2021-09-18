@@ -12,7 +12,11 @@
       <v-list-item-content class="pa-0">
         <v-list-item-title class="title d-flex align-center mb-0">
           <div class="v-navigation-drawer-brand pa-5 d-flex align-center">
-            <img v-if="darkmode" src="@/assets/0xtracker-white.svg" class="w-70" />
+            <img
+              v-if="darkmode"
+              src="@/assets/0xtracker-white.svg"
+              class="w-70"
+            />
             <img v-else src="@/assets/0xtracker-black.svg" class="w-70" />
           </div>
 
@@ -31,8 +35,8 @@
         </v-list-item-title>
       </v-list-item-content>
     </v-list-item>
-    
-    <div class="border-bottom ma-0"/>
+
+    <div class="border-bottom ma-0" />
 
     <v-list nav dense>
       <v-list-item-group>
@@ -49,13 +53,16 @@
             <v-icon v-text="item.icon"></v-icon>
           </v-list-item-icon>
           <v-list-item-content>
-            <v-list-item-title v-text="item.title" :class="{'text-white': darkmode}" />
+            <v-list-item-title
+              v-text="item.title"
+              :class="{ 'text-white': darkmode }"
+            />
           </v-list-item-content>
         </v-list-item>
       </v-list-item-group>
     </v-list>
 
-    <div class="border-bottom ma-0"/>
+    <div class="border-bottom ma-0" />
 
     <v-list nav dense>
       <v-list-item-group>
@@ -66,12 +73,22 @@
           active-class=""
         >
           <v-list-item-icon>
-            <v-icon v-if="connectedWallet" v-text="'fas fa-plug v-icon-drawer'" color="green" />
+            <v-icon
+              v-if="connectedWallet"
+              v-text="'fas fa-plug v-icon-drawer'"
+              color="green"
+            />
             <v-icon v-else v-text="'fas fa-plug v-icon-drawer'" />
           </v-list-item-icon>
           <v-list-item-content>
-            <v-list-item-title v-if="connectedWallet" :class="{'text-white': darkmode}">Connected: {{ connectedWalletShort }}</v-list-item-title>
-            <v-list-item-title v-else :class="{'text-white': darkmode}">Connect Wallet</v-list-item-title>
+            <v-list-item-title
+              v-if="connectedWallet"
+              :class="{ 'text-white': darkmode }"
+              >Connected: {{ connectedWalletShort }}</v-list-item-title
+            >
+            <v-list-item-title v-else :class="{ 'text-white': darkmode }"
+              >Connect Wallet</v-list-item-title
+            >
           </v-list-item-content>
         </v-list-item>
       </v-list-item-group>
@@ -80,8 +97,8 @@
   </v-navigation-drawer>
 </template>
 <script>
-import { mapActions, mapGetters } from 'vuex';
-import WalletConnectDialog from '@/components/Wallet/WalletConnectDialog'
+import { mapActions, mapGetters } from "vuex";
+import WalletConnectDialog from "@/components/Wallet/WalletConnectDialog";
 
 export default {
   components: {
@@ -128,8 +145,8 @@ export default {
     currentRoute() {
       return this.$route.name;
     },
-    ...mapGetters('generalStore', ['darkmode']),
-    ...mapGetters('walletStore', ['connectedWallet', 'connectedWalletShort']),
+    ...mapGetters("generalStore", ["darkmode"]),
+    ...mapGetters("walletStore", ["connectedWallet", "connectedWalletShort"]),
   },
   watch: {
     "$vuetify.breakpoint.mobile"(val) {
@@ -137,8 +154,8 @@ export default {
     },
   },
   methods: {
-    ...mapActions('generalStore', ['setWalletDialog']),
-    ...mapActions('walletStore', ['connectWallet']),
+    ...mapActions("generalStore", ["setWalletDialog"]),
+    ...mapActions("walletStore", ["connectWallet"]),
     minifyDrawer() {
       this.togglerActive = !this.togglerActive;
       this.mini = !this.mini;

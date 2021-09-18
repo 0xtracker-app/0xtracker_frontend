@@ -3,9 +3,7 @@
     <v-card-text class="card-stats-padding">
       <v-row no-gutters>
         <v-col cols="12" lg="9" md="9">
-          <div
-            class="font-weight-600 text-muted text-uppercase text-h5"
-          >
+          <div class="font-weight-600 text-muted text-uppercase text-h5">
             Farms
           </div>
           <p class="font-weight-600 text-h2 mb-0">
@@ -14,9 +12,7 @@
         </v-col>
         <v-col class="text-right">
           <v-avatar color="bg-gradient-success">
-            <v-icon size="20" class="text-white">
-              fas fa-tractor
-            </v-icon>
+            <v-icon size="20" class="text-white"> fas fa-tractor </v-icon>
           </v-avatar>
         </v-col>
       </v-row>
@@ -25,33 +21,30 @@
         <span class="text-success me-2">3.48%</span> Since last month
       </p> -->
     </v-card-text>
-    <v-overlay
-      :absolute="true"
-      :value="loading"
-    >
+    <v-overlay :absolute="true" :value="loading">
       <div class="text-center">
-        <v-progress-circular
-          indeterminate
-          color="white"
-        ></v-progress-circular>
+        <v-progress-circular indeterminate color="white"></v-progress-circular>
       </div>
     </v-overlay>
   </v-card>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters } from "vuex";
 
 export default {
   name: "Farms",
   computed: {
-    ...mapGetters('generalStore', ['darkmode', 'round']),
-    loading: function() {
-      return this.$store.state.poolStore.loading;
+    ...mapGetters("generalStore", ["darkmode", "round"]),
+    loading: function () {
+      return (
+        this.$store.state.poolStore.loading ||
+        this.$store.state.walletStore.loading
+      );
     },
-    farmsValue: function() {
+    farmsValue: function () {
       return this.$store.state.farmStore.farmsValue;
     },
   },
-}
+};
 </script>

@@ -9,7 +9,10 @@
         <v-col cols="12" lg="12" class="pt-6">
           <v-card class="card-shadow mb-6" :dark="darkmode">
             <div class="card-header-padding card-border-bottom">
-              <p class="font-weight-600 text-h3 mb-0" :class="{'text-muted': !darkmode}">
+              <p
+                class="font-weight-600 text-h3 mb-0"
+                :class="{ 'text-muted': !darkmode }"
+              >
                 <v-tooltip bottom>
                   <template v-slot:activator="{ on, attrs }">
                     <v-icon
@@ -18,7 +21,7 @@
                       v-on="on"
                       class="mr-1 pb-1"
                     >
-                      {{ showWallet ? 'fas fa-eye-slash' : 'fas fa-eye' }}
+                      {{ showWallet ? "fas fa-eye-slash" : "fas fa-eye" }}
                     </v-icon>
                   </template>
                   <span v-if="showWallet">Hide Wallet Details</span>
@@ -27,7 +30,7 @@
                 Wallet
               </p>
             </div>
-
+            <v-divider></v-divider>
             <v-card-text class="px-0 py-0">
               <v-slide-y-transition>
                 <div v-show="showWallet">
@@ -41,29 +44,58 @@
         <v-col cols="12" lg="12" class="pt-6">
           <v-card class="card-shadow mb-6" :dark="darkmode">
             <div class="card-header-padding card-border-bottom">
-              <p class="font-weight-600 text-h3 mb-0" :class="{'text-muted': !darkmode}">
-                <v-tooltip bottom>
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-icon
-                      @click="showFarms = !showFarms"
-                      v-bind="attrs"
-                      v-on="on"
-                      class="mr-1 pb-1"
-                    >
-                      {{ showFarms ? 'fas fa-eye-slash' : 'fas fa-eye' }}
-                    </v-icon>
-                  </template>
-                  <span v-if="showFarms">Hide Farms Details</span>
-                  <span v-else>Show Farms Details</span>
-                </v-tooltip>
-                Farms
-              </p>
+              <v-row>
+                <v-col>
+                  <p
+                    class="font-weight-600 text-h3 mb-0"
+                    :class="{ 'text-muted': !darkmode }"
+                  >
+                    <v-tooltip bottom>
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-icon
+                          @click="showFarms = !showFarms"
+                          v-bind="attrs"
+                          v-on="on"
+                          class="mr-1 pb-1"
+                        >
+                          {{ showFarms ? "fas fa-eye-slash" : "fas fa-eye" }}
+                        </v-icon>
+                      </template>
+                      <span v-if="showFarms">Hide Farms Details</span>
+                      <span v-else>Show Farms Details</span>
+                    </v-tooltip>
+                    Farms
+                  </p>
+                </v-col>
+                <v-col class="text-right">
+                  <p
+                    class="font-weight-600 text-h3 mb-0"
+                    :class="{ 'text-muted': !darkmode }"
+                  >
+                    <v-tooltip bottom>
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-icon
+                          @click="toggleCompactView()"
+                          v-bind="attrs"
+                          v-on="on"
+                          class="mr-1 pb-1 toggle"
+                        >
+                          {{ compactView ? "fas fa-list" : "fas fa-th-large" }}
+                        </v-icon>
+                      </template>
+                      <span v-if="compactView">Toggle Card View</span>
+                      <span v-else>Toggle List View</span>
+                    </v-tooltip>
+                  </p>
+                </v-col>
+              </v-row>
             </div>
-
+            <v-divider></v-divider>
             <v-card-text class="px-0 py-0">
               <v-slide-y-transition>
                 <div v-show="showFarms">
                   <FarmsWithoutData />
+                  <v-divider></v-divider>
                   <Farms />
                 </div>
               </v-slide-y-transition>
@@ -76,8 +108,8 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-import HorizontalForm from '@/views/Forms/HorizontalForm.vue'
+import { mapGetters, mapActions } from "vuex";
+import HorizontalForm from "@/views/Forms/HorizontalForm.vue";
 import HeaderTopDashboard from "@/components/HeaderTopDashboard.vue";
 import ValueCards from "@/views/Dashboard/Widgets/ValueCards.vue";
 import Wallet from "@/views/Wallet/Wallet.vue";
@@ -101,7 +133,16 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('generalStore', ['darkmode']),
+    ...mapGetters("generalStore", ["compactView", "darkmode"]),
+  },
+  methods: {
+    ...mapActions("generalStore", ["toggleCompactView"]),
   },
 };
 </script>
+
+<style scoped>
+.toggle.v-icon:focus::after {
+  background-color: transparent;
+}
+</style>

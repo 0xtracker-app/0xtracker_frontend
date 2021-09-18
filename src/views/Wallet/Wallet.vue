@@ -1,7 +1,16 @@
 <template>
   <div>
-    <v-card v-if="balances.length" class="card-shadow">
+    <v-card v-if="balances.length">
       <v-card-text class="px-0 py-0">
+        <v-progress-linear
+          v-show="loading"
+          :indeterminate="loading"
+          color="#5e72e4"
+          slot="progress"
+        ></v-progress-linear>
+        <v-overlay :absolute="true" :value="loading">
+          <div class="text-center"></div>
+        </v-overlay>
         <v-data-table
           :headers="headers"
           :items="balances"
@@ -13,6 +22,12 @@
           sort-by="tokenValue"
           :sort-desc="true"
         >
+          <template v-slot:item.symbol="{ item }">
+            <v-avatar size="25" class="mr-1">
+              <v-img :src="getTokenLogo(item.network, item.tokenAddress)" />
+            </v-avatar>
+            {{ item.symbol }}
+          </template>
           <template v-slot:item.tokenBalance="{ item }">
             {{ item.tokenBalance | to2Decimals(round) }}
           </template>
@@ -40,8 +55,8 @@
   </div>
 </template>
 <script>
-import { mapActions, mapGetters } from 'vuex';
-import NoDataCard from '@/components/Cards/NoDataCard.vue';
+import { mapActions, mapGetters } from "vuex";
+import NoDataCard from "@/components/Cards/NoDataCard.vue";
 
 export default {
   components: {
@@ -51,35 +66,46 @@ export default {
     return {
       headers: [
         {
-          text: 'Ticker',
-          align: 'start',
+          text: "Ticker",
+          align: "start",
           sortable: true,
-          value: 'symbol',
+          value: "symbol",
         },
-        { text: 'Balance', value: 'tokenBalance' },
-        { text: 'Price', value: 'tokenPrice' },
-        { text: 'Value', value: 'tokenValue' },
+        { text: "Balance", value: "tokenBalance" },
+        { text: "Price", value: "tokenPrice" },
+        { text: "Value", value: "tokenValue" },
       ],
       page: 1,
       pageCount: 0,
     };
   },
   computed: {
-    ...mapGetters('generalStore', ['darkmode', 'smallValues', 'round']),
-    loading: function() {
+    ...mapGetters("generalStore", ["darkmode", "smallValues", "round"]),
+    loading: function () {
       return this.$store.state.walletStore.loading;
     },
-    walletBalancesList: function() {
+    walletBalancesList: function () {
       return this.$store.state.walletStore.walletBalancesList;
     },
-    unfilteredBalances: function() {
-      return this.walletBalancesList.map(balance => {return { symbol: balance.symbol, tokenBalance: balance.tokenBalance, tokenPrice: balance.tokenPrice, tokenValue: balance.tokenBalance*balance.tokenPrice }});
+    unfilteredBalances: function () {
+      return this.walletBalancesList.map((balance) => {
+        return {
+          symbol: balance.symbol,
+          tokenBalance: balance.tokenBalance,
+          tokenPrice: balance.tokenPrice,
+          tokenValue: balance.tokenBalance * balance.tokenPrice,
+          tokenAddress: balance.token_address,
+          network: balance.network,
+        };
+      });
     },
-    balances: function() {
-      const unfilteredBalances =  this.unfilteredBalances;
-      return unfilteredBalances.filter(balance => this.smallValues || balance.tokenValue > 1);
+    balances: function () {
+      const unfilteredBalances = this.unfilteredBalances;
+      return unfilteredBalances.filter(
+        (balance) => this.smallValues || balance.tokenValue > 1
+      );
     },
-    total: function() {
+    total: function () {
       let total = 0;
       for (const balance of this.unfilteredBalances) {
         total += balance.tokenValue;
@@ -96,7 +122,20 @@ export default {
     },
   },
   methods: {
-    ...mapActions('walletStore', ['loadWallet', 'setWalletValue']),
+    ...mapActions("walletStore", ["loadWallet", "setWalletValue"]),
+    getTokenLogo(network, token) {
+      try {
+        return require(`@/assets/images/tokens/${network}/${token.toLowerCase()}.png`);
+      } catch (_) {
+        return require(`@/assets/images/tokens/default.png`);
+      }
+    },
   },
 };
 </script>
+
+<style>
+.v-data-table__progress .column {
+  padding: 0px !important;
+}
+</style>

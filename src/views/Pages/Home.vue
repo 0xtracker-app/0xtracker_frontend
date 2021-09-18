@@ -3,14 +3,7 @@
     <v-col cols="12" md="8">
       <VerticalForm class="pb-5" />
       <SponsorsFooter />
-      <v-btn
-        @click="toggleDarkMode()"
-        :dark="darkmode"
-        fixed
-        bottom
-        right
-        fab
-      >
+      <v-btn @click="toggleDarkMode()" :dark="darkmode" fixed bottom right fab>
         <v-icon v-if="darkmode">mdi-weather-sunny</v-icon>
         <v-icon v-else>mdi-weather-night</v-icon>
       </v-btn>
@@ -19,9 +12,9 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
-import VerticalForm from '@/views/Forms/VerticalForm.vue'
-import SponsorsFooter from '@/components/SponsorsFooter.vue'
+import { mapActions, mapGetters } from "vuex";
+import VerticalForm from "@/views/Forms/VerticalForm.vue";
+import SponsorsFooter from "@/components/SponsorsFooter.vue";
 
 export default {
   components: {
@@ -32,11 +25,11 @@ export default {
     showEasySubmit: Boolean,
   },
   computed: {
-    ...mapGetters('generalStore', ['darkmode']),
+    ...mapGetters("generalStore", ["darkmode"]),
   },
   methods: {
-    ...mapActions('generalStore', ['toggleDarkMode']),
-  }
+    ...mapActions("generalStore", ["toggleDarkMode"]),
+  },
 };
 </script>
 
