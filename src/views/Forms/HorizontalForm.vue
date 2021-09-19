@@ -166,7 +166,7 @@ export default {
     ...mapActions("farmStore", ["getFarms", "setSelectedFarms"]),
     ...mapActions("generalStore", ["setWalletDialog"]),
     ...mapActions("poolStore", ["getPoolsForFarms", "newGetPoolsForFarms"]),
-    ...mapActions("walletStore", ["loadWallet", "setWallet", "loadWallets"]),
+    ...mapActions("walletStore", ["loadWallet", "setWallet", "loadWallets", "loadCosmosWallet"]),
     loadPortfolio() {
       if (this.$refs.form.validate()) {
         // .catch(()=>{}); to prevent error when navigating to the same component with the same params
@@ -199,6 +199,8 @@ export default {
               });
             }
           });
+        } else if (wallet.walletType === "Cosmos") {
+          this.loadCosmosWallet({ wallet: wallet.walletAddress });
         }
       });
     },

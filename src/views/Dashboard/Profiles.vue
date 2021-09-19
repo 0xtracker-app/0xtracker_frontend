@@ -358,7 +358,7 @@ export default {
       walletAddress: "",
       walletType: "",
       currentWalletId: null,
-      walletTypes: ["EVM", "Solana"],
+      walletTypes: ["EVM", "Solana", "Cosmos"],
     };
   },
   computed: {
