@@ -18,6 +18,8 @@ const farmStore = {
       (value) => (value && value.length >= 1) || "Min 1 farm.",
     ],
     farms: [],
+    cosmosFarms: [],
+    solFarms: [],
     farmsWithData: {},
     farmsWithoutData: {},
     loading: false,
@@ -26,12 +28,24 @@ const farmStore = {
   },
   getters: {
     farms: (state) => state.farms,
+    cosmosFarms: (state) => state.cosmosFarms,
+    solFarms: (state) => state.solFarms,
     selectedFarms: (state) => state.selectedFarms,
     farmRules: (state) => state.farmRules,
   },
   mutations: {
     SET_FARMS(state, farms) {
       state.farms = farms;
+    },
+    SET_COSMOS_FARMS(state, farms) {
+      state.cosmosFarms = farms.filter(function (el) {
+        return el.network == "cosmos";
+      });
+    },
+    SET_SOL_FARMS(state, farms) {
+      state.solFarms = farms.filter(function (el) {
+        return el.network == "sol";
+      });
     },
     SET_FARMS_VALUE(state, newValue) {
       state.farmsValue = newValue;
@@ -50,6 +64,7 @@ const farmStore = {
     },
     SET_FARMS_WITH_DATA(state, value) {
       Vue.set(state, "farmsWithData", value);
+      console.log(value);
     },
     SET_FARMS_WITHOUT_DATA(state, value) {
       Vue.set(state, "farmsWithoutData", value);
@@ -67,6 +82,8 @@ const farmStore = {
         commit("SET_LOADING", true);
         const response = await axios.get(process.env.VUE_APP_FARMS_URL);
         commit("SET_FARMS", response.data);
+        commit("SET_COSMOS_FARMS", response.data);
+        commit("SET_SOL_FARMS", response.data);
         commit("SET_LOADING", false);
       } catch (error) {
         commit("generalStore/ADD_ALERT", error, { root: true });
