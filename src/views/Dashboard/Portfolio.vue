@@ -78,26 +78,24 @@
                   <v-btn
                     text
                     @click="csvExport()"
-                    v-bind="attrs"
-                    v-on="on"
-                    flat
                     outlined
                     x-small
                     class="mr-2"
-                    :disabled="loading"
+                    :disabled="
+                      loading || Object.keys(farmsWithData).length === 0
+                    "
                   >
                     CSV
                   </v-btn>
                   <v-btn
                     text
                     @click="jsonExport()"
-                    v-bind="attrs"
-                    v-on="on"
-                    flat
                     outlined
                     x-small
                     class="mr-6"
-                    :disabled="loading"
+                    :disabled="
+                      loading || Object.keys(farmsWithData).length === 0
+                    "
                   >
                     JSON
                   </v-btn>
@@ -242,6 +240,23 @@ export default {
         array.push(flatPool);
       }
       return array;
+    },
+    farmsWithData() {
+      // getting object keys and sorting them highest to lowest into an array based on value of total,
+      // then adding the contract to the object so that it can be mapped back and removed from the
+      // farmsWith/Without objects when a single refresh is done
+      return Object.keys(this.$store.state.farmStore.farmsWithData)
+        .sort((a, b) =>
+          this.$store.state.farmStore.farmsWithData[a].total <
+          this.$store.state.farmStore.farmsWithData[b].total
+            ? 1
+            : -1
+        )
+        .map((contract) => {
+          let farm = this.$store.state.farmStore.farmsWithData[contract];
+          farm.contract = contract;
+          return farm;
+        });
     },
   },
   methods: {

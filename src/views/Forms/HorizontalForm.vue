@@ -117,7 +117,7 @@ export default {
     this.getFarms();
   },
   computed: {
-    ...mapState("farmStore", ["farms"]),
+    ...mapState("farmStore", ["farms", "cosmosFarms"]),
     ...mapGetters("generalStore", ["darkmode"]),
     ...mapGetters("farmStore", ["farmRules"]),
     ...mapGetters("walletStore", ["connectedWallet", "walletRules"]),
@@ -166,7 +166,12 @@ export default {
     ...mapActions("farmStore", ["getFarms", "setSelectedFarms"]),
     ...mapActions("generalStore", ["setWalletDialog"]),
     ...mapActions("poolStore", ["getPoolsForFarms", "newGetPoolsForFarms"]),
-    ...mapActions("walletStore", ["loadWallet", "setWallet", "loadWallets", "loadCosmosWallet"]),
+    ...mapActions("walletStore", [
+      "loadWallet",
+      "setWallet",
+      "loadWallets",
+      "loadCosmosWallet",
+    ]),
     loadPortfolio() {
       if (this.$refs.form.validate()) {
         // .catch(()=>{}); to prevent error when navigating to the same component with the same params
@@ -177,6 +182,7 @@ export default {
             params: { wallet: this.wallet, loadFarms: true, loadWallet: true },
           })
           .catch(() => {});
+        this.$store.commit("walletStore/SET_WALLET_BALANCES", []);
         this.loadWallet();
         this.getPoolsForFarms();
       } else this.valid = false;
@@ -187,20 +193,33 @@ export default {
       skipFarmsValues.map((farms) =>
         farms.map((farm) => skipFarmsData.push(farm))
       );
-
+      this.$store.commit("walletStore/SET_WALLET_BALANCES", []);
       selected.wallets.map((wallet) => {
         if (wallet.walletType === "EVM") {
           this.loadWallets({ wallet: wallet.walletAddress });
           this.farms.map((selectFarm) => {
-            if (!skipFarmsData.includes(selectFarm.sendValue)) {
+            if (
+              !skipFarmsData.includes(selectFarm.sendValue) &&
+              !["sol", "cosmos"].includes(selectFarm.network)
+            ) {
               this.newGetPoolsForFarms({
                 walletAddress: wallet.walletAddress,
                 selectFarm,
+                network: "evm",
               });
             }
           });
         } else if (wallet.walletType === "Cosmos") {
           this.loadCosmosWallet({ wallet: wallet.walletAddress });
+          this.cosmosFarms.map((selectFarm) => {
+            if (!skipFarmsData.includes(selectFarm.sendValue)) {
+              this.newGetPoolsForFarms({
+                walletAddress: wallet.walletAddress,
+                selectFarm,
+                network: "cosmos",
+              });
+            }
+          });
         }
       });
     },

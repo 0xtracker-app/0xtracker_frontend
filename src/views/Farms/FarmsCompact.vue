@@ -88,6 +88,9 @@
           <span class="font-weight-bold">{{ item.tokenPair }}</span>
         </div>
       </template>
+      <template v-slot:item.pendingAmount="{ item }">
+        {{ item.pendingAmount | toCurrency(round) }}
+      </template>
       <template v-slot:item.poolValue="{ item }">
         {{ (item.lpPrice + item.pendingAmount) | toCurrency(round) }}
       </template>
@@ -129,7 +132,8 @@ export default {
         { text: "Staked", value: "staked" },
         { text: "LP Balance", value: "lpTotal" },
         { text: "Pending Rewards", value: "pending" },
-        { text: "Value", value: "poolValue", sortable: true },
+        { text: "Pending Value", value: "pendingAmount", sortable: true },
+        { text: "Total Value", value: "poolValue", sortable: true },
         { text: "Actions", value: "actions" },
       ],
     };
@@ -146,6 +150,7 @@ export default {
     ...mapActions("generalStore", ["setSingleFarmDialog"]),
     ...mapActions("poolStore", ["getPoolItemDetails"]),
     getTokenLogo(network, token) {
+      console.log(network, token);
       try {
         return require(`@/assets/images/tokens/${network}/${token.toLowerCase()}.png`);
       } catch (_) {

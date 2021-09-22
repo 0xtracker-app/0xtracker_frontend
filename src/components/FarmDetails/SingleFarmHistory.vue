@@ -8,19 +8,12 @@
       :overlay-color="darkmode ? 'grey' : 'rgb(33, 33, 33)'"
       :overlay-opacity="darkmode ? 0.2 : 0.46"
     >
-      <v-card :dark="darkmode" class="py-3">
+      <v-card v-if="singleFarmDialog" :dark="darkmode" class="py-3">
         <p class="text-h3 font-weight-bold text-center mb-2 font-weight-bold">
           Farm Details
         </p>
         <v-divider></v-divider>
-        <v-card-text
-          :set="
-            (delta =
-              farmInfo.transactions.totalDeposits -
-              farmInfo.transactions.totalWithdrawls)
-          "
-          class="pt-6 mt-2"
-        >
+        <v-card-text class="pt-6 mt-2">
           <div v-if="farmInfo.transactions && !loading">
             <v-row class="mb-8">
               <v-col cols="6" md="4" class="my-2 text-center">
@@ -195,6 +188,12 @@ export default {
     ...mapGetters("poolStore", ["farmInfo"]),
     loading() {
       return this.$store.state.poolStore.singleFarmLoading;
+    },
+    delta() {
+      return (
+        this.farmInfo.transactions?.totalDeposits -
+        this.farmInfo.transactions?.totalWithdrawls
+      );
     },
   },
   methods: {

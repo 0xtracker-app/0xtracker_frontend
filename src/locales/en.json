@@ -7,5 +7,7 @@
   "kcc": "KuCoin Community Chain",
   "eth": "Ethereum",
   "harmony": "Harmony",
-  "avax": "Avalanche"
+  "avax": "Avalanche",
+  "cosmos" : "Cosmos",
+  "moon" : "Moon River"
 }

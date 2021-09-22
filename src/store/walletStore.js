@@ -511,7 +511,6 @@ const walletStore = {
     async loadWallet({ commit, state }) {
       try {
         commit("SET_LOADING", true);
-        commit("SET_WALLET_BALANCES", []);
         for (const network of state.walletNetworks) {
           const response = await axios.get(
             `${process.env.VUE_APP_MYBALANCES_URL}${state.wallet}/${network}`
@@ -534,24 +533,24 @@ const walletStore = {
       }
     },
     async loadCosmosWallet({ commit, state }, params) {
-      const network = 'cosmos'
+      const network = "cosmos";
       try {
         commit("SET_LOADING", true);
-        
-          const response = await axios.get(
-            `http://localhost:8000/cosmos-wallet/${params.wallet}`
-          );
-          if (!response || !response.data || response.data.error)
-            throw `No wallet data returned for ${i18n.t(
-              network
-            )}, you might need to retry.`;
-          commit("SET_WALLET_BALANCES", [
-            ...state.walletBalancesList,
-            ...response.data.map((walletBalance) => {
-              return { ...walletBalance,  network};
-            }),
-          ]);
-        
+
+        const response = await axios.get(
+          `${process.env.VUE_APP_COSMOS_WALLET_URL}${params.wallet}`
+        );
+        if (!response || !response.data || response.data.error)
+          throw `No wallet data returned for ${i18n.t(
+            network
+          )}, you might need to retry.`;
+        commit("SET_WALLET_BALANCES", [
+          ...state.walletBalancesList,
+          ...response.data.map((walletBalance) => {
+            return { ...walletBalance, network };
+          }),
+        ]);
+
         commit("SET_LOADING", false);
       } catch (error) {
         commit("generalStore/ADD_ALERT", error, { root: true });
