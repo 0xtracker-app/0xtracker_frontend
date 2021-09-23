@@ -105,7 +105,7 @@
         {{ item.pendingAmount | toCurrency(round) }}
       </template>
       <template v-slot:item.poolValue="{ item }">
-        {{ (item.lpPrice + item.pendingAmount) | toCurrency(round) }}
+        {{ item.poolValue | toCurrency(round) }}
       </template>
       <template v-slot:item.pending="{ item }">
         <div v-if="item.pending > 0">
@@ -165,7 +165,14 @@ export default {
         let pools = [];
         for (const key in this.farmsWithData) {
           if (Object.hasOwnProperty.call(this.farmsWithData, key)) {
-            const pool = this.farmsWithData[key];
+            const pool = Object.assign(
+              {
+                poolValue:
+                  this.farmsWithData[key].lpPrice +
+                  this.farmsWithData[key].pendingAmount,
+              },
+              this.farmsWithData[key]
+            );
             if (pool.lpPrice + pool.pendingAmount > 5) pools.push(pool);
           }
         }
