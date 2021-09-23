@@ -20,13 +20,21 @@
           mobile-breakpoint="0"
           @page-count="pageCount = $event"
           sort-by="tokenValue"
+          calculate-widths
           :sort-desc="true"
         >
           <template v-slot:item.symbol="{ item }">
-            <v-avatar size="25" class="mr-1">
-              <v-img :src="getTokenLogo(item.network, item.tokenAddress)" />
-            </v-avatar>
-            {{ item.symbol }}
+            <div class="d-flex">
+              <div class="d-flex justify-center align-center">
+                <v-avatar rounded tile size="20" class="mr-4">
+                  <v-img :src="getNetworkLogo(item.network)" />
+                </v-avatar>
+                <v-avatar size="20" class="mr-1">
+                  <v-img :src="getTokenLogo(item.network, item.tokenAddress)" />
+                </v-avatar>
+              </div>
+              {{ item.symbol }}
+            </div>
           </template>
           <template v-slot:item.tokenBalance="{ item }">
             {{ item.tokenBalance | to2Decimals(round) }}
@@ -67,7 +75,6 @@ export default {
       headers: [
         {
           text: "Ticker",
-          align: "start",
           sortable: true,
           value: "symbol",
         },
@@ -129,6 +136,9 @@ export default {
       } catch (_) {
         return require(`@/assets/images/tokens/default.png`);
       }
+    },
+    getNetworkLogo(network) {
+      return require(`@/assets/images/networks/${network}.jpg`);
     },
   },
 };

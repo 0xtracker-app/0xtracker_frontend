@@ -108,11 +108,11 @@ const generalStore = {
     restoreSession({ commit }, sessionToRestore) {
       if (sessionToRestore.darkmode)
         commit("SET_DARK_MODE", sessionToRestore.darkmode);
-      if (sessionToRestore.noLPPools)
+      if (!sessionToRestore.noLPPools)
         commit("SET_NO_LP_POOLS", sessionToRestore.noLPPools);
-      if (sessionToRestore.round)
+      if (!sessionToRestore.round)
         commit("SET_ROUNDING", sessionToRestore.round);
-      if (sessionToRestore.smallValues)
+      if (!sessionToRestore.smallValues)
         commit("SET_SMALL_VALUES", sessionToRestore.smallValues);
       if (sessionToRestore.version)
         commit("SET_VERSION", sessionToRestore.version);

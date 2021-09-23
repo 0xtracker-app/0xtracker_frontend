@@ -64,7 +64,6 @@ const farmStore = {
     },
     SET_FARMS_WITH_DATA(state, value) {
       Vue.set(state, "farmsWithData", value);
-      console.log(value);
     },
     SET_FARMS_WITHOUT_DATA(state, value) {
       Vue.set(state, "farmsWithoutData", value);

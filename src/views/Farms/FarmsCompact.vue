@@ -11,7 +11,7 @@
     </v-overlay>
     <v-data-table
       :headers="headers"
-      :items="farmsWithData"
+      :items="poolsWithoutTotalLP"
       :loading="loading"
       hide-default-footer
       :items-per-page="-1"
@@ -53,6 +53,19 @@
           </v-tooltip>
           <v-spacer />
         </v-card-actions>
+      </template>
+      <template v-slot:item.farmName="{ item }">
+        <div class="d-flex">
+          <div
+            style="width: 30px"
+            class="d-flex justify-center align-center mr-2"
+          >
+            <v-avatar rounded tile size="20">
+              <v-img :src="getNetworkLogo(item.network)" />
+            </v-avatar>
+          </div>
+          <span>{{ item.farmName }}</span>
+        </div>
       </template>
       <template v-slot:item.staked="{ item }">
         {{ item.actualStaked | to2Decimals(round) }}
@@ -139,23 +152,39 @@ export default {
     };
   },
   computed: {
-    ...mapGetters("generalStore", ["round"]),
+    ...mapGetters("generalStore", ["round", "noLPPools"]),
     ...mapGetters("walletStore", ["connectedWallet", "connectedWalletNetwork"]),
     ...mapGetters("poolStore", ["farmInfoNetworks"]),
     loading: function () {
       return this.$store.state.walletStore.loading;
+    },
+    poolsWithoutTotalLP: function () {
+      if (this.noLPPools) {
+        return this.farmsWithData;
+      } else {
+        let pools = [];
+        for (const key in this.farmsWithData) {
+          if (Object.hasOwnProperty.call(this.farmsWithData, key)) {
+            const pool = this.farmsWithData[key];
+            if (pool.lpPrice + pool.pendingAmount > 5) pools.push(pool);
+          }
+        }
+        return pools;
+      }
     },
   },
   methods: {
     ...mapActions("generalStore", ["setSingleFarmDialog"]),
     ...mapActions("poolStore", ["getPoolItemDetails"]),
     getTokenLogo(network, token) {
-      console.log(network, token);
       try {
         return require(`@/assets/images/tokens/${network}/${token.toLowerCase()}.png`);
       } catch (_) {
         return require(`@/assets/images/tokens/default.png`);
       }
+    },
+    getNetworkLogo(network) {
+      return require(`@/assets/images/networks/${network}.jpg`);
     },
   },
 };

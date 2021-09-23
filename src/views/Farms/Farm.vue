@@ -233,7 +233,7 @@ export default {
         for (const key in this.farm.userData) {
           if (Object.hasOwnProperty.call(this.farm.userData, key)) {
             const pool = this.farm.userData[key];
-            if (pool.lpPrice + pool.pendingAmount) pools.push(pool);
+            if (pool.lpPrice + pool.pendingAmount > 5) pools.push(pool);
           }
         }
         return pools;
