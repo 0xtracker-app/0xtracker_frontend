@@ -557,6 +557,34 @@ const walletStore = {
         commit("SET_LOADING", false);
       }
     },
+    async loadSolWallet({ commit, state }, params) {
+      const network = "sol";
+      if (process.env.VUE_APP_SOLANA_WALLET_URL) {
+        try {
+          commit("SET_LOADING", true);
+
+          const response = await axios.get(
+            `${process.env.VUE_APP_SOLANA_WALLET_URL}${params.wallet}`
+          );
+
+          if (!response || !response.data || response.data.error)
+            throw `No wallet data returned for ${i18n.t(
+              network
+            )}, you might need to retry.`;
+          commit("SET_WALLET_BALANCES", [
+            ...state.walletBalancesList,
+            ...response.data.map((walletBalance) => {
+              return { ...walletBalance, network };
+            }),
+          ]);
+
+          commit("SET_LOADING", false);
+        } catch (error) {
+          commit("generalStore/ADD_ALERT", error, { root: true });
+          commit("SET_LOADING", false);
+        }
+      }
+    },
     async loadWallets({ commit, state }, params) {
       try {
         commit("SET_LOADING", true);
