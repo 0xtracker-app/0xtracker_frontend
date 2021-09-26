@@ -8,7 +8,7 @@
     <v-row>
       <v-col cols="12">
         <v-row>
-          <v-col md="8" cols="12">
+          <v-col md="8" lg="9" cols="12">
             <v-row>
               <v-col cols="10">
                 <label for="" class="font-weight-600 mb-2 d-block text-white">
@@ -81,7 +81,7 @@
               </v-col>
             </v-row>
           </v-col>
-          <v-col md="4" cols="12">
+          <v-col md="4" lg="3" cols="12">
             <label for="" class="font-weight-600 mb-2 d-block text-white">
               Profiles
             </label>
