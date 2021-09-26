@@ -115,11 +115,6 @@ export default {
     togglerActive: false,
     itemsSimple: [
       {
-        icon: "fa-home v-icon-drawer",
-        link: "/home",
-        title: "Home",
-      },
-      {
         icon: "fa-piggy-bank v-icon-drawer",
         link: "/portfolio",
         title: "Portfolio",
