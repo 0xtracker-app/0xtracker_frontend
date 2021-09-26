@@ -227,48 +227,68 @@ const poolStore = {
       }
     },
     async getPoolsForSingleFarm({ commit, rootState }, { key, selectedFarm }) {
-      try {
-        commit("SET_LOADING", true);
-        commit("farmStore/REMOVE_FROM_FARMS_WITH_DATA", key, { root: true });
-        commit("farmStore/REMOVE_FROM_FARMS_WITHOUT_DATA", key, { root: true });
-        const response = await axios.get(
-          `${process.env.VUE_APP_MYFARM_URL}${rootState.walletStore.wallet}/${key}`
-        );
+      const processesArray = rootState.walletStore.recentQuery.profile.wallets.map(
+        async (wallet) => {
+          try {
+            commit("SET_LOADING", true);
+            commit("farmStore/REMOVE_FROM_FARMS_WITH_DATA", key, {
+              root: true,
+            });
+            commit("farmStore/REMOVE_FROM_FARMS_WITHOUT_DATA", key, {
+              root: true,
+            });
 
-        if (!response || !response.data || response.data.error)
-          throw `No data returned for some farms, you might need to retry.`;
-        if (Object.keys(response.data).length) {
-          for (const contract in response.data) {
-            const farm = response.data[contract];
-            if (farm?.total && farm.total > 0) {
-              commit(
-                "farmStore/ADD_TO_FARMS_WITH_DATA",
-                {
-                  key: contract,
-                  value: Object.assign(
-                    { name: farm.name, sendValue: selectedFarm.sendValue },
-                    farm
-                  ),
-                },
-                { root: true }
-              );
+            const apiEndpoint =
+              wallet.walletType === "EVM"
+                ? process.env.VUE_APP_MYFARM_URL
+                : wallet.type === "Cosmos"
+                ? process.env.VUE_APP_COSMOS_FARMS_URL
+                : wallet.type === "Solana"
+                ? process.env.VUE_APP_SOLANA_FARMS_URL
+                : "";
+
+            const response = await axios.get(
+              `${apiEndpoint}${wallet.walletAddress}/${key}`
+            );
+
+            if (!response || !response.data || response.data.error)
+              throw `No data returned for some farms, you might need to retry.`;
+            if (Object.keys(response.data).length) {
+              for (const contract in response.data) {
+                const farm = response.data[contract];
+                if (farm?.total && farm.total > 0) {
+                  commit(
+                    "farmStore/ADD_TO_FARMS_WITH_DATA",
+                    {
+                      key: contract,
+                      value: Object.assign(
+                        { name: farm.name, sendValue: selectedFarm.sendValue },
+                        farm
+                      ),
+                    },
+                    { root: true }
+                  );
+                }
+              }
             }
+          } catch (error) {
+            commit("generalStore/ADD_ALERT", error, { root: true });
+            const selectedFarmTemp = {};
+            // require the .assign to prevent modifying original state
+            Object.assign(selectedFarmTemp, selectedFarm);
+            selectedFarmTemp.error = true;
+            commit(
+              "farmStore/ADD_TO_FARMS_WITHOUT_DATA",
+              { key: key, value: selectedFarmTemp },
+              { root: true }
+            );
           }
         }
+      );
+
+      Promise.all(processesArray).then(() => {
         commit("SET_LOADING", false);
-      } catch (error) {
-        commit("generalStore/ADD_ALERT", error, { root: true });
-        commit("SET_LOADING", false);
-        const selectedFarmTemp = {};
-        // require the .assign to prevent modifying original state
-        Object.assign(selectedFarmTemp, selectedFarm);
-        selectedFarmTemp.error = true;
-        commit(
-          "farmStore/ADD_TO_FARMS_WITHOUT_DATA",
-          { key: key, value: selectedFarmTemp },
-          { root: true }
-        );
-      }
+      });
     },
     async getPoolItemDetails({ commit }, { item }) {
       commit("SET_SINGLE_FARM_LOADING", true);

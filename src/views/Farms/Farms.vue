@@ -111,11 +111,7 @@ export default {
   },
   methods: {
     ...mapActions("farmStore", ["setFarmsValue"]),
-    ...mapActions("poolStore", [
-      "getPoolsForFarms",
-      "getPoolsForSingleFarm",
-      "setPendingRewardsValue",
-    ]),
+    ...mapActions("poolStore", ["getPoolsForFarms", "setPendingRewardsValue"]),
   },
 };
 </script>
