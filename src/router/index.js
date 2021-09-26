@@ -1,47 +1,31 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import DashboardLayout from "../views/Layout/DashboardLayout.vue";
-import SinglePageLayout from "@/views/Layout/SinglePageLayout";
 
 // Dashboard pages
 const Portfolio = () => import("../views/Dashboard/Portfolio.vue");
-const SupportedNetworksAndFarms = () => import("../views/Dashboard/SupportedNetworksAndFarms.vue");
+const SupportedNetworksAndFarms = () =>
+  import("../views/Dashboard/SupportedNetworksAndFarms.vue");
 const Rev0x = () => import("../views/Dashboard/Rev0x.vue");
 const EditProfile = () => import("../views/Dashboard/Profiles.vue");
 const Settings = () => import("../views/Dashboard/Settings.vue");
 
-// Pages
-const Home = () => import(/* webpackChunkName: "pages" */ "@/views/Pages/Home.vue");
-
 Vue.use(VueRouter);
-
-let singlePages = {
-  path: "/",
-  component: SinglePageLayout,
-  name: "SinglePage",
-  children: [
-    {
-      path: "/home",
-      name: "Home",
-      component: Home,
-    },
-  ],
-};
 
 const routes = [
   {
     path: "/",
     name: "Dashboard",
-    redirect: "/home",
+    redirect: "/portfolio",
     component: DashboardLayout,
     children: [
       {
         path: "/portfolio/:wallet",
-        name: "Portfolio",
+        name: "Portfolio - Wallet Address",
         component: Portfolio,
       },
       {
-        path: "/portfolio/",
+        path: "/portfolio",
         name: "Portfolio",
         component: Portfolio,
       },
@@ -67,11 +51,14 @@ const routes = [
       },
     ],
   },
-  singlePages,
+  {
+    path: "/:pathMatch(.*)*",
+    redirect: "/",
+  },
 ];
 
 const router = new VueRouter({
-  mode: 'history',
+  mode: "history",
   routes,
 });
 
