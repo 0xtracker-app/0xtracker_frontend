@@ -188,7 +188,6 @@ export default {
       } else this.valid = false;
     },
     loadProfile(selected) {
-      console.log(selected);
       let skipFarmsData = [];
       const skipFarmsValues = Object.values(selected.skipFarms);
       skipFarmsValues.map((farms) =>
