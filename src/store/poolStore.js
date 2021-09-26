@@ -138,7 +138,7 @@ const poolStore = {
         commit("SET_LOADING", false);
       }
     },
-    async newGetPoolsForFarms({ commit, rootState }, params) {
+    async newGetPoolsForFarms({ commit }, params) {
       const walletAddress = params.walletAddress;
       const selectedFarms = [params.selectFarm];
       const farmNetworkUrl = {

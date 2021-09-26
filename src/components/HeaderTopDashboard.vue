@@ -64,12 +64,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions("poolStore", ["getPoolsForFarms", "newGetPoolsForFarms"]),
-    ...mapActions("walletStore", [
-      "loadWallet",
-      "loadPortfolio",
-      "loadProfile",
-    ]),
+    ...mapActions("walletStore", ["loadPortfolio", "loadProfile"]),
     executeRecentQuery() {
       if (this.recentQuery?.type === "portfolio") {
         this.loadPortfolio(this.recentQuery.profile.wallets[0]);

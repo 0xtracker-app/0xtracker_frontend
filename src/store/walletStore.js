@@ -510,9 +510,9 @@ const walletStore = {
         commit("SET_WALLET_PROVIDER", null);
         commit("SET_CONNECTED_WALLET_NETWORK", "");
         commit("generalStore/ADD_ALERT", "Wallet disconnected", { root: true });
-        commit("SET_LOADING", false);
       } catch (error) {
         commit("generalStore/ADD_ALERT", error, { root: true });
+      } finally {
         commit("SET_LOADING", false);
       }
     },
@@ -534,9 +534,9 @@ const walletStore = {
             }),
           ]);
         }
-        commit("SET_LOADING", false);
       } catch (error) {
         commit("generalStore/ADD_ALERT", error, { root: true });
+      } finally {
         commit("SET_LOADING", false);
       }
     },
@@ -558,10 +558,9 @@ const walletStore = {
             return { ...walletBalance, network };
           }),
         ]);
-
-        commit("SET_LOADING", false);
       } catch (error) {
         commit("generalStore/ADD_ALERT", error, { root: true });
+      } finally {
         commit("SET_LOADING", false);
       }
     },
@@ -585,10 +584,9 @@ const walletStore = {
               return { ...walletBalance, network };
             }),
           ]);
-
-          commit("SET_LOADING", false);
         } catch (error) {
           commit("generalStore/ADD_ALERT", error, { root: true });
+        } finally {
           commit("SET_LOADING", false);
         }
       }
@@ -597,24 +595,27 @@ const walletStore = {
       try {
         commit("SET_LOADING", true);
         commit("SET_WALLET_BALANCES", []);
-        for (const network of state.walletNetworks) {
-          const response = await axios.get(
-            `${process.env.VUE_APP_MYBALANCES_URL}${params.wallet}/${network}`
-          );
-          if (!response || !response.data || response.data.error)
-            throw `No wallet data returned for ${i18n.t(
-              network
-            )}, you might need to retry.`;
-          commit("SET_WALLET_BALANCES", [
-            ...state.walletBalancesList,
-            ...response.data.map((walletBalance) => {
-              return { ...walletBalance, network };
-            }),
-          ]);
-        }
-        commit("SET_LOADING", false);
+
+        await Promise.all(
+          state.walletNetworks.map(async (network) => {
+            const response = await axios.get(
+              `${process.env.VUE_APP_MYBALANCES_URL}${params.wallet}/${network}`
+            );
+            if (!response || !response.data || response.data.error)
+              throw `No wallet data returned for ${i18n.t(
+                network
+              )}, you might need to retry.`;
+            commit("SET_WALLET_BALANCES", [
+              ...state.walletBalancesList,
+              ...response.data.map((walletBalance) => {
+                return { ...walletBalance, network };
+              }),
+            ]);
+          })
+        );
       } catch (error) {
         commit("generalStore/ADD_ALERT", error, { root: true });
+      } finally {
         commit("SET_LOADING", false);
       }
     },
@@ -640,54 +641,74 @@ const walletStore = {
         farms.map((farm) => skipFarmsData.push(farm))
       );
       commit("SET_WALLET_BALANCES", []);
+
+      commit("farmStore/SET_LOADING", true, { root: true });
       profile.wallets.map((wallet) => {
         if (wallet.walletType === "EVM") {
           dispatch("loadWallets", { wallet: wallet.walletAddress });
-          rootState.farmStore.farms.map((selectFarm) => {
-            if (
-              !skipFarmsData.includes(selectFarm.sendValue) &&
-              !["sol", "cosmos"].includes(selectFarm.network)
-            ) {
-              dispatch(
-                "poolStore/newGetPoolsForFarms",
-                {
-                  walletAddress: wallet.walletAddress,
-                  selectFarm,
-                  network: "evm",
-                },
-                { root: true }
-              );
+          const processesArray = rootState.farmStore.farms.map(
+            async (selectFarm) => {
+              if (
+                !skipFarmsData.includes(selectFarm.sendValue) &&
+                !["sol", "cosmos"].includes(selectFarm.network)
+              ) {
+                await dispatch(
+                  "poolStore/newGetPoolsForFarms",
+                  {
+                    walletAddress: wallet.walletAddress,
+                    selectFarm,
+                    network: "evm",
+                  },
+                  { root: true }
+                );
+              }
             }
+          );
+
+          Promise.all(processesArray).then(() => {
+            commit("farmStore/SET_LOADING", false, { root: true });
           });
         } else if (wallet.walletType === "Cosmos") {
           dispatch("loadCosmosWallet", { wallet: wallet.walletAddress });
-          rootState.farmStore.cosmosFarms.map((selectFarm) => {
-            if (!skipFarmsData.includes(selectFarm.sendValue)) {
-              dispatch(
-                "poolStore/newGetPoolsForFarms",
-                {
-                  walletAddress: wallet.walletAddress,
-                  selectFarm,
-                  network: "cosmos",
-                },
-                { root: true }
-              );
+          const processesArray = rootState.farmStore.cosmosFarms.map(
+            (selectFarm) => {
+              if (!skipFarmsData.includes(selectFarm.sendValue)) {
+                dispatch(
+                  "poolStore/newGetPoolsForFarms",
+                  {
+                    walletAddress: wallet.walletAddress,
+                    selectFarm,
+                    network: "cosmos",
+                  },
+                  { root: true }
+                );
+              }
             }
+          );
+
+          Promise.all(processesArray).then(() => {
+            commit("farmStore/SET_LOADING", false, { root: true });
           });
         } else if (wallet.walletType === "Solana") {
           dispatch("loadSolWallet", { wallet: wallet.walletAddress });
-          rootState.farmStore.solFarms.map((selectFarm) => {
-            if (!skipFarmsData.includes(selectFarm.sendValue)) {
-              dispatch(
-                "poolStore/newGetPoolsForFarms",
-                {
-                  walletAddress: wallet.walletAddress,
-                  selectFarm,
-                  network: "sol",
-                },
-                { root: true }
-              );
+          const processesArray = rootState.farmStore.solFarms.map(
+            (selectFarm) => {
+              if (!skipFarmsData.includes(selectFarm.sendValue)) {
+                dispatch(
+                  "poolStore/newGetPoolsForFarms",
+                  {
+                    walletAddress: wallet.walletAddress,
+                    selectFarm,
+                    network: "sol",
+                  },
+                  { root: true }
+                );
+              }
             }
+          );
+
+          Promise.all(processesArray).then(() => {
+            commit("farmStore/SET_LOADING", false, { root: true });
           });
         }
       });
