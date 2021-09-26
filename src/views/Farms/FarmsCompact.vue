@@ -159,25 +159,27 @@ export default {
       return this.$store.state.walletStore.loading;
     },
     poolsWithoutTotalLP: function () {
-      if (this.noLPPools) {
-        return this.farmsWithData;
-      } else {
-        let pools = [];
-        for (const key in this.farmsWithData) {
-          if (Object.hasOwnProperty.call(this.farmsWithData, key)) {
-            const pool = Object.assign(
-              {
-                poolValue:
-                  this.farmsWithData[key].lpPrice +
-                  this.farmsWithData[key].pendingAmount,
-              },
-              this.farmsWithData[key]
-            );
-            if (pool.lpPrice + pool.pendingAmount > 5) pools.push(pool);
+      let pools = [];
+      for (const key in this.farmsWithData) {
+        if (Object.hasOwnProperty.call(this.farmsWithData, key)) {
+          const pool = Object.assign(
+            {
+              poolValue:
+                this.farmsWithData[key].lpPrice +
+                this.farmsWithData[key].pendingAmount,
+            },
+            this.farmsWithData[key]
+          );
+          if (this.noLPPools) {
+            pools.push(pool);
+          } else {
+            if (pool.lpPrice + pool.pendingAmount > 5) {
+              pools.push(pool);
+            }
           }
         }
-        return pools;
       }
+      return pools;
     },
   },
   methods: {
