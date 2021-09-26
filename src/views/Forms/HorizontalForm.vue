@@ -70,7 +70,7 @@
               :menu-props="darkmode ? 'dark' : 'light'"
               return-object
               class="font-size-input text-color-dark input-alternative input-focused-alternative input-icon mb-0"
-              @input="loadProfile"
+              @input="loadProfile({ profile: $event })"
             >
               <!-- <template v-slot:item="data">
                 <template>
@@ -95,7 +95,7 @@
           min-width="40"
           width="40"
           class="font-weight-600 text-capitalize btn-ls btn-default me-2 my-2 rounded-circle"
-          @click="loadPortfolio()"
+          @click="loadPortfolio({ walletAddress: wallet, walletType })"
           :dark="darkmode"
         >
           <v-icon size="18" color="#5e72e4">fa-arrow-circle-right</v-icon>
@@ -193,80 +193,9 @@ export default {
       "loadWallets",
       "loadCosmosWallet",
       "loadSolWallet",
+      "loadProfile",
+      "loadPortfolio",
     ]),
-    loadPortfolio() {
-      const data = {
-        name: "Single Wallet",
-        wallets: [
-          {
-            walletAddress: this.wallet,
-            walletType: this.walletType,
-          },
-        ],
-        skipNetworks: [],
-        skipFarms: {
-          kcc: [],
-          oke: [],
-          matic: [],
-          ftm: [],
-          eth: [],
-          harmony: [],
-          avax: [],
-          bsc: [],
-          cosmos: [],
-          moon: [],
-        },
-      };
-
-      this.loadProfile(data);
-    },
-    loadProfile(selected) {
-      let skipFarmsData = [];
-      const skipFarmsValues = Object.values(selected.skipFarms);
-      skipFarmsValues.map((farms) =>
-        farms.map((farm) => skipFarmsData.push(farm))
-      );
-      this.$store.commit("walletStore/SET_WALLET_BALANCES", []);
-      selected.wallets.map((wallet) => {
-        if (wallet.walletType === "EVM") {
-          this.loadWallets({ wallet: wallet.walletAddress });
-          this.farms.map((selectFarm) => {
-            if (
-              !skipFarmsData.includes(selectFarm.sendValue) &&
-              !["sol", "cosmos"].includes(selectFarm.network)
-            ) {
-              this.newGetPoolsForFarms({
-                walletAddress: wallet.walletAddress,
-                selectFarm,
-                network: "evm",
-              });
-            }
-          });
-        } else if (wallet.walletType === "Cosmos") {
-          this.loadCosmosWallet({ wallet: wallet.walletAddress });
-          this.cosmosFarms.map((selectFarm) => {
-            if (!skipFarmsData.includes(selectFarm.sendValue)) {
-              this.newGetPoolsForFarms({
-                walletAddress: wallet.walletAddress,
-                selectFarm,
-                network: "cosmos",
-              });
-            }
-          });
-        } else if (wallet.walletType === "Solana") {
-          this.loadSolWallet({ wallet: wallet.walletAddress });
-          this.solFarms.map((selectFarm) => {
-            if (!skipFarmsData.includes(selectFarm.sendValue)) {
-              this.newGetPoolsForFarms({
-                walletAddress: wallet.walletAddress,
-                selectFarm,
-                network: "sol",
-              });
-            }
-          });
-        }
-      });
-    },
     detectWalletType() {
       let isTypeEVM = ethers.utils.isAddress(this.wallet);
       let isTypeCosmos = WAValidator.validate(this.wallet, "cosmos");

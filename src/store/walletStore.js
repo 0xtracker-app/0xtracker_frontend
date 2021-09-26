@@ -306,6 +306,10 @@ const walletStore = {
       (value) => !!value || "Required.",
       (value) => (value && value.length >= 3) || "Min 3 characters.",
     ],
+    recentQuery: {
+      type: null,
+      profile: null,
+    },
   },
   getters: {
     connectedWallet: (state) => state.connectedWallet,
@@ -325,6 +329,7 @@ const walletStore = {
     },
     wallet: (state) => state.wallet,
     walletRules: (state) => state.walletRules,
+    recentQuery: (state) => state.recentQuery,
   },
   mutations: {
     SET_CONNECTED_WALLET(state, value) {
@@ -347,6 +352,9 @@ const walletStore = {
     },
     SET_WALLET_VALUE(state, value) {
       state.walletValue = value;
+    },
+    SET_RECENT_QUERY(state, value) {
+      state.recentQuery = value;
     },
   },
   actions: {
@@ -616,6 +624,95 @@ const walletStore = {
     },
     setWalletValue({ commit }, newValue) {
       commit("SET_WALLET_VALUE", newValue);
+    },
+    async loadProfile(
+      { dispatch, commit, rootState },
+      { profile, type = "profile" }
+    ) {
+      commit("SET_RECENT_QUERY", {
+        type,
+        profile,
+      });
+
+      let skipFarmsData = [];
+      const skipFarmsValues = Object.values(profile.skipFarms);
+      skipFarmsValues.map((farms) =>
+        farms.map((farm) => skipFarmsData.push(farm))
+      );
+      commit("SET_WALLET_BALANCES", []);
+      profile.wallets.map((wallet) => {
+        if (wallet.walletType === "EVM") {
+          dispatch("loadWallets", { wallet: wallet.walletAddress });
+          rootState.farmStore.farms.map((selectFarm) => {
+            if (
+              !skipFarmsData.includes(selectFarm.sendValue) &&
+              !["sol", "cosmos"].includes(selectFarm.network)
+            ) {
+              dispatch(
+                "poolStore/newGetPoolsForFarms",
+                {
+                  walletAddress: wallet.walletAddress,
+                  selectFarm,
+                  network: "evm",
+                },
+                { root: true }
+              );
+            }
+          });
+        } else if (wallet.walletType === "Cosmos") {
+          dispatch("loadCosmosWallet", { wallet: wallet.walletAddress });
+          rootState.farmStore.cosmosFarms.map((selectFarm) => {
+            if (!skipFarmsData.includes(selectFarm.sendValue)) {
+              dispatch(
+                "poolStore/newGetPoolsForFarms",
+                {
+                  walletAddress: wallet.walletAddress,
+                  selectFarm,
+                  network: "cosmos",
+                },
+                { root: true }
+              );
+            }
+          });
+        } else if (wallet.walletType === "Solana") {
+          dispatch("loadSolWallet", { wallet: wallet.walletAddress });
+          rootState.farmStore.solFarms.map((selectFarm) => {
+            if (!skipFarmsData.includes(selectFarm.sendValue)) {
+              dispatch(
+                "poolStore/newGetPoolsForFarms",
+                {
+                  walletAddress: wallet.walletAddress,
+                  selectFarm,
+                  network: "sol",
+                },
+                { root: true }
+              );
+            }
+          });
+        }
+      });
+    },
+    async loadPortfolio({ dispatch }, { walletAddress, walletType }) {
+      await dispatch("loadProfile", {
+        profile: {
+          name: "Single Wallet",
+          wallets: [{ walletAddress, walletType }],
+          skipNetworks: [],
+          skipFarms: {
+            kcc: [],
+            oke: [],
+            matic: [],
+            ftm: [],
+            eth: [],
+            harmony: [],
+            avax: [],
+            bsc: [],
+            cosmos: [],
+            moon: [],
+          },
+        },
+        type: "portfolio",
+      });
     },
   },
 };

@@ -21,18 +21,21 @@
       </v-col>
       <v-col v-if="showRefresh" cols="6" md="6" class="d-flex justify-end">
         <v-btn
-          :disabled="loading"
+          :disabled="
+            loading ||
+            Object.values(recentQuery).every((x) => x === null || x === '')
+          "
           elevation="0"
           small
           min-width="45"
           :ripple="false"
           class="me-3 py-1 px-2 font-weight-600 text-capitalize rounded-sm"
-          @click="loadPortfolio()"
+          @click="executeRecentQuery()"
           :dark="darkmode"
         >
-          <v-icon size=".875rem" class="mr-2" color="#5e72e4"
-            >fas fa-redo</v-icon
-          >
+          <v-icon size=".875rem" class="mr-2" color="primary">
+            fas fa-redo {{ loading ? "fa-spin" : "" }}
+          </v-icon>
           Refresh
         </v-btn>
       </v-col>
@@ -51,6 +54,7 @@ export default {
   },
   computed: {
     ...mapGetters("generalStore", ["darkmode"]),
+    ...mapGetters("walletStore", ["recentQuery"]),
     loading: function () {
       return (
         this.$store.state.farmStore.loading ||
@@ -60,16 +64,17 @@ export default {
     },
   },
   methods: {
-    ...mapActions("poolStore", ["getPoolsForFarms"]),
-    ...mapActions("walletStore", ["loadWallet"]),
-    loadPortfolio() {
-      if (
-        this.$store.state.walletStore.wallet &&
-        this.$store.state.farmStore.selectedFarms &&
-        this.$store.state.farmStore.selectedFarms.length
-      ) {
-        this.getPoolsForFarms();
-        this.loadWallet();
+    ...mapActions("poolStore", ["getPoolsForFarms", "newGetPoolsForFarms"]),
+    ...mapActions("walletStore", [
+      "loadWallet",
+      "loadPortfolio",
+      "loadProfile",
+    ]),
+    executeRecentQuery() {
+      if (this.recentQuery?.type === "portfolio") {
+        this.loadPortfolio(this.recentQuery.profile.wallets[0]);
+      } else if (this.recentQuery?.type === "profile") {
+        this.loadProfile(this.recentQuery);
       }
     },
   },
