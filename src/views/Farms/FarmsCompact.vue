@@ -156,7 +156,7 @@ export default {
     ...mapGetters("walletStore", ["connectedWallet", "connectedWalletNetwork"]),
     ...mapGetters("poolStore", ["farmInfoNetworks"]),
     loading: function () {
-      return this.$store.state.walletStore.loading;
+      return this.$store.state.farmStore.loading;
     },
     poolsWithoutTotalLP: function () {
       let pools = [];

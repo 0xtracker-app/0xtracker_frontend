@@ -32,7 +32,7 @@ export default {
   computed: {
     ...mapGetters("generalStore", ["compactView", "darkmode", "round"]),
     loading: function () {
-      return this.$store.state.walletStore.loading;
+      return this.$store.state.farmStore.loading;
     },
     farmsWithData: function () {
       // getting object keys and sorting them highest to lowest into an array based on value of total,
@@ -111,11 +111,7 @@ export default {
   },
   methods: {
     ...mapActions("farmStore", ["setFarmsValue"]),
-    ...mapActions("poolStore", [
-      "getPoolsForFarms",
-      "getPoolsForSingleFarm",
-      "setPendingRewardsValue",
-    ]),
+    ...mapActions("poolStore", ["getPoolsForFarms", "setPendingRewardsValue"]),
   },
 };
 </script>

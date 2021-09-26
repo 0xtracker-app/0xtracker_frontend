@@ -306,6 +306,10 @@ const walletStore = {
       (value) => !!value || "Required.",
       (value) => (value && value.length >= 3) || "Min 3 characters.",
     ],
+    recentQuery: {
+      type: null,
+      profile: null,
+    },
   },
   getters: {
     connectedWallet: (state) => state.connectedWallet,
@@ -325,6 +329,7 @@ const walletStore = {
     },
     wallet: (state) => state.wallet,
     walletRules: (state) => state.walletRules,
+    recentQuery: (state) => state.recentQuery,
   },
   mutations: {
     SET_CONNECTED_WALLET(state, value) {
@@ -347,6 +352,9 @@ const walletStore = {
     },
     SET_WALLET_VALUE(state, value) {
       state.walletValue = value;
+    },
+    SET_RECENT_QUERY(state, value) {
+      state.recentQuery = value;
     },
   },
   actions: {
@@ -502,9 +510,9 @@ const walletStore = {
         commit("SET_WALLET_PROVIDER", null);
         commit("SET_CONNECTED_WALLET_NETWORK", "");
         commit("generalStore/ADD_ALERT", "Wallet disconnected", { root: true });
-        commit("SET_LOADING", false);
       } catch (error) {
         commit("generalStore/ADD_ALERT", error, { root: true });
+      } finally {
         commit("SET_LOADING", false);
       }
     },
@@ -526,9 +534,9 @@ const walletStore = {
             }),
           ]);
         }
-        commit("SET_LOADING", false);
       } catch (error) {
         commit("generalStore/ADD_ALERT", error, { root: true });
+      } finally {
         commit("SET_LOADING", false);
       }
     },
@@ -550,21 +558,22 @@ const walletStore = {
             return { ...walletBalance, network };
           }),
         ]);
-
-        commit("SET_LOADING", false);
       } catch (error) {
         commit("generalStore/ADD_ALERT", error, { root: true });
+      } finally {
         commit("SET_LOADING", false);
       }
     },
-    async loadWallets({ commit, state }, params) {
-      try {
-        commit("SET_LOADING", true);
-        commit("SET_WALLET_BALANCES", []);
-        for (const network of state.walletNetworks) {
+    async loadSolWallet({ commit, state }, params) {
+      const network = "sol";
+      if (process.env.VUE_APP_SOLANA_WALLET_URL) {
+        try {
+          commit("SET_LOADING", true);
+
           const response = await axios.get(
-            `${process.env.VUE_APP_MYBALANCES_URL}${params.wallet}/${network}`
+            `${process.env.VUE_APP_SOLANA_WALLET_URL}${params.wallet}`
           );
+
           if (!response || !response.data || response.data.error)
             throw `No wallet data returned for ${i18n.t(
               network
@@ -575,10 +584,38 @@ const walletStore = {
               return { ...walletBalance, network };
             }),
           ]);
+        } catch (error) {
+          commit("generalStore/ADD_ALERT", error, { root: true });
+        } finally {
+          commit("SET_LOADING", false);
         }
-        commit("SET_LOADING", false);
+      }
+    },
+    async loadWallets({ commit, state }, params) {
+      try {
+        commit("SET_LOADING", true);
+        commit("SET_WALLET_BALANCES", []);
+
+        await Promise.all(
+          state.walletNetworks.map(async (network) => {
+            const response = await axios.get(
+              `${process.env.VUE_APP_MYBALANCES_URL}${params.wallet}/${network}`
+            );
+            if (!response || !response.data || response.data.error)
+              throw `No wallet data returned for ${i18n.t(
+                network
+              )}, you might need to retry.`;
+            commit("SET_WALLET_BALANCES", [
+              ...state.walletBalancesList,
+              ...response.data.map((walletBalance) => {
+                return { ...walletBalance, network };
+              }),
+            ]);
+          })
+        );
       } catch (error) {
         commit("generalStore/ADD_ALERT", error, { root: true });
+      } finally {
         commit("SET_LOADING", false);
       }
     },
@@ -588,6 +625,115 @@ const walletStore = {
     },
     setWalletValue({ commit }, newValue) {
       commit("SET_WALLET_VALUE", newValue);
+    },
+    async loadProfile(
+      { dispatch, commit, rootState },
+      { profile, type = "profile" }
+    ) {
+      commit("SET_RECENT_QUERY", {
+        type,
+        profile,
+      });
+
+      let skipFarmsData = [];
+      const skipFarmsValues = Object.values(profile.skipFarms);
+      skipFarmsValues.map((farms) =>
+        farms.map((farm) => skipFarmsData.push(farm))
+      );
+      commit("SET_WALLET_BALANCES", []);
+
+      commit("farmStore/SET_LOADING", true, { root: true });
+      profile.wallets.map((wallet) => {
+        if (wallet.walletType === "EVM") {
+          dispatch("loadWallets", { wallet: wallet.walletAddress });
+          const processesArray = rootState.farmStore.farms.map(
+            async (selectFarm) => {
+              if (
+                !skipFarmsData.includes(selectFarm.sendValue) &&
+                !["sol", "cosmos"].includes(selectFarm.network)
+              ) {
+                await dispatch(
+                  "poolStore/newGetPoolsForFarms",
+                  {
+                    walletAddress: wallet.walletAddress,
+                    selectFarm,
+                    network: "evm",
+                  },
+                  { root: true }
+                );
+              }
+            }
+          );
+
+          Promise.all(processesArray).then(() => {
+            commit("farmStore/SET_LOADING", false, { root: true });
+          });
+        } else if (wallet.walletType === "Cosmos") {
+          dispatch("loadCosmosWallet", { wallet: wallet.walletAddress });
+          const processesArray = rootState.farmStore.cosmosFarms.map(
+            (selectFarm) => {
+              if (!skipFarmsData.includes(selectFarm.sendValue)) {
+                dispatch(
+                  "poolStore/newGetPoolsForFarms",
+                  {
+                    walletAddress: wallet.walletAddress,
+                    selectFarm,
+                    network: "cosmos",
+                  },
+                  { root: true }
+                );
+              }
+            }
+          );
+
+          Promise.all(processesArray).then(() => {
+            commit("farmStore/SET_LOADING", false, { root: true });
+          });
+        } else if (wallet.walletType === "Solana") {
+          dispatch("loadSolWallet", { wallet: wallet.walletAddress });
+          const processesArray = rootState.farmStore.solFarms.map(
+            (selectFarm) => {
+              if (!skipFarmsData.includes(selectFarm.sendValue)) {
+                dispatch(
+                  "poolStore/newGetPoolsForFarms",
+                  {
+                    walletAddress: wallet.walletAddress,
+                    selectFarm,
+                    network: "sol",
+                  },
+                  { root: true }
+                );
+              }
+            }
+          );
+
+          Promise.all(processesArray).then(() => {
+            commit("farmStore/SET_LOADING", false, { root: true });
+          });
+        }
+      });
+    },
+    async loadPortfolio({ dispatch }, { walletAddress, walletType }) {
+      await dispatch("loadProfile", {
+        profile: {
+          name: "Single Wallet",
+          wallets: [{ walletAddress, walletType }],
+          skipNetworks: [],
+          skipFarms: {
+            kcc: [],
+            oke: [],
+            matic: [],
+            ftm: [],
+            eth: [],
+            harmony: [],
+            avax: [],
+            bsc: [],
+            cosmos: [],
+            moon: [],
+          },
+        },
+        type: "portfolio",
+      });
     },
   },
 };

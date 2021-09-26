@@ -31,7 +31,7 @@ export default {
       return this.$store.state.farmStore.farmsWithoutData;
     },
     loading: function () {
-      return this.$store.state.poolStore.loading;
+      return this.$store.state.farmStore.loading;
     },
   },
   methods: {

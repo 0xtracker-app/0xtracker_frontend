@@ -6,42 +6,85 @@
     lazy-validation
   >
     <v-row>
-      <v-col md="11" sm="11">
+      <v-col cols="12">
         <v-row>
-          <v-col md="8" sm="12">
-            <label for="" class="font-weight-600 mb-2 d-block text-white"
-              >Wallet Address</label
-            >
-            <v-text-field
-              v-model="wallet"
-              :disabled="loading"
-              rounded
-              outlined
-              solo
-              class="font-size-input placeholder-dark input-alternative input-icon"
-              :rules="walletRules"
-              :dark="darkmode"
-            >
-              <template slot="prepend-inner">
-                <v-icon size=".875rem">fas fa-wallet</v-icon>
-              </template>
-              <template
-                v-slot:append
-                v-if="!wallet || !connectedWallet || wallet !== connectedWallet"
-              >
-                <v-icon @click="setWalletDialog(true)"> fas fa-plug </v-icon>
-              </template>
-              <template v-slot:append v-else-if="connectedWallet">
-                <v-icon @click="setWalletDialog(true)" color="green">
-                  fas fa-plug
-                </v-icon>
-              </template>
-            </v-text-field>
+          <v-col md="8" lg="9" cols="12">
+            <v-row>
+              <v-col cols="10">
+                <label for="" class="font-weight-600 mb-2 d-block text-white">
+                  Wallet Address
+                </label>
+                <v-text-field
+                  v-model="wallet"
+                  :disabled="loading"
+                  rounded
+                  outlined
+                  solo
+                  class="font-size-input placeholder-dark input-alternative input-icon"
+                  :rules="walletRules"
+                  :dark="darkmode"
+                  @input="detectWalletType()"
+                >
+                  <template slot="prepend-inner">
+                    <v-icon size=".875rem">fas fa-wallet</v-icon>
+                  </template>
+                  <template
+                    v-slot:append
+                    v-if="
+                      !wallet || !connectedWallet || wallet !== connectedWallet
+                    "
+                  >
+                    <span
+                      v-if="wallet || walletType"
+                      class="caption px-2 font-weight-bold text-uppercase"
+                      :class="[walletType ? 'blue--text' : 'red--text']"
+                    >
+                      {{ walletType || "UNSUPPORTED" }}
+                    </span>
+                    <v-icon @click="setWalletDialog(true)">
+                      fas fa-plug
+                    </v-icon>
+                  </template>
+                  <template v-slot:append v-else-if="connectedWallet">
+                    <span
+                      v-if="wallet || walletType"
+                      class="caption px-2 font-weight-bold text-uppercase"
+                      :class="[walletType ? 'blue--text' : 'red--text']"
+                    >
+                      {{ walletType || "UNSUPPORTED" }}
+                    </span>
+                    <v-icon @click="setWalletDialog(true)" color="green">
+                      fas fa-plug
+                    </v-icon>
+                  </template>
+                </v-text-field>
+              </v-col>
+              <v-col cols="auto" class="text-center">
+                <label for="" class="font-weight-600 mb-3 d-block text-white">
+                  Go!
+                </label>
+                <v-btn
+                  :disabled="loading || !walletType"
+                  elevation="0"
+                  :ripple="false"
+                  height="40"
+                  min-width="40"
+                  width="40"
+                  class="font-weight-600 text-capitalize btn-ls btn-default rounded-circle"
+                  @click="loadPortfolio({ walletAddress: wallet, walletType })"
+                  :dark="darkmode"
+                >
+                  <v-icon size="18" color="#5e72e4"
+                    >fa-arrow-circle-right</v-icon
+                  >
+                </v-btn>
+              </v-col>
+            </v-row>
           </v-col>
-          <v-col md="4" sm="12">
-            <label for="" class="font-weight-600 mb-2 d-block text-white"
-              >Profiles</label
-            >
+          <v-col md="4" lg="3" cols="12">
+            <label for="" class="font-weight-600 mb-2 d-block text-white">
+              Profiles
+            </label>
             <v-select
               rounded
               outlined
@@ -52,10 +95,14 @@
               :items="userProfiles"
               placeholder="Select Profile"
               :dark="darkmode"
-              :menu-props="darkmode ? 'dark' : 'light'"
+              :menu-props="{
+                offsetY: true,
+                dark: darkmode,
+                light: !darkmode,
+              }"
               return-object
               class="font-size-input text-color-dark input-alternative input-focused-alternative input-icon mb-0"
-              @input="loadProfile"
+              @input="loadProfile({ profile: $event })"
             >
               <!-- <template v-slot:item="data">
                 <template>
@@ -68,30 +115,15 @@
           </v-col>
         </v-row>
       </v-col>
-      <v-col md="1" sm="1" class="text-center">
-        <label for="" class="font-weight-600 mb-1 d-block text-white"
-          >Go!</label
-        >
-        <v-btn
-          :disabled="loading"
-          elevation="0"
-          :ripple="false"
-          height="40"
-          min-width="40"
-          width="40"
-          class="font-weight-600 text-capitalize btn-ls btn-default me-2 my-2 rounded-circle"
-          @click="loadPortfolio()"
-          :dark="darkmode"
-        >
-          <v-icon size="18" color="#5e72e4">fa-arrow-circle-right</v-icon>
-        </v-btn>
-      </v-col>
     </v-row>
   </v-form>
 </template>
 
 <script>
 import { mapState, mapActions, mapGetters } from "vuex";
+import WAValidator from "trezor-address-validator";
+import { ethers } from "ethers";
+import { PublicKey } from "@solana/web3.js";
 
 export default {
   data() {
@@ -99,6 +131,7 @@ export default {
       selectedProfile: {},
       farmSearchInput: "",
       valid: true,
+      walletType: null,
     };
   },
   mounted() {
@@ -112,12 +145,14 @@ export default {
         .push({ name: "Portfolio", params: { wallet: this.wallet } })
         .catch(() => {});
     }
+
+    this.detectWalletType();
   },
   created() {
     this.getFarms();
   },
   computed: {
-    ...mapState("farmStore", ["farms", "cosmosFarms"]),
+    ...mapState("farmStore", ["farms", "cosmosFarms", "solFarms"]),
     ...mapGetters("generalStore", ["darkmode"]),
     ...mapGetters("farmStore", ["farmRules"]),
     ...mapGetters("walletStore", ["connectedWallet", "walletRules"]),
@@ -165,63 +200,33 @@ export default {
   methods: {
     ...mapActions("farmStore", ["getFarms", "setSelectedFarms"]),
     ...mapActions("generalStore", ["setWalletDialog"]),
-    ...mapActions("poolStore", ["getPoolsForFarms", "newGetPoolsForFarms"]),
     ...mapActions("walletStore", [
-      "loadWallet",
       "setWallet",
-      "loadWallets",
       "loadCosmosWallet",
+      "loadSolWallet",
+      "loadProfile",
+      "loadPortfolio",
     ]),
-    loadPortfolio() {
-      if (this.$refs.form.validate()) {
-        // .catch(()=>{}); to prevent error when navigating to the same component with the same params
-        // pushing additional params to trigger loading of farms and wallets when navigating from this page
-        this.$router
-          .push({
-            name: "Portfolio",
-            params: { wallet: this.wallet, loadFarms: true, loadWallet: true },
-          })
-          .catch(() => {});
-        this.$store.commit("walletStore/SET_WALLET_BALANCES", []);
-        this.loadWallet();
-        this.getPoolsForFarms();
-      } else this.valid = false;
-    },
-    loadProfile(selected) {
-      let skipFarmsData = [];
-      const skipFarmsValues = Object.values(selected.skipFarms);
-      skipFarmsValues.map((farms) =>
-        farms.map((farm) => skipFarmsData.push(farm))
-      );
-      this.$store.commit("walletStore/SET_WALLET_BALANCES", []);
-      selected.wallets.map((wallet) => {
-        if (wallet.walletType === "EVM") {
-          this.loadWallets({ wallet: wallet.walletAddress });
-          this.farms.map((selectFarm) => {
-            if (
-              !skipFarmsData.includes(selectFarm.sendValue) &&
-              !["sol", "cosmos"].includes(selectFarm.network)
-            ) {
-              this.newGetPoolsForFarms({
-                walletAddress: wallet.walletAddress,
-                selectFarm,
-                network: "evm",
-              });
-            }
-          });
-        } else if (wallet.walletType === "Cosmos") {
-          this.loadCosmosWallet({ wallet: wallet.walletAddress });
-          this.cosmosFarms.map((selectFarm) => {
-            if (!skipFarmsData.includes(selectFarm.sendValue)) {
-              this.newGetPoolsForFarms({
-                walletAddress: wallet.walletAddress,
-                selectFarm,
-                network: "cosmos",
-              });
-            }
-          });
-        }
-      });
+    detectWalletType() {
+      let isTypeEVM = ethers.utils.isAddress(this.wallet);
+      let isTypeCosmos = WAValidator.validate(this.wallet, "cosmos");
+      let isTypeSolana;
+      try {
+        const key = new PublicKey(this.wallet);
+        isTypeSolana = Boolean(key);
+      } catch (e) {
+        isTypeSolana = false;
+      }
+
+      const walletType = isTypeEVM
+        ? "EVM"
+        : isTypeCosmos
+        ? "Cosmos"
+        : isTypeSolana
+        ? "Solana"
+        : null;
+
+      this.walletType = walletType;
     },
   },
 };

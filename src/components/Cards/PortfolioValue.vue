@@ -38,7 +38,7 @@ export default {
     ...mapGetters("generalStore", ["darkmode", "round"]),
     loading: function () {
       return (
-        this.$store.state.poolStore.loading ||
+        this.$store.state.farmStore.loading ||
         this.$store.state.walletStore.loading
       );
     },
