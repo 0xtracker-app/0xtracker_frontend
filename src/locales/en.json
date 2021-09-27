@@ -9,5 +9,6 @@
   "harmony": "Harmony",
   "avax": "Avalanche",
   "cosmos" : "Cosmos",
-  "moon" : "Moon River"
+  "moon" : "Moon River",
+  "arb" : "Arbitrum"
 }
