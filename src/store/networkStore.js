@@ -10,6 +10,7 @@ const networkStore = {
       1: "eth",
       66: "oke",
       1666600000: "harmony",
+      42161: "arb",
     },
   },
   getters: {

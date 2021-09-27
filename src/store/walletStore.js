@@ -301,6 +301,7 @@ const walletStore = {
       "eth",
       "harmony",
       "avax",
+      "arb",
     ],
     walletRules: [
       (value) => !!value || "Required.",
@@ -730,6 +731,7 @@ const walletStore = {
             bsc: [],
             cosmos: [],
             moon: [],
+            arb: [],
           },
         },
         type: "portfolio",
