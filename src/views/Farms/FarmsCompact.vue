@@ -53,6 +53,68 @@
           </v-tooltip>
           <v-spacer />
         </v-card-actions>
+        <v-card-actions v-if="item.contractAddress && item.poolID">
+          <v-spacer />
+          <v-tooltip top>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                text
+                :disabled="
+                  !connectedWallet ||
+                  item.network != connectedWalletNetwork ||
+                  item.wallet !== connectedWallet
+                "
+                @click="
+                  harvestAll({
+                    contractAddress: item.contractAddress,
+                    poolIndex: item.poolID,
+                    rawTokens: item.rawStakes,
+                  })
+                "
+                v-bind="attrs"
+                v-on="on"
+                elevation="2"
+                outlined
+                x-small
+              >
+                WITHDRAW
+              </v-btn>
+            </template>
+            <span>Withdraw all funds including rewards.</span>
+          </v-tooltip>
+          <v-spacer />
+        </v-card-actions>
+        <v-card-actions v-if="item.contractAddress && item.poolID">
+          <v-spacer />
+          <v-tooltip top>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                text
+                :disabled="
+                  !connectedWallet ||
+                  item.network != connectedWalletNetwork ||
+                  item.wallet !== connectedWallet
+                "
+                @click="
+                  emergencyHarvest({
+                    contractAddress: item.contractAddress,
+                    poolIndex: item.poolID,
+                    rawTokens: item.rawStakes,
+                  })
+                "
+                v-bind="attrs"
+                v-on="on"
+                elevation="2"
+                outlined
+                x-small
+              >
+                E. WITHDRAW
+              </v-btn>
+            </template>
+            <span>Withdraw without caring about rewards. EMERGENCY ONLY.</span>
+          </v-tooltip>
+          <v-spacer />
+        </v-card-actions>
       </template>
       <template v-slot:item.farmName="{ item }">
         <div class="d-flex">
@@ -185,6 +247,11 @@ export default {
   methods: {
     ...mapActions("generalStore", ["setSingleFarmDialog"]),
     ...mapActions("poolStore", ["getPoolItemDetails"]),
+    ...mapActions("walletStore", [
+      "claimReward",
+      "emergencyHarvest",
+      "harvestAll",
+    ]),
     getTokenLogo(network, token) {
       try {
         return require(`@/assets/images/tokens/${network}/${token.toLowerCase()}.png`);

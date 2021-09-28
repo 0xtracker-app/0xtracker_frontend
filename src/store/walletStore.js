@@ -281,6 +281,13 @@ const ERC20_ABI = [
     stateMutability: "nonpayable",
     type: "function",
   },
+  {
+    inputs: [{ internalType: "uint256", name: "_pid", type: "uint256" }],
+    name: "withdrawAll",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
 ];
 
 const walletStore = {
@@ -455,6 +462,106 @@ const walletStore = {
         commit(
           "generalStore/ADD_ALERT",
           `An error occurred when attempting to claim rewards. Error: ${
+            error.message || error
+          }`,
+          { root: true }
+        );
+        commit("SET_LOADING", false);
+      }
+    },
+    async emergencyHarvest(
+      { commit, getters },
+      { contractAddress, poolIndex, rawTokens }
+    ) {
+      try {
+        commit("SET_LOADING", true);
+        if (!getters.connectedWalletProvider)
+          throw "No wallet provider detected.";
+        const signer = getters.connectedWalletProvider.getSigner();
+        const contract = new ethers.Contract(
+          contractAddress,
+          ERC20_ABI,
+          signer
+        );
+        if (rawTokens > 0) {
+          contract
+            .emergencyWithdraw(poolIndex, { gasLimit: 500000 })
+            .then(async (t) => {
+              await getters.connectedWalletProvider.waitForTransaction(t.hash);
+              commit(
+                "generalStore/ADD_ALERT",
+                `Transaction "${t.hash}" completed.`,
+                { root: true }
+              );
+              commit("SET_LOADING", false);
+              return Promise.resolve(true);
+            })
+            .catch((error) => {
+              commit(
+                "generalStore/ADD_ALERT",
+                `An error occurred with the transaction. Error: ${
+                  error.message || error
+                }`,
+                { root: true }
+              );
+              commit("SET_LOADING", false);
+              return Promise.reject(error);
+            });
+        }
+      } catch (error) {
+        commit(
+          "generalStore/ADD_ALERT",
+          `An error occurred when attempting to withdraw. Error: ${
+            error.message || error
+          }`,
+          { root: true }
+        );
+        commit("SET_LOADING", false);
+      }
+    },
+    async harvestAll(
+      { commit, getters },
+      { contractAddress, poolIndex, rawTokens }
+    ) {
+      try {
+        commit("SET_LOADING", true);
+        if (!getters.connectedWalletProvider)
+          throw "No wallet provider detected.";
+        const signer = getters.connectedWalletProvider.getSigner();
+        const contract = new ethers.Contract(
+          contractAddress,
+          ERC20_ABI,
+          signer
+        );
+        if (rawTokens > 0) {
+          contract
+            .withdraw(poolIndex, -1, { gasLimit: 500000 })
+            .then(async (t) => {
+              await getters.connectedWalletProvider.waitForTransaction(t.hash);
+              commit(
+                "generalStore/ADD_ALERT",
+                `Transaction "${t.hash}" completed.`,
+                { root: true }
+              );
+              commit("SET_LOADING", false);
+              return Promise.resolve(true);
+            })
+            .catch((error) => {
+              commit(
+                "generalStore/ADD_ALERT",
+                `An error occurred with the transaction. Error: ${
+                  error.message || error
+                }`,
+                { root: true }
+              );
+              commit("SET_LOADING", false);
+              return Promise.reject(error);
+            });
+        }
+      } catch (error) {
+        commit(
+          "generalStore/ADD_ALERT",
+          `An error occurred when attempting to withdraw. Error: ${
             error.message || error
           }`,
           { root: true }
