@@ -53,7 +53,7 @@
           </v-tooltip>
           <v-spacer />
         </v-card-actions>
-        <v-card-actions v-if="item.contractAddress && item.poolID">
+        <!-- <v-card-actions v-if="item.contractAddress && item.poolID">
           <v-spacer />
           <v-tooltip top>
             <template v-slot:activator="{ on, attrs }">
@@ -83,7 +83,7 @@
             <span>Withdraw all funds including rewards.</span>
           </v-tooltip>
           <v-spacer />
-        </v-card-actions>
+        </v-card-actions> -->
         <v-card-actions v-if="item.contractAddress && item.poolID">
           <v-spacer />
           <v-tooltip top>
