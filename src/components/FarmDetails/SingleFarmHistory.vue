@@ -66,16 +66,25 @@
                   :class="{
                     'red--text':
                       Math.sign(
-                        ((farmInfo.poolData.actualStaked - delta) / delta) * 100
+                        ((farmInfo.poolData.actualStaked -
+                          farmInfo.transactions.estStake) /
+                          farmInfo.transactions.estStake) *
+                          100
                       ) < 0,
                     'green--text':
                       Math.sign(
-                        ((farmInfo.poolData.actualStaked - delta) / delta) * 100
+                        ((farmInfo.poolData.actualStaked -
+                          farmInfo.transactions.estStake) /
+                          farmInfo.transactions.estStake) *
+                          100
                       ) > 0,
                   }"
                 >
                   {{
-                    (((farmInfo.poolData.actualStaked - delta) / delta) * 100)
+                    (((farmInfo.poolData.actualStaked -
+                      farmInfo.transactions.estStake) /
+                      farmInfo.transactions.estStake) *
+                      100)
                       | to2Decimals(round)
                   }}%
                 </v-row>
