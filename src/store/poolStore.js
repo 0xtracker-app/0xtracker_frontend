@@ -145,6 +145,7 @@ const poolStore = {
       const farmNetworkUrl = {
         evm: process.env.VUE_APP_MYFARM_URL,
         cosmos: process.env.VUE_APP_COSMOS_FARMS_URL,
+        solana: process.env.VUE_APP_SOLANA_FARMS_URL,
       };
       try {
         commit("farmStore/SET_FARMS_WITH_DATA", {}, { root: true });

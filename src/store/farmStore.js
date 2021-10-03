@@ -44,7 +44,7 @@ const farmStore = {
     },
     SET_SOL_FARMS(state, farms) {
       state.solFarms = farms.filter(function (el) {
-        return el.network == "sol";
+        return el.network == "solana";
       });
     },
     SET_FARMS_VALUE(state, newValue) {
