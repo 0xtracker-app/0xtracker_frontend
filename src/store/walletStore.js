@@ -673,7 +673,7 @@ const walletStore = {
       }
     },
     async loadSolWallet({ commit, state }, params) {
-      const network = "sol";
+      const network = "solana";
       if (process.env.VUE_APP_SOLANA_WALLET_URL) {
         try {
           commit("SET_LOADING", true);
@@ -758,7 +758,7 @@ const walletStore = {
             async (selectFarm) => {
               if (
                 !skipFarmsData.includes(selectFarm.sendValue) &&
-                !["sol", "cosmos"].includes(selectFarm.network)
+                !["solana", "cosmos"].includes(selectFarm.network)
               ) {
                 await dispatch(
                   "poolStore/newGetPoolsForFarms",
@@ -807,7 +807,7 @@ const walletStore = {
                   {
                     walletAddress: wallet.walletAddress,
                     selectFarm,
-                    network: "sol",
+                    network: "solana",
                   },
                   { root: true }
                 );
