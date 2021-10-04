@@ -90,10 +90,8 @@ const approvalsStore = {
       try {
         commit("SET_LOADING", true);
         commit("SET_APPROVALS", {});
-        const requestBody = { wallet, network };
-        const response = await axios.post(
-          process.env.VUE_APP_APPROVALS_URL,
-          requestBody
+        const response = await axios.get(
+          `${process.env.VUE_APP_APPROVALS_URL}${wallet}/${network}`
         );
         if (!response || !response.data || response.data.error)
           throw `There was an error in the response when attempting to get approvals. ${response.data.error}`;
