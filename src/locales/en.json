@@ -10,5 +10,9 @@
   "avax": "Avalanche",
   "cosmos" : "Cosmos",
   "moon" : "Moon River",
-  "arb" : "Arbitrum"
+  "arb" : "Arbitrum",
+  "heco" : "Huobi ECO Chain",
+  "celo" : "Celo",
+  "xdai" : "xDai",
+  "solana" : "Solana"
 }

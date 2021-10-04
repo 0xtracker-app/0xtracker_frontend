@@ -23,7 +23,6 @@
                   class="font-size-input placeholder-dark input-alternative input-icon"
                   :rules="walletRules"
                   :dark="darkmode"
-                  @input="detectWalletType()"
                 >
                   <template slot="prepend-inner">
                     <v-icon size=".875rem">fas fa-wallet</v-icon>
@@ -121,9 +120,7 @@
 
 <script>
 import { mapState, mapActions, mapGetters } from "vuex";
-import WAValidator from "trezor-address-validator";
-import { ethers } from "ethers";
-import { PublicKey } from "@solana/web3.js";
+import { detectWalletType } from "@/util/helpers";
 
 export default {
   data() {
@@ -146,7 +143,7 @@ export default {
         .catch(() => {});
     }
 
-    this.detectWalletType();
+    this.walletType = detectWalletType(this.wallet);
   },
   created() {
     this.getFarms();
@@ -197,6 +194,15 @@ export default {
       return this.allFeaturedFarms.concat(this.allRegularFarms);
     },
   },
+  watch: {
+    wallet: {
+      immediate: true,
+      deep: true,
+      handler(value) {
+        this.walletType = detectWalletType(value);
+      },
+    },
+  },
   methods: {
     ...mapActions("farmStore", ["getFarms", "setSelectedFarms"]),
     ...mapActions("generalStore", ["setWalletDialog"]),
@@ -207,27 +213,6 @@ export default {
       "loadProfile",
       "loadPortfolio",
     ]),
-    detectWalletType() {
-      let isTypeEVM = ethers.utils.isAddress(this.wallet);
-      let isTypeCosmos = WAValidator.validate(this.wallet, "cosmos");
-      let isTypeSolana;
-      try {
-        const key = new PublicKey(this.wallet);
-        isTypeSolana = Boolean(key);
-      } catch (e) {
-        isTypeSolana = false;
-      }
-
-      const walletType = isTypeEVM
-        ? "EVM"
-        : isTypeCosmos
-        ? "Cosmos"
-        : isTypeSolana
-        ? "Solana"
-        : null;
-
-      this.walletType = walletType;
-    },
   },
 };
 </script>
