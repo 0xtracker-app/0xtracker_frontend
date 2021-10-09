@@ -138,7 +138,7 @@
           </v-card>
         </v-col>
 
-        <v-col cols="12" lg="12" class="pt-6">
+        <v-col cols="12" lg="12" class="pt-6" v-if="compactView">
           <v-card class="card-shadow mb-6" :dark="darkmode">
             <div class="card-header-padding card-border-bottom">
               <v-row>
