@@ -87,9 +87,7 @@
               hide-default-footer
               :items-per-page="-1"
               :sort-desc="true"
-              :expanded.sync="expanded"
               item-key="name"
-              single-expand
               style="border: 1px solid grey"
             >
               <template v-slot:item="{ item }">

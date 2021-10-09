@@ -158,7 +158,9 @@
                 >
                   <span
                     class="font-weight-bold text-subtitle-2 mr-2"
-                    v-if="lendingFarms.length > 0"
+                    v-if="
+                      lendingFarms.length > 0 && !$store.state.farmStore.loading
+                    "
                   >
                     Total: {{ total | toCurrency(round) }}
                   </span>
