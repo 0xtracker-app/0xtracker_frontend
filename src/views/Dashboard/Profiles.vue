@@ -345,6 +345,7 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import HeaderTopDashboard from "@/components/HeaderTopDashboard.vue";
+import { detectWalletType } from "@/util/helpers";
 
 export default {
   components: {
@@ -395,6 +396,15 @@ export default {
   },
   created() {
     this.getFarms();
+  },
+  watch: {
+    walletAddress: {
+      immediate: true,
+      deep: true,
+      handler(value) {
+        this.walletType = detectWalletType(value);
+      },
+    },
   },
   methods: {
     ...mapActions("farmStore", ["getFarms"]),

@@ -103,13 +103,6 @@
               class="font-size-input text-color-dark input-alternative input-focused-alternative input-icon mb-0"
               @input="loadProfile({ profile: $event })"
             >
-              <!-- <template v-slot:item="data">
-                <template>
-                  <v-list-item-content>
-                    <v-list-item-title v-html="data.item.name" />
-                  </v-list-item-content>
-                </template>
-              </template> -->
             </v-select>
           </v-col>
         </v-row>
