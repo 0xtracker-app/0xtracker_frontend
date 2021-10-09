@@ -137,6 +137,44 @@
             </v-card-text>
           </v-card>
         </v-col>
+
+        <v-col cols="12" lg="12" class="pt-6">
+          <v-card class="card-shadow mb-6" :dark="darkmode">
+            <div class="card-header-padding card-border-bottom">
+              <v-row>
+                <v-col cols="12" sm="6">
+                  <p
+                    class="font-weight-600 text-h3 mb-0"
+                    :class="{ 'text-muted': !darkmode }"
+                  >
+                    <v-icon> mdi-hand-coin </v-icon>
+                    Lending / Borrowing
+                  </p>
+                </v-col>
+                <v-col
+                  cols="12"
+                  sm="6"
+                  class="text-right d-flex align-center justify-start justify-sm-end"
+                >
+                  <span
+                    class="font-weight-bold text-subtitle-2 mr-2"
+                    v-if="lendingFarms.length > 0"
+                  >
+                    Total: {{ total | toCurrency(round) }}
+                  </span>
+                </v-col>
+              </v-row>
+            </div>
+            <v-divider></v-divider>
+            <v-card-text class="px-0 py-0">
+              <v-slide-y-transition>
+                <div>
+                  <LendingFarmsTable />
+                </div>
+              </v-slide-y-transition>
+            </v-card-text>
+          </v-card>
+        </v-col>
       </v-row>
     </v-container>
   </div>
@@ -150,6 +188,7 @@ import ValueCards from "@/views/Dashboard/Widgets/ValueCards.vue";
 import Wallet from "@/views/Wallet/Wallet.vue";
 import Farms from "@/views/Farms/Farms.vue";
 import FarmsWithoutData from "@/views/Farms/FarmsWithoutData.vue";
+import LendingFarmsTable from "@/views/Farms/LendingFarmsTable.vue";
 
 export default {
   name: "Dashboard",
@@ -160,6 +199,7 @@ export default {
     Wallet,
     Farms,
     FarmsWithoutData,
+    LendingFarmsTable,
   },
   data: function () {
     return {
@@ -168,7 +208,8 @@ export default {
     };
   },
   computed: {
-    ...mapGetters("generalStore", ["darkmode", "compactView"]),
+    ...mapGetters("generalStore", ["darkmode", "compactView", "round"]),
+    ...mapGetters("farmStore", ["lendingFarms"]),
     loading() {
       return (
         this.$store.state.poolStore.loading ||
@@ -257,6 +298,17 @@ export default {
           farm.contract = contract;
           return farm;
         });
+    },
+    total() {
+      return this.lendingFarms.length > 0
+        ? this.lendingFarms.reduce((previousValue, currentValue) => {
+            const previousTotal =
+              previousValue.poolTotal - previousValue.totalBorrowed;
+            const currentTotal =
+              currentValue.poolTotal - currentValue.totalBorrowed;
+            return previousTotal + currentTotal;
+          })
+        : 0;
     },
   },
   methods: {

@@ -22,6 +22,7 @@ const farmStore = {
     solFarms: [],
     farmsWithData: {},
     farmsWithoutData: {},
+    lendingFarms: [],
     loading: false,
     selectedFarms: [],
     farmsValue: 0,
@@ -32,6 +33,7 @@ const farmStore = {
     solFarms: (state) => state.solFarms,
     selectedFarms: (state) => state.selectedFarms,
     farmRules: (state) => state.farmRules,
+    lendingFarms: (state) => state.lendingFarms,
   },
   mutations: {
     SET_FARMS(state, farms) {
@@ -70,6 +72,9 @@ const farmStore = {
     },
     SET_SELECTED_FARMS(state, selectedFarms) {
       state.selectedFarms = selectedFarms;
+    },
+    SET_LENDING_FARMS(state, lendingFarms) {
+      state.lendingFarms = lendingFarms;
     },
     SET_LOADING(state, loading) {
       state.loading = loading;

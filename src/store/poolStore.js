@@ -139,7 +139,7 @@ const poolStore = {
         commit("SET_LOADING", false);
       }
     },
-    async newGetPoolsForFarms({ commit }, params) {
+    async newGetPoolsForFarms({ commit, rootState }, params) {
       const walletAddress = params.walletAddress;
       const selectedFarms = [params.selectFarm];
       const farmNetworkUrl = {
@@ -151,6 +151,7 @@ const poolStore = {
       try {
         commit("farmStore/SET_FARMS_WITH_DATA", {}, { root: true });
         commit("farmStore/SET_FARMS_WITHOUT_DATA", {}, { root: true });
+        commit("farmStore/SET_LENDING_FARMS", [], { root: true });
         const farmsArray = selectedFarms;
         let requestArray = farmsArray.map(async (selectedFarm) => {
           await axios
@@ -180,6 +181,13 @@ const poolStore = {
                 for (const contract in response.data) {
                   if (Object.hasOwnProperty.call(response.data, contract)) {
                     const farm = response.data[contract];
+                    if (farm.type === "lending") {
+                      commit(
+                        "farmStore/SET_LENDING_FARMS",
+                        [...rootState.farmStore.lendingFarms, farm],
+                        { root: true }
+                      );
+                    }
                     if (farm?.total && farm.total > 0) {
                       commit(
                         "farmStore/ADD_TO_FARMS_WITH_DATA",
