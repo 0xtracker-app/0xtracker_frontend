@@ -56,6 +56,7 @@
           v-model="page"
           :length="pageCount"
           circle
+          total-visible="8"
         ></v-pagination>
       </div>
     </v-card>
@@ -89,7 +90,10 @@ export default {
   computed: {
     ...mapGetters("generalStore", ["darkmode", "smallValues", "round"]),
     loading: function () {
-      return this.$store.state.walletStore.loading;
+      return (
+        this.$store.state.walletStore.loading ||
+        this.$store.state.poolStore.loading
+      );
     },
     walletBalancesList: function () {
       return this.$store.state.walletStore.walletBalancesList;
