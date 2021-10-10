@@ -139,7 +139,7 @@ const poolStore = {
         commit("SET_LOADING", false);
       }
     },
-    async newGetPoolsForFarms({ commit }, params) {
+    async newGetPoolsForFarms({ commit, rootState }, params) {
       const walletAddress = params.walletAddress;
       const selectedFarms = [params.selectFarm];
       const farmNetworkUrl = {
@@ -147,84 +147,88 @@ const poolStore = {
         cosmos: process.env.VUE_APP_COSMOS_FARMS_URL,
         solana: process.env.VUE_APP_SOLANA_FARMS_URL,
       };
+      commit("SET_LOADING", true);
       try {
         commit("farmStore/SET_FARMS_WITH_DATA", {}, { root: true });
         commit("farmStore/SET_FARMS_WITHOUT_DATA", {}, { root: true });
+        commit("farmStore/SET_LENDING_FARMS", [], { root: true });
         const farmsArray = selectedFarms;
         let requestArray = farmsArray.map(async (selectedFarm) => {
-          return new Promise((resolve) => {
-            axios
-              .get(
-                `${farmNetworkUrl[params.network]}${walletAddress}/${
-                  selectedFarm.sendValue
-                }`
-              )
-              .then((response) => {
-                if (!response || !response.data || response.data.error) {
-                  commit(
-                    "generalStore/ADD_ALERT",
-                    `No data returned for ${selectedFarm.name}, you might need to retry.`,
-                    { root: true }
-                  );
-                  const selectedFarmTemp = {};
-                  // require the .assign to prevent modifying original state
-                  Object.assign(selectedFarmTemp, selectedFarm);
-                  selectedFarmTemp.error = true;
-                  selectedFarmTemp.walletType = detectWalletType(walletAddress);
-                  commit(
-                    "farmStore/ADD_TO_FARMS_WITHOUT_DATA",
-                    { key: selectedFarm.sendValue, value: selectedFarmTemp },
-                    { root: true }
-                  );
-                } else if (Object.keys(response.data).length) {
-                  for (const contract in response.data) {
-                    if (Object.hasOwnProperty.call(response.data, contract)) {
-                      const farm = response.data[contract];
-                      if (farm?.total && farm.total > 0) {
-                        commit(
-                          "farmStore/ADD_TO_FARMS_WITH_DATA",
-                          {
-                            key: `${walletAddress}_${contract}`,
-                            value: Object.assign(
-                              {
-                                name: farm.name,
-                                sendValue: selectedFarm.sendValue,
-                              },
-                              farm
-                            ),
-                          },
-                          { root: true }
-                        );
-                      }
-                    }
-                  }
-                }
-                resolve(true);
-              })
-              .catch((error) => {
+          await axios
+            .get(
+              `${farmNetworkUrl[params.network]}${walletAddress}/${
+                selectedFarm.sendValue
+              }`
+            )
+            .then((response) => {
+              if (!response || !response.data || response.data.error) {
                 commit(
                   "generalStore/ADD_ALERT",
-                  "An error occurred when getting Farm data, error: " + error,
+                  `No data returned for ${selectedFarm.name}, you might need to retry.`,
                   { root: true }
                 );
                 const selectedFarmTemp = {};
                 // require the .assign to prevent modifying original state
                 Object.assign(selectedFarmTemp, selectedFarm);
                 selectedFarmTemp.error = true;
+                selectedFarmTemp.walletType = detectWalletType(walletAddress);
                 commit(
                   "farmStore/ADD_TO_FARMS_WITHOUT_DATA",
                   { key: selectedFarm.sendValue, value: selectedFarmTemp },
                   { root: true }
                 );
-                resolve(true);
-              });
-          });
+              } else if (Object.keys(response.data).length) {
+                for (const contract in response.data) {
+                  if (Object.hasOwnProperty.call(response.data, contract)) {
+                    const farm = response.data[contract];
+                    if (farm.type === "lending") {
+                      commit(
+                        "farmStore/SET_LENDING_FARMS",
+                        [...rootState.farmStore.lendingFarms, farm],
+                        { root: true }
+                      );
+                    }
+                    if (farm?.total && farm.total > 0) {
+                      commit(
+                        "farmStore/ADD_TO_FARMS_WITH_DATA",
+                        {
+                          key: `${walletAddress}_${contract}`,
+                          value: Object.assign(
+                            {
+                              name: farm.name,
+                              sendValue: selectedFarm.sendValue,
+                            },
+                            farm
+                          ),
+                        },
+                        { root: true }
+                      );
+                    }
+                  }
+                }
+              }
+            })
+            .catch((error) => {
+              commit(
+                "generalStore/ADD_ALERT",
+                "An error occurred when getting Farm data, error: " + error,
+                { root: true }
+              );
+              const selectedFarmTemp = {};
+              // require the .assign to prevent modifying original state
+              Object.assign(selectedFarmTemp, selectedFarm);
+              selectedFarmTemp.error = true;
+              commit(
+                "farmStore/ADD_TO_FARMS_WITHOUT_DATA",
+                { key: selectedFarm.sendValue, value: selectedFarmTemp },
+                { root: true }
+              );
+            });
         });
-        try {
-          await Promise.all(requestArray);
-        } catch (error) {
-          commit("generalStore/ADD_ALERT", error, { root: true });
-        }
+
+        await Promise.all(requestArray).then(() => {
+          commit("SET_LOADING", false);
+        });
       } catch (error) {
         commit("generalStore/ADD_ALERT", error, { root: true });
       }
@@ -247,9 +251,9 @@ const poolStore = {
           const apiEndpoint =
             wallet.walletType === "EVM"
               ? process.env.VUE_APP_MYFARM_URL
-              : wallet.type === "Cosmos"
+              : wallet.walletType === "Cosmos"
               ? process.env.VUE_APP_COSMOS_FARMS_URL
-              : wallet.type === "Solana"
+              : wallet.walletType === "Solana"
               ? process.env.VUE_APP_SOLANA_FARMS_URL
               : "";
 
@@ -291,7 +295,7 @@ const poolStore = {
         }
       });
 
-      Promise.all(processesArray).then(() => {
+      await Promise.all(processesArray).then(() => {
         commit("SET_LOADING", false);
       });
     },

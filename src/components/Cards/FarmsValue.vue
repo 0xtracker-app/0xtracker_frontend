@@ -16,10 +16,6 @@
           </v-avatar>
         </v-col>
       </v-row>
-
-      <!-- <p class="mt-4 mb-0 text-body font-weight-light">
-        <span class="text-success me-2">3.48%</span> Since last month
-      </p> -->
     </v-card-text>
     <v-overlay :absolute="true" :value="loading">
       <div class="text-center">
