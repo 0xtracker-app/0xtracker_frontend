@@ -10,10 +10,13 @@ const networkStore = {
       1: "eth",
       66: "oke",
       1666600000: "harmony",
+      43114: "avax",
+      1285: "moon",
       42161: "arb",
       128: "heco",
       100: "xdai",
       42220: "celo",
+      82: "meter",
     },
   },
   getters: {

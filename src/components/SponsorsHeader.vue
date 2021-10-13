@@ -34,10 +34,6 @@ export default {
           href: "https://jetswap.finance/",
         },
         {
-          src: require("@/assets/images/sponsors-header/koge.gif"),
-          href: "https://kogefarm.io/",
-        },
-        {
           src: require("@/assets/images/sponsors-header/hunny.gif"),
           href:
             "https://pancakehunny.finance/?utm_source=0xtracker.app&utm_medium=banner&utm_campaign=sept_2021",

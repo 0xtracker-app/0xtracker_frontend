@@ -309,6 +309,10 @@ const walletStore = {
       "harmony",
       "avax",
       "arb",
+      "celo",
+      "xdai",
+      "heco",
+      "meter",
     ],
     walletRules: [
       (value) => !!value || "Required.",

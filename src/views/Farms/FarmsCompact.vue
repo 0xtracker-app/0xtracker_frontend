@@ -172,7 +172,9 @@
       <template v-slot:item.pending="{ item }">
         <div v-if="item.pending > 0">
           {{ item.pending | to2Decimals(round) }}
+          <span v-if="item.rewardSymbol">{{ item.rewardSymbol }}</span>
         </div>
+
         <div v-if="item.gambitRewards">
           <div v-for="(gReward, key) in item.gambitRewards" :key="key">
             {{ gReward.pending | to2Decimals(round) }} {{ gReward.symbol }}
