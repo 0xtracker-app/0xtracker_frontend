@@ -42,65 +42,8 @@
               </a>
             </div>
           </v-col>
-          <v-col>
-            <div class="text-center">
-              <a href="http://kogefarm.io/" target="_blank">
-                <v-avatar>
-                  <v-img
-                    max-height="50"
-                    max-width="50"
-                    src="@/assets/images/sponsors-footer/koge.png"
-                  ></v-img>
-                </v-avatar>
-                <p :class="{ 'text-white': darkmode }">Koge Farm</p>
-              </a>
-            </div>
-          </v-col>
         </v-row>
-        <v-row align="center" no-gutters style="height: 100px">
-          <v-col>
-            <div class="text-center">
-              <a href="https://polyquokka.finance/" target="_blank">
-                <v-avatar>
-                  <v-img
-                    max-height="50"
-                    max-width="50"
-                    src="@/assets/images/sponsors-footer/quokka.svg"
-                  ></v-img>
-                </v-avatar>
-                <p :class="{ 'text-white': darkmode }">PolyQuokka</p>
-              </a>
-            </div>
-          </v-col>
-          <v-col>
-            <div class="text-center">
-              <a href="https://shibanova.io/" target="_blank">
-                <v-avatar>
-                  <v-img
-                    max-height="50"
-                    max-width="50"
-                    src="@/assets/images/sponsors-footer/coin.png"
-                  ></v-img>
-                </v-avatar>
-                <p :class="{ 'text-white': darkmode }">ShibaNova</p>
-              </a>
-            </div>
-          </v-col>
-          <v-col>
-            <div class="text-center">
-              <a href="https://timeleap.finance/" target="_blank">
-                <v-avatar>
-                  <v-img
-                    max-height="50"
-                    max-width="50"
-                    src="@/assets/images/sponsors-footer/timeleap.gif"
-                  ></v-img>
-                </v-avatar>
-                <p :class="{ 'text-white': darkmode }">Timeleap</p>
-              </a>
-            </div>
-          </v-col>
-        </v-row>
+        <v-row align="center" no-gutters style="height: 100px"> </v-row>
       </v-card>
     </v-container>
   </div>
