@@ -14,5 +14,6 @@
   "heco" : "Huobi ECO Chain",
   "celo" : "Celo",
   "xdai" : "xDai",
-  "solana" : "Solana"
+  "solana" : "Solana",
+  "meter" : "Meter"
 }
