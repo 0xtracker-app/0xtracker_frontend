@@ -36,7 +36,11 @@ export default {
         {
           src: require("@/assets/images/sponsors-header/hunny.gif"),
           href:
-            "https://pancakehunny.finance/?utm_source=0xtracker.app&utm_medium=banner&utm_campaign=sept_2021",
+            "https://pancakehunny.finance/?utm_source=0xtracker.app&utm_medium=banner&utm_campaign=single_asset_stablecoin",
+        },
+        {
+          src: require("@/assets/images/sponsors-header/grand.png"),
+          href: "https://www.thegrandbanks.finance/",
         },
       ],
       interval: "",

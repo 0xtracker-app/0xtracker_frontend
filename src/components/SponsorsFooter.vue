@@ -28,7 +28,7 @@
           <v-col>
             <div class="text-center">
               <a
-                href="https://pancakehunny.finance/?utm_source=0xtracker.app&utm_medium=logo&utm_campaign=sept_2021"
+                href="https://pancakehunny.finance/?utm_source=0xtracker.app&utm_medium=logo&utm_campaign=oct_2021uvicucu"
                 target="_blank"
               >
                 <v-avatar>
@@ -42,8 +42,21 @@
               </a>
             </div>
           </v-col>
+          <v-col>
+            <div class="text-center">
+              <a href="https://www.thegrandbanks.finance/" target="_blank">
+                <v-avatar>
+                  <v-img
+                    max-height="50"
+                    max-width="50"
+                    src="@/assets/images/sponsors-footer/grand.png"
+                  ></v-img>
+                </v-avatar>
+                <p :class="{ 'text-white': darkmode }">The Grand Banks</p>
+              </a>
+            </div>
+          </v-col>
         </v-row>
-        <v-row align="center" no-gutters style="height: 100px"> </v-row>
       </v-card>
     </v-container>
   </div>
