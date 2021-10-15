@@ -757,7 +757,7 @@ const walletStore = {
       commit("farmStore/SET_LOADING", true, { root: true });
       const processesArray = profile.wallets.map(async (wallet) => {
         if (wallet.walletType === "EVM") {
-          await dispatch("loadWallets", { wallet: wallet.walletAddress });
+          dispatch("loadWallets", { wallet: wallet.walletAddress });
           await Promise.all(
             rootState.farmStore.farms.map(async (selectFarm) => {
               if (
@@ -777,7 +777,7 @@ const walletStore = {
             })
           );
         } else if (wallet.walletType === "Cosmos") {
-          await dispatch("loadCosmosWallet", {
+          dispatch("loadCosmosWallet", {
             wallet: wallet.walletAddress,
           });
           await Promise.all(
@@ -796,7 +796,7 @@ const walletStore = {
             })
           );
         } else if (wallet.walletType === "Solana") {
-          await dispatch("loadSolWallet", { wallet: wallet.walletAddress });
+          dispatch("loadSolWallet", { wallet: wallet.walletAddress });
           await Promise.all(
             rootState.farmStore.solFarms.map(async (selectFarm) => {
               if (!skipFarmsData.includes(selectFarm.sendValue)) {
