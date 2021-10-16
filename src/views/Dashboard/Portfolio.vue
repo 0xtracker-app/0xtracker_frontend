@@ -6,8 +6,8 @@
     </HeaderTopDashboard>
     <v-container fluid class="pt-0 px-6 mt-n13">
       <v-row class="mt-0">
-        <v-col cols="12" lg="12" class="pt-6">
-          <v-card class="card-shadow mb-6" :dark="darkmode">
+        <v-col cols="12" lg="6" class="pt-6 d-flex">
+          <v-card class="card-shadow mb-3 flex-grow-1" :dark="darkmode">
             <div class="card-header-padding card-border-bottom">
               <p
                 class="font-weight-600 text-h3 mb-0"
@@ -39,6 +39,9 @@
               </v-slide-y-transition>
             </v-card-text>
           </v-card>
+        </v-col>
+        <v-col cols="12" lg="6" class="pt-6">
+          <KPICards />
         </v-col>
 
         <v-col cols="12" lg="12" class="pt-6">
@@ -187,6 +190,7 @@ import { mapGetters, mapActions } from "vuex";
 import HorizontalForm from "@/views/Forms/HorizontalForm.vue";
 import HeaderTopDashboard from "@/components/HeaderTopDashboard.vue";
 import ValueCards from "@/views/Dashboard/Widgets/ValueCards.vue";
+import KPICards from "@/views/Dashboard/Widgets/KPICards.vue";
 import Wallet from "@/views/Wallet/Wallet.vue";
 import Farms from "@/views/Farms/Farms.vue";
 import FarmsWithoutData from "@/views/Farms/FarmsWithoutData.vue";
@@ -198,6 +202,7 @@ export default {
     HorizontalForm,
     HeaderTopDashboard,
     ValueCards,
+    KPICards,
     Wallet,
     Farms,
     FarmsWithoutData,
