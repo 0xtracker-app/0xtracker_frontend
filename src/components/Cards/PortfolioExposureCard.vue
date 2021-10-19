@@ -109,7 +109,15 @@
               style="max-width: 250px"
             >
               <div class="d-flex justify-space-between align-center">
-                <div class="d-flex">
+                <div class="d-flex align-center">
+                  <div
+                    class="rounded-circle mr-2"
+                    :style="{
+                      backgroundImage: `linear-gradient(to right, ${firstColors[index]} , ${secondColors[index]})`,
+                      width: '13px',
+                      height: '13px',
+                    }"
+                  ></div>
                   <div
                     style="width: 30px"
                     class="d-flex justify-center align-center mr-1"
@@ -130,7 +138,15 @@
             </div>
             <div v-if="otherTokens" class="mb-1" style="max-width: 250px">
               <div class="d-flex justify-space-between align-center">
-                <div class="d-flex">
+                <div class="d-flex align-center">
+                  <div
+                    class="rounded-circle mr-2"
+                    :style="{
+                      background: 'white',
+                      width: '13px',
+                      height: '13px',
+                    }"
+                  ></div>
                   <div
                     style="width: 30px"
                     class="d-flex justify-center align-center mr-1"
@@ -195,6 +211,8 @@ export default {
         { text: "Value", value: "value" },
         { text: "Ratio", value: "ratio" },
       ],
+      firstColors: ["#f5365c", "#2dce89", "#fb6340", "#8965e0", "#7796cb"],
+      secondColors: ["#f56036", "#2dcecc", "#fbb140", "#bc65e0", "#a3bcf9"],
     };
   },
   methods: {
