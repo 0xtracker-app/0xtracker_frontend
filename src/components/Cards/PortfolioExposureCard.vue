@@ -66,7 +66,10 @@
                         <td>{{ item.amount.toFixed(2) }}</td>
                         <td>${{ item.value.toFixed(2) }}</td>
                         <td>
-                          <span class="text-right" style="min-width: 50px">
+                          <span
+                            class="text-right"
+                            style="mcolorsin-width: 50px"
+                          >
                             {{ getPercentage(item.value).toFixed(2) }}%
                           </span>
                         </td>
@@ -98,22 +101,28 @@
                 :options="options"
                 style="max-height: 200px; max-width: 200px"
                 :chart-labels="chartLabels"
+                :colors="colors"
+                ref="portfolioExposureChart"
               ></DoughnutChart>
             </div>
           </v-col>
-          <v-col cols="12" sm="6" class="d-flex flex-column justify-center">
-            <div
+          <v-col
+            cols="12"
+            sm="6"
+            class="pa-10 d-flex flex-column justify-center"
+          >
+            <v-flex
               v-for="(token, index) in mappedTokens"
               :key="index"
-              class="mb-3"
-              style="max-width: 250px"
+              class="mb-3 mx-auto"
+              style="max-width: 250px; width: 100%"
             >
               <div class="d-flex justify-space-between align-center">
                 <div class="d-flex align-center">
                   <div
                     class="rounded-circle mr-2"
                     :style="{
-                      backgroundImage: `linear-gradient(to right, ${firstColors[index]} , ${secondColors[index]})`,
+                      backgroundColor: `${labelColors[index]}`,
                       width: '13px',
                       height: '13px',
                     }"
@@ -135,14 +144,18 @@
                   <span> {{ getPercentage(token.value).toFixed(2) }}% </span>
                 </div>
               </div>
-            </div>
-            <div v-if="otherTokens" class="mb-1" style="max-width: 250px">
+            </v-flex>
+            <div
+              v-if="otherTokens"
+              class="mx-auto"
+              style="max-width: 250px; width: 100%"
+            >
               <div class="d-flex justify-space-between align-center">
                 <div class="d-flex align-center">
                   <div
                     class="rounded-circle mr-2"
                     :style="{
-                      background: 'white',
+                      background: `${labelColors[5]}`,
                       width: '13px',
                       height: '13px',
                     }"
@@ -189,6 +202,8 @@
 
 <script>
 import DoughnutChart from "@/components/Charts/DoughnutChart";
+import { interpolateSpectral } from "d3";
+import { generateColors } from "@/util/helpers";
 import { groupBy } from "@/util/helpers";
 import { mapGetters } from "vuex";
 
@@ -211,8 +226,6 @@ export default {
         { text: "Value", value: "value" },
         { text: "Ratio", value: "ratio" },
       ],
-      firstColors: ["#f5365c", "#2dce89", "#fb6340", "#8965e0", "#7796cb"],
-      secondColors: ["#f56036", "#2dcecc", "#fbb140", "#bc65e0", "#a3bcf9"],
     };
   },
   methods: {
@@ -319,6 +332,16 @@ export default {
     },
     chartLabels() {
       return [...this.mappedTokens.map((token) => token.name), "Others"];
+    },
+    colors() {
+      return generateColors(this.chartData.length * 2, interpolateSpectral, {
+        colorStart: 0,
+        colorEnd: 1,
+        useEndAsStart: true,
+      });
+    },
+    labelColors() {
+      return this.colors.filter((_, index) => index % 2 === 0);
     },
     options() {
       return {

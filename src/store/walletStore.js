@@ -322,6 +322,7 @@ const walletStore = {
       type: null,
       profile: null,
     },
+    historicalData: [],
   },
   getters: {
     connectedWallet: (state) => state.connectedWallet,
@@ -342,6 +343,7 @@ const walletStore = {
     wallet: (state) => state.wallet,
     walletRules: (state) => state.walletRules,
     recentQuery: (state) => state.recentQuery,
+    historicalData: (state) => state.historicalData,
   },
   mutations: {
     SET_CONNECTED_WALLET(state, value) {
@@ -367,6 +369,9 @@ const walletStore = {
     },
     SET_RECENT_QUERY(state, value) {
       state.recentQuery = value;
+    },
+    SET_HISTORICAL_DATA(state, value) {
+      state.historicalData = value;
     },
   },
   actions: {
@@ -746,6 +751,7 @@ const walletStore = {
         type,
         profile,
       });
+      commit("SET_HISTORICAL_DATA", []);
 
       let skipFarmsData = [];
       const skipFarmsValues = Object.values(profile.skipFarms);
@@ -754,7 +760,29 @@ const walletStore = {
       );
       commit("SET_WALLET_BALANCES", []);
 
+      let _historicalData = [];
+
       commit("farmStore/SET_LOADING", true, { root: true });
+      const fetchHistoricalDataProcessesArray = profile.wallets.map(
+        async (wallet) => {
+          await axios
+            .get(
+              `${
+                process.env.VUE_APP_USER_BALANCE
+              }?wallet=${wallet.walletAddress.toLowerCase()}`
+            )
+            .then(({ data }) => {
+              _historicalData = [
+                ..._historicalData,
+                {
+                  wallet,
+                  data,
+                },
+              ];
+            });
+        }
+      );
+
       const processesArray = profile.wallets.map(async (wallet) => {
         if (wallet.walletType === "EVM") {
           dispatch("loadWallets", { wallet: wallet.walletAddress });
@@ -813,6 +841,10 @@ const walletStore = {
             })
           );
         }
+      });
+
+      await Promise.all(fetchHistoricalDataProcessesArray).then(() => {
+        commit("SET_HISTORICAL_DATA", _historicalData);
       });
 
       await Promise.all(processesArray).then(() => {

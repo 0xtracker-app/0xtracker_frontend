@@ -16,56 +16,40 @@ export default {
       type: Object,
       default: null,
     },
+    colors: {
+      type: Array,
+      required: true,
+      default: () => [],
+    },
   },
   computed: {
     ...mapGetters("generalStore", ["darkmode"]),
+    calculatedColors() {
+      if (this.colors.length > this.chartData.length) {
+        let colors = [];
+        for (let i = 0; i < this.colors.length; i++) {
+          if (i % 2 == 0) {
+            let gradient = this.$refs.canvas
+              .getContext("2d")
+              .createLinearGradient(0, 0, 0, 150);
+            gradient.addColorStop(0, this.colors[i]);
+            gradient.addColorStop(1, this.colors[i + 1]);
+            colors.push(gradient);
+          }
+        }
+
+        return colors;
+      }
+
+      return this.colors;
+    },
   },
   watch: {
     chartData() {
       this.render();
     },
   },
-  data() {
-    return {
-      gradient: null,
-      gradient2: null,
-      gradient3: null,
-      gradient4: null,
-      gradient5: null,
-      gradient6: null,
-    };
-  },
   mounted() {
-    this.gradient = this.$refs.canvas
-      .getContext("2d")
-      .createLinearGradient(0, 0, 150, 0);
-    this.gradient.addColorStop(0, "#f5365c");
-    this.gradient.addColorStop(1, "#f56036");
-
-    this.gradient2 = this.$refs.canvas
-      .getContext("2d")
-      .createLinearGradient(0, 0, 150, 0);
-    this.gradient2.addColorStop(0, "#2dce89");
-    this.gradient2.addColorStop(1, "#2dcecc");
-
-    this.gradient3 = this.$refs.canvas
-      .getContext("2d")
-      .createLinearGradient(0, 0, 150, 0);
-    this.gradient3.addColorStop(0, "#fb6340");
-    this.gradient3.addColorStop(1, "#fbb140");
-
-    this.gradient4 = this.$refs.canvas
-      .getContext("2d")
-      .createLinearGradient(0, 0, 150, 0);
-    this.gradient4.addColorStop(0, "#8965e0");
-    this.gradient4.addColorStop(1, "#bc65e0");
-
-    this.gradient5 = this.$refs.canvas
-      .getContext("2d")
-      .createLinearGradient(0, 0, 150, 0);
-    this.gradient5.addColorStop(0, "#7796cb");
-    this.gradient5.addColorStop(1, "#a3bcf9");
-
     this.render();
   },
   methods: {
@@ -75,14 +59,8 @@ export default {
           labels: this.chartLabels,
           datasets: [
             {
-              backgroundColor: [
-                this.gradient,
-                this.gradient2,
-                this.gradient3,
-                this.gradient4,
-                this.gradient5,
-                this.darkmode ? "white" : "#666",
-              ],
+              backgroundColor: this.calculatedColors,
+              hoverBackgroundColor: this.calculatedColors,
               hoverBorderColor: "transparent",
               hoverBorderWidth: 0,
               data: this.chartData,

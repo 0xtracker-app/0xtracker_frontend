@@ -1,6 +1,7 @@
 import WAValidator from "trezor-address-validator";
 import { ethers } from "ethers";
 import { PublicKey } from "@solana/web3.js";
+import { interpolateRainbow } from "d3";
 
 /**
  * This helper function detects the wallet type of a wallet address.
@@ -40,3 +41,49 @@ export const groupBy = (array, key) =>
     objectsByKeyValue[value] = (objectsByKeyValue[value] || []).concat(obj);
     return objectsByKeyValue;
   }, {});
+
+/**
+ * Used to calculate a point from 0 - 1
+ *
+ * @param {*} i
+ * @param {*} intervalSize
+ * @param {*} colorRangeInfo
+ * @returns Number
+ */
+export const calculatePoint = (i, intervalSize, colorRangeInfo) => {
+  var { colorStart, colorEnd, useEndAsStart } = colorRangeInfo;
+  return useEndAsStart
+    ? colorEnd - i * intervalSize
+    : colorStart + i * intervalSize;
+};
+
+/**
+ * Must use an interpolated color scale, which has a range of [0, 1]
+ *
+ * @param {*} dataLength
+ * @param {*} colorScale
+ * @param {*} colorRangeInfo
+ * @returns Array
+ */
+export const generateColors = (
+  dataLength,
+  colorScale = interpolateRainbow,
+  colorRangeInfo = {
+    colorStart: 0,
+    colorEnd: 1,
+    useEndAsStart: false,
+  }
+) => {
+  let { colorStart, colorEnd } = colorRangeInfo;
+  let colorRange = colorEnd - colorStart;
+  let intervalSize = colorRange / dataLength;
+  let i, colorPoint;
+  let colorArray = [];
+
+  for (i = 0; i < dataLength; i++) {
+    colorPoint = calculatePoint(i, intervalSize, colorRangeInfo);
+    colorArray.push(colorScale(colorPoint));
+  }
+
+  return colorArray;
+};

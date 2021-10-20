@@ -6,6 +6,9 @@
     </HeaderTopDashboard>
     <v-container fluid class="pt-0 px-6 mt-n13">
       <v-row class="mt-0">
+        <v-col cols="12" class="pt-6">
+          <HistoricalProfileCard />
+        </v-col>
         <v-col cols="12" lg="6" class="pt-6 d-flex">
           <v-card class="card-shadow mb-3 flex-grow-1" :dark="darkmode">
             <div class="card-header-padding card-border-bottom">
@@ -195,6 +198,7 @@ import Wallet from "@/views/Wallet/Wallet.vue";
 import Farms from "@/views/Farms/Farms.vue";
 import FarmsWithoutData from "@/views/Farms/FarmsWithoutData.vue";
 import LendingFarmsTable from "@/views/Farms/LendingFarmsTable.vue";
+import HistoricalProfileCard from "@/components/Cards/HistoricalProfileCard.vue";
 
 export default {
   name: "Dashboard",
@@ -207,6 +211,7 @@ export default {
     Farms,
     FarmsWithoutData,
     LendingFarmsTable,
+    HistoricalProfileCard,
   },
   data: function () {
     return {
