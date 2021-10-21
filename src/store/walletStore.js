@@ -803,8 +803,6 @@ const walletStore = {
 
       commit("farmStore/SET_LOADING", true, { root: true });
 
-      dispatch("loadHistoricalProfile", profile);
-
       const processesArray = profile.wallets.map(async (wallet) => {
         if (wallet.walletType === "EVM") {
           dispatch("loadWallets", { wallet: wallet.walletAddress });
@@ -865,7 +863,8 @@ const walletStore = {
         }
       });
 
-      await Promise.all(processesArray).then(() => {
+      await Promise.all(processesArray).then(async () => {
+        await dispatch("loadHistoricalProfile", profile);
         commit("farmStore/SET_LOADING", false, { root: true });
       });
     },
