@@ -17,7 +17,7 @@
               class="d-flex align-center text-overline font-weight-bold grey--text text--darken-4"
             >
               <v-icon size="20" class="mr-1"> mdi-alert-octagon </v-icon>
-              Beta Feature
+              Beta {{ $vuetify.breakpoint.mdAndUp ? "Feature" : "" }}
             </v-chip>
           </template>
           <span class="text-caption text-white font-weight-bold">
@@ -50,6 +50,7 @@
                 v-for="(interval, index) in intervals"
                 :key="index"
                 active-class="active-btn"
+                :icon="$vuetify.breakpoint.xsOnly"
               >
                 <span class="text-caption font-weight-bold">
                   {{ interval.text }}
