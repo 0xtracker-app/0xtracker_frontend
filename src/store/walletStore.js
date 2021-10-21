@@ -322,6 +322,9 @@ const walletStore = {
       type: null,
       profile: null,
     },
+    selectedInterval: 1,
+    historicalData: [],
+    historicalDataLoading: false,
   },
   getters: {
     connectedWallet: (state) => state.connectedWallet,
@@ -342,6 +345,8 @@ const walletStore = {
     wallet: (state) => state.wallet,
     walletRules: (state) => state.walletRules,
     recentQuery: (state) => state.recentQuery,
+    selectedInterval: (state) => state.selectedInterval,
+    historicalData: (state) => state.historicalData,
   },
   mutations: {
     SET_CONNECTED_WALLET(state, value) {
@@ -367,6 +372,15 @@ const walletStore = {
     },
     SET_RECENT_QUERY(state, value) {
       state.recentQuery = value;
+    },
+    SET_HISTORICAL_DATA(state, value) {
+      state.historicalData = value;
+    },
+    SET_SELECTED_INTERVAL(state, value) {
+      state.selectedInterval = value;
+    },
+    SET_HISTORICAL_DATA_LOADING(state, value) {
+      state.historicalDataLoading = value;
     },
   },
   actions: {
@@ -738,6 +752,39 @@ const walletStore = {
     setWalletValue({ commit }, newValue) {
       commit("SET_WALLET_VALUE", newValue);
     },
+    async loadHistoricalProfile({ commit, rootState }, profile) {
+      commit("SET_HISTORICAL_DATA_LOADING", true);
+      commit("SET_HISTORICAL_DATA", []);
+
+      let _historicalData = [];
+
+      const fetchHistoricalDataProcessesArray = profile.wallets.map(
+        async (wallet) => {
+          await axios
+            .get(
+              `${
+                process.env.VUE_APP_USER_BALANCE
+              }?wallet=${wallet.walletAddress.toLowerCase()}&days=${
+                rootState.walletStore.selectedInterval
+              }`
+            )
+            .then(({ data }) => {
+              _historicalData = [
+                ..._historicalData,
+                {
+                  wallet,
+                  data,
+                },
+              ];
+            });
+        }
+      );
+
+      await Promise.all(fetchHistoricalDataProcessesArray).then(() => {
+        commit("SET_HISTORICAL_DATA", _historicalData);
+        commit("SET_HISTORICAL_DATA_LOADING", false);
+      });
+    },
     async loadProfile(
       { dispatch, commit, rootState },
       { profile, type = "profile" }
@@ -755,6 +802,7 @@ const walletStore = {
       commit("SET_WALLET_BALANCES", []);
 
       commit("farmStore/SET_LOADING", true, { root: true });
+
       const processesArray = profile.wallets.map(async (wallet) => {
         if (wallet.walletType === "EVM") {
           dispatch("loadWallets", { wallet: wallet.walletAddress });
@@ -815,7 +863,8 @@ const walletStore = {
         }
       });
 
-      await Promise.all(processesArray).then(() => {
+      await Promise.all(processesArray).then(async () => {
+        await dispatch("loadHistoricalProfile", profile);
         commit("farmStore/SET_LOADING", false, { root: true });
       });
     },
@@ -841,6 +890,12 @@ const walletStore = {
         },
         type: "portfolio",
       });
+    },
+    setSelectedInterval({ state, dispatch, commit }, value) {
+      commit("SET_SELECTED_INTERVAL", value);
+      if (state.recentQuery.profile) {
+        dispatch("loadHistoricalProfile", state.recentQuery.profile);
+      }
     },
   },
 };
