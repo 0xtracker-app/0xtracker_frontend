@@ -54,6 +54,9 @@ export default {
     datasets() {
       this.render();
     },
+    options() {
+      this.render();
+    },
   },
   data() {
     return {

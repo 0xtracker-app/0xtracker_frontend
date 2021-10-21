@@ -20,13 +20,27 @@
         <div class="text-center"></div>
       </v-overlay>
       <div v-if="historicalData.length > 0" class="d-flex pb-10">
-        <v-row class="d-flex align-center">
+        <v-row class="d-flex align-center mt-2" style="width: 100%">
+          <v-col cols="12" class="d-flex justify-end">
+            <v-btn-toggle v-model="selectedInterval" mandatory dense>
+              <v-btn
+                :dark="darkmode"
+                v-for="(interval, index) in intervals"
+                :key="index"
+                active-class="active-btn"
+              >
+                <span class="text-caption font-weight-bold">
+                  {{ interval.text }}
+                </span>
+              </v-btn>
+            </v-btn-toggle>
+          </v-col>
           <v-col cols="12" class="pa-md-10 d-flex justify-center">
             <LineChart
               :datasets="datasets"
               :options="options"
               ref="historicalDataRef"
-              style="width: 100%"
+              style="max-height: 300px; width: 100%; overflow: visible"
             ></LineChart>
           </v-col>
           <v-col cols="12" class="d-flex justify-center flex-column align-end">
@@ -73,7 +87,7 @@
 <script>
 import LineChart from "@/components/Charts/LineChart";
 import { generateColors } from "@/util/helpers";
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 import { interpolateSpectral } from "d3";
 
 export default {
@@ -85,6 +99,29 @@ export default {
     return {
       datasets: [],
       colors: [],
+      intervals: [
+        {
+          text: "1D",
+          value: 1,
+        },
+        {
+          text: "7D",
+          value: 7,
+        },
+        {
+          text: "14D",
+          value: 14,
+        },
+        {
+          text: "30D",
+          value: 30,
+        },
+        {
+          text: "90D",
+          value: 90,
+        },
+      ],
+      selectedInterval: 0,
     };
   },
   watch: {
@@ -104,23 +141,43 @@ export default {
         this.generateDatasets();
       },
     },
+    selectedInterval: {
+      immediate: true,
+      deep: true,
+      handler() {
+        this.setSelectedInterval(this.intervals[this.selectedInterval].value);
+      },
+    },
   },
   computed: {
     ...mapGetters("generalStore", ["darkmode"]),
     ...mapGetters("walletStore", ["historicalData"]),
     loading: function () {
-      return this.$store.state.walletStore.loading;
+      return this.$store.state.walletStore.historicalDataLoading;
     },
     options() {
       return {
+        layout: {
+          padding: {
+            left: 5,
+            right: 5,
+            top: 10,
+            bottom: 0,
+          },
+        },
         scales: {
           xAxes: [
             {
               type: "time",
               time: {
+                unit:
+                  this.intervals[this.selectedInterval].value === 1
+                    ? "hour"
+                    : "day",
                 minUnit: "hour",
                 displayFormats: {
-                  hour: "MMM D, hA",
+                  hour: "hA",
+                  day: "MM-D-YY",
                 },
                 tooltipFormat: "MMM D, hA",
               },
@@ -128,11 +185,21 @@ export default {
                 display: true,
                 labelString: "Time",
                 fontFamily: "'Quicksand', sans-serif",
-                fontSize: 18,
+                fontSize: 14,
                 fontStyle: "bold",
               },
               ticks: {
                 fontFamily: "'Quicksand', sans-serif",
+                autoSkip: true,
+                maxRotation: this.$vuetify.breakpoint.smAndUp ? 0 : 50,
+                minRotation: 0,
+                maxTicksLimit: this.$vuetify.breakpoint.smAndUp
+                  ? this.selectedInterval === 0
+                    ? 12
+                    : this.selectedInterval === 1
+                    ? 7
+                    : this.intervals[this.selectedInterval].value / 2
+                  : 4,
               },
               gridLines: {
                 display: false,
@@ -152,7 +219,7 @@ export default {
                 display: true,
                 labelString: "Value",
                 fontFamily: "'Quicksand', sans-serif",
-                fontSize: 18,
+                fontSize: 14,
                 fontStyle: "bold",
               },
             },
@@ -165,10 +232,11 @@ export default {
         },
         responsive: true,
         maintainAspectRatio: false,
-        aspectRatio: 10,
-        cutoutPercentage: 50,
         tooltips: {
           enabled: true,
+          mode: "nearest",
+          position: "nearest",
+          intersect: false,
           callbacks: {
             title: function (tooltipItem) {
               return "$" + tooltipItem[0].yLabel.toFixed(2);
@@ -184,6 +252,10 @@ export default {
           bodyFontFamily: " 'Quicksand', sans-serif",
           bodyAlign: "center",
           displayColors: false,
+        },
+        hover: {
+          mode: "nearest",
+          intersect: false,
         },
         plugins: {
           datalabels: {
@@ -214,9 +286,12 @@ export default {
     },
   },
   mounted() {
-    this.generateDatasets();
+    if (!this.loading) {
+      this.generateDatasets();
+    }
   },
   methods: {
+    ...mapActions("walletStore", ["setSelectedInterval"]),
     generateDatasets() {
       let _historicalData = [];
       this.colors = generateColors(
@@ -232,25 +307,37 @@ export default {
       this.historicalData.forEach((historicalData, index) => {
         let color = null;
 
-        color = this.$refs.historicalDataRef.$refs.canvas
-          .getContext("2d")
-          .createLinearGradient(0, 0, 0, 450);
-        color.addColorStop(0, this.colors[index]);
-        color.addColorStop(1, "rgba(0, 0, 0, 0)");
+        this.$nextTick(() => {
+          color = this.$refs.historicalDataRef.$refs.canvas
+            .getContext("2d")
+            .createLinearGradient(0, 0, 0, 450);
+          color.addColorStop(0, this.colors[index]);
+          color.addColorStop(
+            1,
+            this.darkmode ? "rgba(0, 0, 0, 0)" : "rgba(255, 255, 255, 0)"
+          );
 
-        _historicalData.push({
-          label: historicalData.wallet.walletAddress,
-          fill: true,
-          backgroundColor: color,
-          hoverBackgroundColor: this.colors[index],
-          borderColor: this.colors[index],
-          borderWidth: 2,
-          data: historicalData.data.map((data) => ({
-            x: data._id,
-            y: data.average,
-          })),
-          lineTension: 0,
-          pointRadius: 2,
+          _historicalData.push({
+            label: historicalData.wallet.walletAddress,
+            fill: true,
+            backgroundColor: color,
+            hoverBackgroundColor: this.colors[index],
+            borderColor: this.colors[index],
+            borderWidth: 2,
+            data: historicalData.data.map((data) => ({
+              x: data._id,
+              y: data.average,
+            })),
+            lineTension: 0.15,
+            pointRadius: 0,
+            pointHoverRadius: 4,
+            pointHoverBorderWidth: 15,
+            pointBorderColor: this.colors[index]
+              .replace(/rgb/i, "rgba")
+              .replace(/\)/i, ",0.20)"),
+            pointBackgroundColor: this.colors[index],
+            spanGaps: false,
+          });
         });
       });
 
@@ -259,3 +346,10 @@ export default {
   },
 };
 </script>
+
+<style>
+.active-btn {
+  background: #5e72e4 !important;
+  color: white !important;
+}
+</style>
