@@ -21,8 +21,8 @@
             </v-chip>
           </template>
           <span class="text-caption text-white font-weight-bold">
-            Beta Feature This feature is currently in beta version. If you see
-            some bugs, let us know
+            This feature is currently in beta version. If you see some bugs, let
+            us know
             <a
               href="https://0xtracker.hellonext.co/roadmap"
               class="font-weight-bold text-decoration-none blue--text text--lighten-2"
