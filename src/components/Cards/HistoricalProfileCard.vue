@@ -8,6 +8,28 @@
             Historical Profile
           </h4>
         </div>
+        <v-tooltip left>
+          <template v-slot:activator="{ on, attrs }">
+            <v-chip
+              v-bind="attrs"
+              v-on="on"
+              color="yellow"
+              class="d-flex align-center text-overline font-weight-bold grey--text text--darken-4"
+            >
+              <v-icon size="20" class="mr-1"> mdi-alert-octagon </v-icon>
+              Beta Feature
+            </v-chip>
+          </template>
+          <span class="text-caption text-white font-weight-bold">
+            Beta Feature This feature is currently in beta version. If you see
+            some bugs, let us know
+            <a
+              href="https://0xtracker.hellonext.co/roadmap"
+              class="font-weight-bold text-decoration-none blue--text text--lighten-2"
+              >here</a
+            >.
+          </span>
+        </v-tooltip>
       </div>
       <v-divider class="my-2"></v-divider>
       <v-progress-linear
