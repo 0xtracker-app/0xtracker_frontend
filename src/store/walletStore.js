@@ -313,6 +313,7 @@ const walletStore = {
       "xdai",
       "heco",
       "meter",
+      "moon",
     ],
     walletRules: [
       (value) => !!value || "Required.",
