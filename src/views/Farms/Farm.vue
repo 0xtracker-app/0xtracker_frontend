@@ -7,7 +7,7 @@
         justify="center"
       >
         <v-col cols="12" sm="12">
-          <v-card outlined class="card-shadow">
+          <v-card outlined>
             <v-card-text>
               <p
                 v-if="
@@ -71,7 +71,7 @@
       <!-- Dynamic Lending Protocols -->
       <v-row v-if="farm.type === 'lending'" align="center" justify="center">
         <v-col cols="12" sm="12">
-          <v-card outlined class="card-shadow">
+          <v-card outlined>
             <v-card-text>
               <p :set="(loanAmount = farm.availableLimit)" class="text-center">
                 <strong>Borrow / Credit Balance</strong>
@@ -103,7 +103,7 @@
           cols="12"
           sm="4"
         >
-          <v-card outlined class="card-shadow">
+          <v-card outlined>
             <v-card-title class="font-weight-600 text-uppercase text-h3">
               <v-avatar
                 style="position: absolute; left: 30px"

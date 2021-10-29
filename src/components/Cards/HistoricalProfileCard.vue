@@ -1,37 +1,60 @@
 <template>
-  <v-card class="card-shadow mb-3" :dark="darkmode">
+  <v-card class="mb-3" :dark="darkmode" style="background-color: transparent">
     <v-card-text class="card-stats-padding">
-      <div class="d-flex justify-space-between align-center">
-        <div class="d-flex align-center">
-          <v-icon class="mr-2"> mdi-chart-timeline-variant-shimmer </v-icon>
-          <h4 class="font-weight-600 text-muted text-uppercase text-h5 mb-0">
+      <div
+        class="d-flex flex-column flex-md-row justify-space-between align-center"
+      >
+        <div class="d-flex align-center mb-4 mb-md-0">
+          <v-icon> mdi-chart-timeline-variant-shimmer </v-icon>
+          <h4
+            class="font-weight-600 text-uppercase text-h3 mb-0 mx-2"
+            :style="{ color: darkmode ? '#d5d5d5' : '#15121D' }"
+          >
             Historical Profile
           </h4>
-        </div>
-        <v-tooltip left>
-          <template v-slot:activator="{ on, attrs }">
-            <v-chip
-              v-bind="attrs"
-              v-on="on"
-              color="yellow"
-              class="d-flex align-center text-overline font-weight-bold grey--text text--darken-4"
+          <v-tooltip top :open-on-hover="false" v-model="isTooltipOpen">
+            <template v-slot:activator="{ on, attrs }">
+              <v-chip
+                v-bind="attrs"
+                v-on="on"
+                small
+                color="yellow"
+                class="d-flex align-center text-caption font-weight-bold grey--text text--darken-4"
+                style="font-size: 10px !important"
+              >
+                <v-icon size="15" class="mr-1"> mdi-alert-octagon </v-icon>
+                Beta {{ $vuetify.breakpoint.xlAndUp ? "Feature" : "" }}
+              </v-chip>
+            </template>
+            <span
+              class="text-caption text-white font-weight-bold"
+              @click:outside="isTooltipOpen = false"
             >
-              <v-icon size="20" class="mr-1"> mdi-alert-octagon </v-icon>
-              Beta {{ $vuetify.breakpoint.mdAndUp ? "Feature" : "" }}
-            </v-chip>
-          </template>
-          <span class="text-caption text-white font-weight-bold">
-            This feature is currently in beta version. If you see some bugs, let
-            us know
-            <a
-              href="https://0xtracker.hellonext.co/roadmap"
-              class="font-weight-bold text-decoration-none blue--text text--lighten-2"
-              >here</a
-            >.
-          </span>
-        </v-tooltip>
+              This feature is currently in beta version. If you see some bugs,
+              let us know
+              <a
+                href="https://0xtracker.hellonext.co/roadmap"
+                class="font-weight-bold text-decoration-none blue--text text--lighten-2"
+              >
+                here </a
+              >.
+            </span>
+          </v-tooltip>
+        </div>
+        <v-btn-toggle v-model="selectedInterval" mandatory dense>
+          <v-btn
+            :dark="darkmode"
+            v-for="(interval, index) in intervals"
+            :key="index"
+            active-class="active-btn"
+            :icon="$vuetify.breakpoint.lgAndDown"
+          >
+            <span class="text-caption font-weight-bold">
+              {{ interval.text }}
+            </span>
+          </v-btn>
+        </v-btn-toggle>
       </div>
-      <v-divider class="my-2"></v-divider>
       <v-progress-linear
         v-show="loading"
         :indeterminate="loading"
@@ -41,29 +64,17 @@
       <v-overlay :absolute="true" :value="loading">
         <div class="text-center"></div>
       </v-overlay>
-      <div v-if="historicalData.length > 0" class="d-flex pb-10">
+      <div v-if="historicalData.length > 0" class="d-flex">
         <v-row class="d-flex align-center mt-2" style="width: 100%">
-          <v-col cols="12" class="d-flex justify-end">
-            <v-btn-toggle v-model="selectedInterval" mandatory dense>
-              <v-btn
-                :dark="darkmode"
-                v-for="(interval, index) in intervals"
-                :key="index"
-                active-class="active-btn"
-                :icon="$vuetify.breakpoint.xsOnly"
-              >
-                <span class="text-caption font-weight-bold">
-                  {{ interval.text }}
-                </span>
-              </v-btn>
-            </v-btn-toggle>
-          </v-col>
-          <v-col cols="12" class="pa-md-10 d-flex justify-center">
+          <v-col cols="12" class="d-flex justify-center">
             <LineChart
               :datasets="datasets"
               :options="options"
               ref="historicalDataRef"
-              style="max-height: 300px; width: 100%; overflow: visible"
+              style="width: 100%; overflow: visible"
+              :style="{
+                height: $vuetify.breakpoint.mdAndUp ? '100%' : '300px',
+              }"
             ></LineChart>
           </v-col>
           <v-col cols="12" class="d-flex justify-center flex-column align-end">
@@ -145,6 +156,7 @@ export default {
         },
       ],
       selectedInterval: 0,
+      isTooltipOpen: false,
     };
   },
   watch: {
@@ -205,7 +217,7 @@ export default {
                 tooltipFormat: "MMM D, hA",
               },
               scaleLabel: {
-                display: true,
+                display: false,
                 labelString: "Time",
                 fontFamily: "'Quicksand', sans-serif",
                 fontSize: 14,
@@ -223,6 +235,7 @@ export default {
                     ? 7
                     : this.intervals[this.selectedInterval].value / 2
                   : 4,
+                padding: 10,
               },
               gridLines: {
                 display: false,
@@ -236,14 +249,24 @@ export default {
                 callback: function (value) {
                   return "$" + value;
                 },
+                autoSkip: true,
+                maxTicksLimit: 10,
+                padding: 10,
                 fontFamily: "'Quicksand', sans-serif",
+                fontSize: 15,
+                fontStyle: 600,
+                fontColor: this.darkmode ? "white" : "#9BA2B0",
               },
               scaleLabel: {
-                display: true,
+                display: false,
                 labelString: "Value",
                 fontFamily: "'Quicksand', sans-serif",
                 fontSize: 14,
                 fontStyle: "bold",
+              },
+              gridLines: {
+                color: this.darkmode ? "#3B424C" : "#DDE2ED",
+                borderDash: [8, 4],
               },
             },
           ],
@@ -334,7 +357,7 @@ export default {
           color = this.$refs.historicalDataRef.$refs.canvas
             .getContext("2d")
             .createLinearGradient(0, 0, 0, 450);
-          color.addColorStop(0, this.colors[index]);
+          color.addColorStop(0, this.colors[index].replace(")", ",0.5)"));
           color.addColorStop(
             1,
             this.darkmode ? "rgba(0, 0, 0, 0)" : "rgba(255, 255, 255, 0)"
@@ -374,5 +397,9 @@ export default {
 .active-btn {
   background: #5e72e4 !important;
   color: white !important;
+}
+
+.v-tooltip__content {
+  pointer-events: auto;
 }
 </style>

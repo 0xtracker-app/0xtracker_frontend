@@ -241,9 +241,13 @@ const poolStore = {
       const processesArray = selectedWallets.map(async (wallet) => {
         try {
           commit("SET_LOADING", true);
-          commit("farmStore/REMOVE_FROM_FARMS_WITH_DATA", key, {
-            root: true,
-          });
+          commit(
+            "farmStore/REMOVE_FROM_FARMS_WITH_DATA",
+            `${wallet.walletAddress}_${key}`,
+            {
+              root: true,
+            }
+          );
           commit("farmStore/REMOVE_FROM_FARMS_WITHOUT_DATA", key, {
             root: true,
           });

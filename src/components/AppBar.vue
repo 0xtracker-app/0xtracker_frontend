@@ -2,43 +2,53 @@
   <div>
     <v-container fluid>
       <v-row class="d-flex">
-        <v-col
-          class="d-flex flex-column justify-space-between align-center"
-          cols="12"
-        >
-          <SponsorsHeader />
+        <v-col class="d-flex align-center px-0" cols="12">
           <v-btn
             elevation="0"
             :ripple="false"
             height="43"
-            class="font-weight-600 text-capitalize drawer-toggler py-3 px-6 rounded-sm"
+            class="font-weight-600 text-capitalize drawer-toggler py-3 px-0 px-sm-6 rounded-sm"
             :class="{
               'btn-dark-toggler-hover': !hasBg,
               'btn-toggler-hover': hasBg,
               active: togglerActive,
+            }"
+            :style="{
+              minWidth: $vuetify.breakpoint.smAndDown ? '32px' : auto,
             }"
             v-if="$vuetify.breakpoint.mobile"
             color="transparent"
             @click="drawerClose"
           >
             <div class="drawer-toggler-inner">
-              <i class="drawer-toggler-line" :class="{ 'bg-white': hasBg }"></i>
-              <i class="drawer-toggler-line" :class="{ 'bg-white': hasBg }"></i>
-              <i class="drawer-toggler-line" :class="{ 'bg-white': hasBg }"></i>
+              <i
+                class="drawer-toggler-line"
+                :class="[darkmode ? 'bg-white' : 'bg-black']"
+              ></i>
+              <i
+                class="drawer-toggler-line"
+                :class="[darkmode ? 'bg-white' : 'bg-black']"
+              ></i>
+              <i
+                class="drawer-toggler-line"
+                :class="[darkmode ? 'bg-white' : 'bg-black']"
+              ></i>
             </div>
           </v-btn>
+          <HorizontalForm style="width: 100%" />
         </v-col>
       </v-row>
     </v-container>
   </div>
 </template>
 <script>
-import SponsorsHeader from "@/components/SponsorsHeader.vue";
+import HorizontalForm from "@/views/Forms/HorizontalForm.vue";
+import { mapGetters } from "vuex";
 
 export default {
   name: "app-bar",
   components: {
-    SponsorsHeader,
+    HorizontalForm,
   },
   props: {
     background: String,
@@ -57,6 +67,9 @@ export default {
       this.togglerActive = !this.togglerActive;
       this.$emit("drawer-toggle", true);
     },
+  },
+  computed: {
+    ...mapGetters("generalStore", ["darkmode"]),
   },
   watch: {
     toggleActive(val) {

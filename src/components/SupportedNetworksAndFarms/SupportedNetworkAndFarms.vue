@@ -1,27 +1,37 @@
 <template>
-  <v-card class="card-shadow mb-30" :dark="darkmode">
-    <div class="card-header-padding card-border-bottom">
-      <v-row>
+  <v-card
+    class="mb-4 card-padding"
+    :dark="darkmode"
+    :style="{
+      filter: darkmode
+        ? 'drop-shadow(1px -1px 0px #5C6BC0) drop-shadow(-1px 1px 1px #0C0B10)'
+        : '',
+    }"
+  >
+    <div>
+      <v-row class="d-flex align-center">
         <v-col>
-          <p class="font-weight-600 text-h3 mb-0">{{ $t(network) }}</p>
+          <p class="font-weight-bold text-h1 mb-0">{{ $t(network) }}</p>
         </v-col>
-        <v-col class="text-right">
+        <v-col class="text-right font-weight-bold text-h4">
           {{ $tc("farm", farms.length, { count: farms.length }) }}
         </v-col>
       </v-row>
     </div>
-    <v-card-text class="card-padding card-shadow">
+    <v-card-text>
       <v-card-text class="px-0 py-0">
         <v-data-table
           :headers="headers"
           :items="farms"
           hide-default-footer
+          dense
           :page.sync="page"
-          class="table"
+          class="table px-4"
           mobile-breakpoint="0"
           @page-count="pageCount = $event"
           sort-by="name"
           :sort-desc="false"
+          style="background-color: transparent"
         >
           <template v-slot:item.featured="{ item }">
             <v-icon color="green" v-if="item.featured === 1" class="pr-1"
@@ -40,6 +50,7 @@
           v-model="page"
           :length="pageCount"
           circle
+          :total-visible="$vuetify.breakpoint.smAndDown ? 4 : 8"
         ></v-pagination>
       </div>
     </v-card-text>

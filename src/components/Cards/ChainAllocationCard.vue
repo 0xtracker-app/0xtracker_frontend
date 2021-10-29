@@ -1,5 +1,13 @@
 <template>
-  <v-card class="card-shadow mb-6" :dark="darkmode">
+  <v-card
+    class="mb-6"
+    :dark="darkmode"
+    :style="{
+      filter: darkmode
+        ? 'drop-shadow(1px -1px 0px #5C6BC0) drop-shadow(-1px 1px 1px #0C0B10)'
+        : '',
+    }"
+  >
     <v-card-text class="card-stats-padding">
       <div class="d-flex justify-space-between align-center">
         <div class="d-flex align-center">
@@ -8,6 +16,7 @@
             Network Distribution
           </h4>
         </div>
+
         <v-dialog
           v-model="dialog"
           width="500"
@@ -30,28 +39,34 @@
             </v-btn>
           </template>
 
-          <v-card :dark="darkmode" class="black-shadow">
+          <v-card
+            :dark="darkmode"
+            class="black-shadow"
+            style="max-height: 600px"
+          >
             <v-card-title
               class="text-h4 font-weight-bold flex justify-center lighten-2"
             >
-              Platform Distribution
+              Network Distribution
             </v-card-title>
             <v-divider></v-divider>
 
             <v-card-text
-              class="custom-scrollbar"
-              style="max-height: calc(90vh - 520px); overflow-y: auto"
+              class="custom-scrollbar pa-0"
+              style="max-height: 500px; overflow-y: auto; overflow-x: hidden"
             >
-              <v-row class="d-flex justify-center mt-6">
+              <v-row class="d-flex justify-center">
                 <v-col cols="12">
                   <v-data-table
                     dense
                     :headers="headers"
                     :items="farmsByNetwork"
                     item-key="name"
-                    class="elevation-1"
+                    class="elevation-0"
                     hide-default-footer
                     :items-per-page="-1"
+                    mobile-breakpoint="0"
+                    style="background-color: transparent"
                   >
                     <template v-slot:item="{ item }">
                       <tr>
@@ -220,6 +235,7 @@ export default {
 .v-dialog {
   box-shadow: 0px 11px 15px -7px rgb(0 0 0 / 20%),
     0px 24px 38px 3px rgb(0 0 0 / 14%), 0px 9px 46px 8px rgb(0 0 0 / 12%);
+  border-radius: 28px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {

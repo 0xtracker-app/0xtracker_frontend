@@ -1,13 +1,12 @@
 <template>
   <div>
-    <v-card v-if="balances.length">
+    <v-progress-linear
+      v-show="loading"
+      :indeterminate="loading"
+      color="#5e72e4"
+    ></v-progress-linear>
+    <v-card v-if="balances.length" style="overflow: hidden" class="rounded-t-0">
       <v-card-text class="px-0 py-0">
-        <v-progress-linear
-          v-show="loading"
-          :indeterminate="loading"
-          color="#5e72e4"
-          slot="progress"
-        ></v-progress-linear>
         <v-overlay :absolute="true" :value="loading">
           <div class="text-center"></div>
         </v-overlay>
@@ -16,15 +15,16 @@
           :items="balances"
           hide-default-footer
           :page.sync="page"
-          class="table"
+          class="table px-4 custom-scrollbar"
           mobile-breakpoint="0"
           @page-count="pageCount = $event"
           sort-by="tokenValue"
           calculate-widths
           :sort-desc="true"
+          style="background-color: transparent"
         >
           <template v-slot:item.symbol="{ item }">
-            <div class="d-flex">
+            <div class="d-flex font-weight-bold">
               <div class="d-flex justify-center align-center">
                 <v-avatar rounded tile size="20" class="mr-4">
                   <v-img :src="getNetworkLogo(item.network)" />
@@ -56,11 +56,11 @@
           v-model="page"
           :length="pageCount"
           circle
-          total-visible="8"
+          :total-visible="$vuetify.breakpoint.smAndDown ? 4 : 8"
         ></v-pagination>
       </div>
     </v-card>
-    <NoDataCard v-else :loading="loading" />
+    <NoDataCard v-else />
   </div>
 </template>
 <script>
@@ -151,5 +151,24 @@ export default {
 <style>
 .v-data-table__progress .column {
   padding: 0px !important;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  background-color: #f5f5f51c;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  background-color: #f5f5f51c;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.3);
+  background-color: #5e72e4;
 }
 </style>

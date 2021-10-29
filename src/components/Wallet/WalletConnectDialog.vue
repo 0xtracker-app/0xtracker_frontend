@@ -1,61 +1,129 @@
 <template>
   <v-row justify="center">
     <v-dialog v-model="walletDialog" persistent max-width="600">
-      <v-card :dark="darkmode" class="pt-5">
-        <p class="text-h1 text-center mb-10">
-          {{ connectedWallet ? "Wallet Connected" : "Connect your Wallet" }}
-        </p>
+      <v-card :dark="darkmode" class="pt-2 pb-5">
+        <v-card-title class="d-flex flex-column mb-10">
+          <v-btn
+            @click="setWalletDialog(false)"
+            icon
+            class="text-caption text-none font-weight-bold ml-auto"
+            :class="[darkmode ? 'white--text' : 'grey--text']"
+            elevation="0"
+            small
+            :dark="darkmode"
+            outlined
+            circle
+          >
+            <v-icon size="16"> mdi-close-thick </v-icon>
+          </v-btn>
+          <p
+            class="text-h3 font-weight-bold text-uppercase grey--text text-center mb-0"
+            :class="darkmode ? 'text--lighten-1' : 'text--darken-2'"
+          >
+            {{ connectedWallet ? "Wallet Connected" : "Connect your Wallet" }}
+          </p>
+        </v-card-title>
+
         <v-card-text>
-          <v-row v-if="connectedWallet" justify="space-around">
-            <div class="text-center m-5">
-              <v-btn class="mx-2 mb-1" fab large>
-                <v-icon color="green"> fas fa-plug </v-icon>
-              </v-btn>
-              <p :class="{ 'text-white': darkmode }">
-                {{
-                  'Connected to "' +
-                  connectedWallet +
-                  '" on "' +
-                  $t(connectedWalletNetwork) +
-                  '" network.'
-                }}
+          <v-row
+            v-if="connectedWallet"
+            justify="space-around"
+            style="overflow: hidden"
+          >
+            <div
+              class="text-center mx-10"
+              style="
+                width: 100%;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+              "
+            >
+              <v-icon color="green lighten-1" size="70" class="mb-10">
+                fas fa-plug
+              </v-icon>
+              <p
+                :class="{ 'text-white': darkmode }"
+                class="mb-0"
+                style="
+                  width: 100%;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                  white-space: nowrap;
+                "
+              >
+                Connected to
+                <span class="font-weight-bold indigo--text text--accent-2">
+                  {{ connectedWallet }}
+                </span>
+              </p>
+              <p :class="{ 'text-white': darkmode }" style="max-width: 500px">
+                on
+                <span class="font-weight-bold indigo--text text--accent-2">
+                  {{ $t(connectedWalletNetwork) }}
+                </span>
+                network.
               </p>
             </div>
           </v-row>
           <v-row v-else justify="space-around">
-            <div class="text-center m-5">
-              <v-btn class="mx-2 mb-1" fab large @click="connectWallet()">
-                <v-img
-                  max-height="40"
-                  max-width="40"
-                  src="@/assets/images/icons/metamask-fox.svg"
-                ></v-img>
-              </v-btn>
-              <p :class="{ 'text-white': darkmode }">MetaMask</p>
+            <div
+              @click="connectWallet()"
+              class="m-5 d-flex flex-column align-center"
+              style="cursor: pointer"
+            >
+              <img
+                style="
+                  filter: drop-shadow(0 0 0.85rem #e4725e);
+                  height: 70px;
+                  width: 70px;
+                "
+                src="@/assets/images/icons/metamask-fox.svg"
+              />
+              <span
+                :class="{ 'text-white': darkmode }"
+                class="font-weight-600 mt-2"
+              >
+                MetaMask
+              </span>
             </div>
-            <div class="text-center m-5">
-              <v-btn class="mx-2 mb-1" fab large @click="connectWallet()">
-                <v-img
-                  max-height="40"
-                  max-width="40"
+            <div
+              @click="connectWallet()"
+              class="m-5 d-flex flex-column align-center"
+              style="cursor: pointer"
+            >
+              <div
+                style="height: 70px; width: 70px"
+                class="d-flex align-center justify-center"
+              >
+                <img
+                  style="
+                    filter: drop-shadow(0 0 0.75rem #5e72e4);
+                    height: 60px;
+                    width: 60px;
+                  "
                   src="@/assets/images/icons/twt.svg"
-                ></v-img>
-              </v-btn>
-              <p :class="{ 'text-white': darkmode }">Trustwallet</p>
+                />
+              </div>
+              <span
+                :class="{ 'text-white': darkmode }"
+                class="font-weight-600 mt-2"
+              >
+                Trustwallet
+              </span>
             </div>
           </v-row>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn text @click="setWalletDialog(false)"> Close </v-btn>
         </v-card-actions>
         <v-overlay
           :absolute="absolute"
-          opacity="0.95"
+          opacity="0.98"
           :value="overlay"
           class="text-center"
         >
-          <p class="mx-5">
+          <p class="mx-5 mx-md-10 text-subtitle-2 mb-0" style="line-height: 1">
             Please note that wallet functionality is still in BETA and you use
             it at your own risk. Contract functions have not been verified and
             might end up in a failed transaction. If you experience this please
@@ -66,20 +134,35 @@
               >t.me/bsc0xtracker</a
             >) to report.
           </p>
-          <v-checkbox
-            v-model="termsAccepted"
-            label="I understand the risks associated with the wallet functionality and would like to continue."
-            class="mx-10"
-          ></v-checkbox>
+          <v-checkbox v-model="termsAccepted" class="mx-10 mx-md-12">
+            <template #label>
+              <span class="text-caption" style="line-height: 1">
+                I understand the risks associated with the wallet functionality
+                and would like to continue.
+              </span>
+            </template>
+          </v-checkbox>
           <v-spacer></v-spacer>
-          <v-btn
-            :disabled="!termsAccepted"
-            class="mx-5"
-            @click="overlay = false"
-          >
-            Proceed
-          </v-btn>
-          <v-btn class="mx-5" @click="setWalletDialog(false)"> Cancel </v-btn>
+          <div class="d-flex justify-md-end justify-space-between">
+            <v-btn
+              class="mx-5 text-decoration-none text-overline font-weight-bold"
+              @click="setWalletDialog(false)"
+              depressed
+              color="#5e72e4"
+              outlined
+            >
+              Cancel
+            </v-btn>
+            <v-btn
+              :disabled="!termsAccepted"
+              class="mx-5 text-decoration-none text-overline font-weight-bold"
+              @click="overlay = false"
+              depressed
+              color="#5e72e4"
+            >
+              Proceed
+            </v-btn>
+          </div>
         </v-overlay>
       </v-card>
     </v-dialog>

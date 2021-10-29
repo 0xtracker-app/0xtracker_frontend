@@ -1,25 +1,17 @@
 <template>
-  <v-container fluid class="pt-0 px-6 pb-16">
-    <v-row no-gutters class="py-3">
-      <v-col
-        cols="6"
-        v-if="$route.name === 'Portfolio' || $route.name === 'Rev0x'"
-      >
-        <!-- <h2
-          class="text-h2 font-weight-600 text-white"
+  <v-container fluid>
+    <v-row no-gutters>
+      <v-col cols="6">
+        <h2
+          class="text-h2 text-uppercase font-weight-bold"
+          :style="{
+            color: darkmode ? 'white' : '#15121F99',
+          }"
         >
           <template>{{ $route.name }}</template>
-        </h2> -->
-      </v-col>
-      <v-col cols="12" v-else>
-        <h2
-          class="text-h1 text-uppercase font-weight-bold text-white text-center"
-        >
-          <template v-if="$route.name === 'Dashboard'">Dashboard</template>
-          <template v-else>{{ $route.name }}</template>
         </h2>
       </v-col>
-      <v-col v-if="showRefresh" cols="6" md="6" class="d-flex justify-end">
+      <v-col class="d-flex justify-end align-center" v-if="showRefresh">
         <v-btn
           :disabled="
             loading ||
@@ -27,13 +19,16 @@
           "
           elevation="0"
           small
-          min-width="45"
+          min-width="40"
+          outlined
+          height="40"
           :ripple="false"
-          class="me-3 py-1 px-2 font-weight-600 text-capitalize rounded-sm"
+          class="me-3 py-1 font-weight-600 text-capitalize rounded-pill"
+          :style="{ backgroundColor: darkmode ? '#232228' : '#f3f4fd' }"
           @click="executeRecentQuery()"
           :dark="darkmode"
         >
-          <v-icon size=".875rem" class="mr-2" color="primary">
+          <v-icon size=".875rem" color="primary" class="mr-2">
             fas fa-redo {{ loading ? "fa-spin" : "" }}
           </v-icon>
           Refresh
@@ -46,9 +41,10 @@
 </template>
 <script>
 import { mapGetters, mapActions } from "vuex";
+import { detectWalletType } from "@/util/helpers";
 
 export default {
-  name: "header-top",
+  name: "HeaderTopDashboard",
   props: {
     showRefresh: Boolean,
   },
@@ -62,6 +58,16 @@ export default {
         this.$store.state.poolStore.loading
       );
     },
+  },
+  mounted() {
+    if (this.recentQuery.profile) {
+      this.executeRecentQuery();
+    } else if (this.$store.state.walletStore.wallet) {
+      this.loadPortfolio({
+        walletAddress: this.$store.state.walletStore.wallet,
+        walletType: detectWalletType(this.$store.state.walletStore.wallet),
+      });
+    }
   },
   methods: {
     ...mapActions("walletStore", ["loadPortfolio", "loadProfile"]),

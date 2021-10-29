@@ -1,39 +1,61 @@
 <template>
   <div>
-    <HorizontalForm />
-    <HeaderTopDashboard :showRefresh="true">
+    <v-container fluid>
       <ValueCards />
-    </HeaderTopDashboard>
-    <v-container fluid class="pt-0 px-6 mt-n13">
-      <v-row class="mt-0">
-        <v-col cols="12" class="pt-6">
+      <v-row class="mt-8">
+        <v-col cols="12" md="7" xl="8">
+          <div class="px-md-6 py-4" style="opacity: 0.9">
+            <SponsorsHeader />
+          </div>
           <HistoricalProfileCard />
         </v-col>
-        <v-col cols="12" lg="6" class="pt-6 d-flex">
-          <v-card class="card-shadow mb-3 flex-grow-1" :dark="darkmode">
-            <div class="card-header-padding card-border-bottom">
+        <v-col cols="12" md="5" xl="4" class="pt-6">
+          <KPICards />
+        </v-col>
+        <v-col cols="12" class="pt-6 d-flex">
+          <v-card
+            class="mb-3 flex-grow-1"
+            :dark="darkmode"
+            :style="{
+              filter: darkmode
+                ? 'drop-shadow(1px -1px 0px #5C6BC0) drop-shadow(-1px 1px 1px #0C0B10)'
+                : '',
+            }"
+          >
+            <div class="card-header-padding">
               <p
-                class="font-weight-600 text-h3 mb-0"
+                class="font-weight-600 text-h3 mb-0 d-flex justify-space-between align-center fill-height"
                 :class="{ 'text-muted': !darkmode }"
               >
+                <span class="text-muted text-uppercase text-h5 font-weight-600">
+                  Wallet
+                </span>
                 <v-tooltip bottom>
                   <template v-slot:activator="{ on, attrs }">
-                    <v-icon
+                    <v-btn
+                      depressed
+                      outlined
+                      icon
                       @click="showWallet = !showWallet"
-                      v-bind="attrs"
-                      v-on="on"
-                      class="mr-1 pb-1"
+                      class="rounded-lg"
+                      small
+                      :ripple="false"
                     >
-                      {{ showWallet ? "fas fa-eye-slash" : "fas fa-eye" }}
-                    </v-icon>
+                      <v-icon
+                        v-bind="attrs"
+                        v-on="on"
+                        class="show-button"
+                        size="15"
+                      >
+                        {{ showWallet ? "mdi-minus-thick" : "mdi-plus-thick" }}
+                      </v-icon>
+                    </v-btn>
                   </template>
                   <span v-if="showWallet">Hide Wallet Details</span>
                   <span v-else>Show Wallet Details</span>
                 </v-tooltip>
-                Wallet
               </p>
             </div>
-            <v-divider></v-divider>
             <v-card-text class="px-0 py-0">
               <v-slide-y-transition>
                 <div v-show="showWallet">
@@ -43,39 +65,60 @@
             </v-card-text>
           </v-card>
         </v-col>
-        <v-col cols="12" lg="6" class="pt-6">
-          <KPICards />
-        </v-col>
 
         <v-col cols="12" lg="12" class="pt-6">
-          <v-card class="card-shadow mb-6" :dark="darkmode">
-            <div class="card-header-padding card-border-bottom">
+          <v-card
+            class="mb-6"
+            :dark="darkmode"
+            :style="{
+              filter: darkmode
+                ? 'drop-shadow(1px -1px 0px #5C6BC0) drop-shadow(-1px 1px 1px #0C0B10)'
+                : '',
+            }"
+          >
+            <div class="card-header-padding">
               <v-row>
-                <v-col cols="12" sm="6">
+                <v-col cols="12" sm="">
                   <p
-                    class="font-weight-600 text-h3 mb-0"
+                    class="font-weight-600 text-h3 mb-0 d-flex justify-space-between align-center fill-height"
                     :class="{ 'text-muted': !darkmode }"
                   >
+                    <span
+                      class="text-muted text-uppercase text-h5 font-weight-600"
+                    >
+                      Farms
+                    </span>
                     <v-tooltip bottom>
                       <template v-slot:activator="{ on, attrs }">
-                        <v-icon
+                        <v-btn
+                          depressed
+                          outlined
+                          icon
                           @click="showFarms = !showFarms"
-                          v-bind="attrs"
-                          v-on="on"
-                          class="mr-1 pb-1"
+                          class="rounded-lg"
+                          small
+                          :ripple="false"
                         >
-                          {{ showFarms ? "fas fa-eye-slash" : "fas fa-eye" }}
-                        </v-icon>
+                          <v-icon
+                            v-bind="attrs"
+                            v-on="on"
+                            class="show-button"
+                            size="15"
+                          >
+                            {{
+                              showFarms ? "mdi-minus-thick" : "mdi-plus-thick"
+                            }}
+                          </v-icon>
+                        </v-btn>
                       </template>
                       <span v-if="showFarms">Hide Farms Details</span>
                       <span v-else>Show Farms Details</span>
                     </v-tooltip>
-                    Farms
                   </p>
                 </v-col>
                 <v-col
                   cols="12"
-                  sm="6"
+                  sm="auto"
                   class="text-right d-flex align-center justify-start justify-sm-end"
                 >
                   <span class="font-weight-bold text-subtitle-2 mr-2">
@@ -131,7 +174,6 @@
                 </v-col>
               </v-row>
             </div>
-            <v-divider></v-divider>
             <v-card-text class="px-0 py-0">
               <v-slide-y-transition>
                 <div v-show="showFarms">
@@ -145,8 +187,16 @@
         </v-col>
 
         <v-col cols="12" lg="12" class="pt-6" v-if="compactView">
-          <v-card class="card-shadow mb-6" :dark="darkmode">
-            <div class="card-header-padding card-border-bottom">
+          <v-card
+            class="mb-6"
+            :dark="darkmode"
+            :style="{
+              filter: darkmode
+                ? 'drop-shadow(1px -1px 0px #5C6BC0) drop-shadow(-1px 1px 1px #0C0B10)'
+                : '',
+            }"
+          >
+            <div class="card-header-padding">
               <v-row>
                 <v-col cols="12" sm="6">
                   <p
@@ -173,7 +223,6 @@
                 </v-col>
               </v-row>
             </div>
-            <v-divider></v-divider>
             <v-card-text class="px-0 py-0">
               <v-slide-y-transition>
                 <div>
@@ -190,8 +239,7 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import HorizontalForm from "@/views/Forms/HorizontalForm.vue";
-import HeaderTopDashboard from "@/components/HeaderTopDashboard.vue";
+
 import ValueCards from "@/views/Dashboard/Widgets/ValueCards.vue";
 import KPICards from "@/views/Dashboard/Widgets/KPICards.vue";
 import Wallet from "@/views/Wallet/Wallet.vue";
@@ -199,12 +247,11 @@ import Farms from "@/views/Farms/Farms.vue";
 import FarmsWithoutData from "@/views/Farms/FarmsWithoutData.vue";
 import LendingFarmsTable from "@/views/Farms/LendingFarmsTable.vue";
 import HistoricalProfileCard from "@/components/Cards/HistoricalProfileCard.vue";
+import SponsorsHeader from "@/components/SponsorsHeader.vue";
 
 export default {
   name: "Dashboard",
   components: {
-    HorizontalForm,
-    HeaderTopDashboard,
     ValueCards,
     KPICards,
     Wallet,
@@ -212,6 +259,7 @@ export default {
     FarmsWithoutData,
     LendingFarmsTable,
     HistoricalProfileCard,
+    SponsorsHeader,
   },
   data: function () {
     return {
@@ -358,5 +406,9 @@ export default {
 <style scoped>
 .toggle.v-icon:focus::after {
   background-color: transparent;
+}
+
+.show-button:focus::after {
+  opacity: 0 !important;
 }
 </style>

@@ -313,6 +313,7 @@ const walletStore = {
       "xdai",
       "heco",
       "meter",
+      "moon",
     ],
     walletRules: [
       (value) => !!value || "Required.",
@@ -325,6 +326,7 @@ const walletStore = {
     selectedInterval: 1,
     historicalData: [],
     historicalDataLoading: false,
+    selectedProfile: null,
   },
   getters: {
     connectedWallet: (state) => state.connectedWallet,
@@ -347,6 +349,7 @@ const walletStore = {
     recentQuery: (state) => state.recentQuery,
     selectedInterval: (state) => state.selectedInterval,
     historicalData: (state) => state.historicalData,
+    selectedProfile: (state) => state.selectedProfile,
   },
   mutations: {
     SET_CONNECTED_WALLET(state, value) {
@@ -381,6 +384,9 @@ const walletStore = {
     },
     SET_HISTORICAL_DATA_LOADING(state, value) {
       state.historicalDataLoading = value;
+    },
+    SET_SELECTED_PROFILE(state, value) {
+      state.selectedProfile = value;
     },
   },
   actions: {
@@ -793,6 +799,8 @@ const walletStore = {
         type,
         profile,
       });
+
+      commit("SET_SELECTED_PROFILE", profile);
 
       let skipFarmsData = [];
       const skipFarmsValues = Object.values(profile.skipFarms);

@@ -1,8 +1,7 @@
 <template>
   <div>
     <Rev0xForm />
-    <HeaderTopDashboard />
-    <v-container fluid class="pt-0 px-6 mt-n13">
+    <v-container fluid class="pt-0 px-6">
       <v-row class="mt-0">
         <v-col cols="12" lg="12" class="pt-6">
           <v-card class="card-shadow mb-6" :dark="darkmode">
@@ -136,12 +135,10 @@
 </template>
 <script>
 import { mapActions, mapGetters } from "vuex";
-import HeaderTopDashboard from "@/components/HeaderTopDashboard.vue";
 import Rev0xForm from "@/views/Forms/Rev0xForm.vue";
 
 export default {
   components: {
-    HeaderTopDashboard,
     Rev0xForm,
   },
   data() {

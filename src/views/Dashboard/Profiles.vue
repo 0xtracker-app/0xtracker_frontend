@@ -1,10 +1,9 @@
 <template>
   <div>
-    <HeaderTopDashboard />
-    <v-container fluid class="pt-0 px-6 mt-n13">
+    <v-container fluid class="pt-0 px-6">
       <p
         class="font-weight-600 text-h3 mb-0"
-        :class="!darkmode ? 'white--text' : 'grey--text text--lighten-2'"
+        :class="darkmode ? 'white--text' : 'grey--text text--darken-2'"
       >
         Name :
         <span class="font-weight-bold">
