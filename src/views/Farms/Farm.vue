@@ -7,7 +7,14 @@
         justify="center"
       >
         <v-col cols="12" sm="12">
-          <v-card outlined>
+          <v-card
+            :dark="darkmode"
+            :style="{
+              filter: darkmode
+                ? 'drop-shadow(1px -1px 0px #5C6BC0) drop-shadow(-1px 1px 1px #0C0B10)'
+                : '',
+            }"
+          >
             <v-card-text>
               <p
                 v-if="
@@ -29,7 +36,7 @@
                   :value="(farm.mintedFAI / loanAmount) * 100"
                   height="25"
                   rounded
-                  color="#5e72e4"
+                  color="indigo lighten-1"
                 >
                   <strong
                     >{{
@@ -52,7 +59,7 @@
                   :value="(farm.mintedFAI / loanAmount) * 100"
                   height="25"
                   rounded
-                  color="#5e72e4"
+                  color="indigo lighten-1"
                 >
                   <strong>
                     {{
@@ -79,7 +86,7 @@
                   :value="(farm.totalBorrowed / loanAmount) * 100"
                   height="25"
                   rounded
-                  color="#5e72e4"
+                  color="indigo lighten-1"
                 >
                   <strong>
                     {{
@@ -103,7 +110,16 @@
           cols="12"
           sm="4"
         >
-          <v-card outlined>
+          <v-card
+            :outlined="!darkmode"
+            class="py-3 px-2"
+            :dark="darkmode"
+            :style="{
+              filter: darkmode
+                ? 'drop-shadow(1px -1px 0px #5C6BC0) drop-shadow(-1px 1px 1px #0C0B10)'
+                : '',
+            }"
+          >
             <v-card-title class="font-weight-600 text-uppercase text-h3">
               <v-avatar
                 style="position: absolute; left: 30px"
@@ -118,32 +134,38 @@
 
               {{ pool.tokenPair }}
               <v-spacer />
-              {{ (pool.lpPrice + pool.pendingAmount) | toCurrency(round) }}
+              <span class="font-weight-bold" style="font-size: 22px">
+                {{ (pool.lpPrice + pool.pendingAmount) | toCurrency(round) }}
+              </span>
             </v-card-title>
             <v-card-text>
-              <p v-if="pool.staked">
+              <p v-if="pool.staked" class="mb-0">
                 <strong>Total Staked:</strong>
                 {{ pool.staked | to2Decimals(round) }}
               </p>
-              <p v-if="pool.borrowed">
+              <p v-if="pool.borrowed" class="mb-0">
                 <strong>Total Borrowed:</strong>
                 {{ pool.borrowed | to2Decimals(round) }} ({{
                   pool.borrowedUSD | toCurrency(round)
                 }})
               </p>
-              <p v-if="pool.lpTotal">
+              <p v-if="pool.lpTotal" class="mb-0">
                 <strong>Total LP:</strong> {{ pool.lpTotal || 0 }}
                 {{ pool.elevenBalance }}
               </p>
               <div v-if="pool.gambitRewards && pool.gambitRewards.length">
-                <p v-for="(gReward, index) in pool.gambitRewards" :key="index">
+                <p
+                  v-for="(gReward, index) in pool.gambitRewards"
+                  :key="index"
+                  class="mb-0"
+                >
                   <strong>Pending {{ gReward.symbol }}:</strong>
                   {{ gReward.pending | to2Decimals(round) }} ({{
                     gReward.pendingAmount | toCurrency(round)
                   }})
                 </p>
               </div>
-              <p v-else-if="pool.pending > 0">
+              <p v-else-if="pool.pending > 0" class="mb-0">
                 <strong>Pending {{ pool.rewardSymbol || "Rewards" }}:</strong>
                 {{ pool.pending | to2Decimals(round) }} ({{
                   pool.pendingELE ||
@@ -151,19 +173,19 @@
                   pool.pendingAmount | toCurrency(round)
                 }})
               </p>
-              <p v-if="pool.pendingNerve">
+              <p v-if="pool.pendingNerve" class="mb-0">
                 <strong>Pending 11NRV:</strong>
                 {{ pool.pendingNerve | to2Decimals(round) }} ({{
                   pool.pendingNRVAmount | toCurrency(round)
                 }})
               </p>
-              <p v-if="pool.pendingBunny">
+              <p v-if="pool.pendingBunny" class="mb-0">
                 <strong>Pending BUNNY:</strong>
                 {{ pool.pendingBunny | to2Decimals(round) }} ({{
                   pool.pendingBunnyAmount | toCurrency(round)
                 }})
               </p>
-              <p v-if="pool.pendingMerlin">
+              <p v-if="pool.pendingMerlin" class="mb-0">
                 <strong>Pending MERLIN:</strong>
                 {{ pool.pendingMerlin | to2Decimals(round) }} ({{
                   pool.pendingMerlinAmount | toCurrency(round)
@@ -223,7 +245,7 @@ export default {
     farm: Object,
   },
   computed: {
-    ...mapGetters("generalStore", ["noLPPools", "round"]),
+    ...mapGetters("generalStore", ["noLPPools", "round", "darkmode"]),
     ...mapGetters("walletStore", ["connectedWallet", "connectedWalletNetwork"]),
     poolsWithoutTotalLP: function () {
       if (this.noLPPools) {

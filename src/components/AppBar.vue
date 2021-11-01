@@ -14,7 +14,7 @@
               active: togglerActive,
             }"
             :style="{
-              minWidth: $vuetify.breakpoint.smAndDown ? '32px' : auto,
+              minWidth: $vuetify.breakpoint.smAndDown ? '32px' : 'auto',
             }"
             v-if="$vuetify.breakpoint.mobile"
             color="transparent"

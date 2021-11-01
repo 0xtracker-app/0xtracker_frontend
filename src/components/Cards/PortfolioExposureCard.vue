@@ -100,7 +100,7 @@
       <v-progress-linear
         v-show="loading"
         :indeterminate="loading"
-        color="#5e72e4"
+        color="indigo lighten-1"
         slot="progress"
       ></v-progress-linear>
       <v-overlay :absolute="true" :value="loading">

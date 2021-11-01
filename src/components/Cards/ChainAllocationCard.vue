@@ -32,7 +32,7 @@
               elevation="0"
               small
               :dark="darkmode"
-              color="#5e72e4"
+              color="indigo lighten-1"
               :disabled="farmsByNetwork.length === 0"
             >
               View All
@@ -95,7 +95,7 @@
       <v-progress-linear
         v-show="loading"
         :indeterminate="loading"
-        color="#5e72e4"
+        color="indigo lighten-1"
         slot="progress"
       ></v-progress-linear>
       <v-overlay :absolute="true" :value="loading">
@@ -136,7 +136,7 @@
                 :value="getPercentage(farm.total)"
                 rounded
                 height="7"
-                color="#5e72e4"
+                color="indigo lighten-1"
                 class="mx-2"
               />
             </template>

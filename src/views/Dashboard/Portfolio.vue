@@ -27,7 +27,10 @@
                 class="font-weight-600 text-h3 mb-0 d-flex justify-space-between align-center fill-height"
                 :class="{ 'text-muted': !darkmode }"
               >
-                <span class="text-muted text-uppercase text-h5 font-weight-600">
+                <span
+                  class="text-muted text-uppercase text-h5 font-weight-600 d-flex align-center"
+                >
+                  <v-icon class="mr-2 text-muted"> mdi-wallet-outline </v-icon>
                   Wallet
                 </span>
                 <v-tooltip bottom>
@@ -59,6 +62,7 @@
             <v-card-text class="px-0 py-0">
               <v-slide-y-transition>
                 <div v-show="showWallet">
+                  <v-divider></v-divider>
                   <Wallet />
                 </div>
               </v-slide-y-transition>
@@ -84,36 +88,11 @@
                     :class="{ 'text-muted': !darkmode }"
                   >
                     <span
-                      class="text-muted text-uppercase text-h5 font-weight-600"
+                      class="text-muted text-uppercase text-h5 font-weight-600 d-flex align-center"
                     >
+                      <v-icon class="mr-2 text-muted"> mdi-tractor </v-icon>
                       Farms
                     </span>
-                    <v-tooltip bottom>
-                      <template v-slot:activator="{ on, attrs }">
-                        <v-btn
-                          depressed
-                          outlined
-                          icon
-                          @click="showFarms = !showFarms"
-                          class="rounded-lg"
-                          small
-                          :ripple="false"
-                        >
-                          <v-icon
-                            v-bind="attrs"
-                            v-on="on"
-                            class="show-button"
-                            size="15"
-                          >
-                            {{
-                              showFarms ? "mdi-minus-thick" : "mdi-plus-thick"
-                            }}
-                          </v-icon>
-                        </v-btn>
-                      </template>
-                      <span v-if="showFarms">Hide Farms Details</span>
-                      <span v-else>Show Farms Details</span>
-                    </v-tooltip>
                   </p>
                 </v-col>
                 <v-col
@@ -153,7 +132,7 @@
                     View:
                   </span>
                   <p
-                    class="font-weight-600 text-h3 mb-0"
+                    class="font-weight-600 text-h3 mb-0 mr-2"
                     :class="{ 'text-muted': !darkmode }"
                   >
                     <v-tooltip bottom>
@@ -171,6 +150,31 @@
                       <span v-else>Toggle List View</span>
                     </v-tooltip>
                   </p>
+
+                  <v-tooltip bottom>
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn
+                        depressed
+                        outlined
+                        icon
+                        @click="showFarms = !showFarms"
+                        class="rounded-lg"
+                        small
+                        :ripple="false"
+                      >
+                        <v-icon
+                          v-bind="attrs"
+                          v-on="on"
+                          class="show-button"
+                          size="15"
+                        >
+                          {{ showFarms ? "mdi-minus-thick" : "mdi-plus-thick" }}
+                        </v-icon>
+                      </v-btn>
+                    </template>
+                    <span v-if="showFarms">Hide Farms Details</span>
+                    <span v-else>Show Farms Details</span>
+                  </v-tooltip>
                 </v-col>
               </v-row>
             </div>
@@ -199,13 +203,12 @@
             <div class="card-header-padding">
               <v-row>
                 <v-col cols="12" sm="6">
-                  <p
-                    class="font-weight-600 text-h3 mb-0"
-                    :class="{ 'text-muted': !darkmode }"
+                  <span
+                    class="text-muted text-uppercase text-h5 font-weight-600 d-flex align-center"
                   >
-                    <v-icon> mdi-hand-coin </v-icon>
+                    <v-icon class="mr-2 text-muted"> mdi-hand-coin </v-icon>
                     Lending / Borrowing
-                  </p>
+                  </span>
                 </v-col>
                 <v-col
                   cols="12"
@@ -220,12 +223,39 @@
                   >
                     Total: {{ total | toCurrency(round) }}
                   </span>
+                  <v-tooltip bottom>
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn
+                        depressed
+                        outlined
+                        icon
+                        @click="showLending = !showLending"
+                        class="rounded-lg"
+                        small
+                        :ripple="false"
+                      >
+                        <v-icon
+                          v-bind="attrs"
+                          v-on="on"
+                          class="show-button"
+                          size="15"
+                        >
+                          {{
+                            showLending ? "mdi-minus-thick" : "mdi-plus-thick"
+                          }}
+                        </v-icon>
+                      </v-btn>
+                    </template>
+                    <span v-if="showLending">Hide Farms Details</span>
+                    <span v-else>Show Farms Details</span>
+                  </v-tooltip>
                 </v-col>
               </v-row>
             </div>
             <v-card-text class="px-0 py-0">
               <v-slide-y-transition>
-                <div>
+                <div v-if="showLending">
+                  <v-divider />
                   <LendingFarmsTable />
                 </div>
               </v-slide-y-transition>
@@ -265,6 +295,7 @@ export default {
     return {
       showWallet: true,
       showFarms: true,
+      showLending: true,
     };
   },
   computed: {

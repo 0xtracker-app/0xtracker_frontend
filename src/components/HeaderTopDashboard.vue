@@ -41,7 +41,7 @@
 </template>
 <script>
 import { mapGetters, mapActions } from "vuex";
-import { detectWalletType } from "@/util/helpers";
+// import { detectWalletType } from "@/util/helpers";
 
 export default {
   name: "HeaderTopDashboard",
@@ -60,14 +60,14 @@ export default {
     },
   },
   mounted() {
-    if (this.recentQuery.profile) {
-      this.executeRecentQuery();
-    } else if (this.$store.state.walletStore.wallet) {
-      this.loadPortfolio({
-        walletAddress: this.$store.state.walletStore.wallet,
-        walletType: detectWalletType(this.$store.state.walletStore.wallet),
-      });
-    }
+    // if (this.recentQuery.profile) {
+    //   this.executeRecentQuery();
+    // } else if (this.$store.state.walletStore.wallet) {
+    //   this.loadPortfolio({
+    //     walletAddress: this.$store.state.walletStore.wallet,
+    //     walletType: detectWalletType(this.$store.state.walletStore.wallet),
+    //   });
+    // }
   },
   methods: {
     ...mapActions("walletStore", ["loadPortfolio", "loadProfile"]),

@@ -90,7 +90,9 @@
           @click="loadApprovals()"
           :dark="darkmode"
         >
-          <v-icon size="18" color="#5e72e4">fa-arrow-circle-right</v-icon>
+          <v-icon size="18" color="indigo lighten-1"
+            >fa-arrow-circle-right</v-icon
+          >
         </v-btn>
       </v-col>
     </v-row>

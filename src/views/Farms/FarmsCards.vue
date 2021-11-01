@@ -1,12 +1,26 @@
 <template>
   <v-card>
-    <v-card-text v-if="Object.keys(farmsWithData).length" class="px-0 py-0">
-      <v-expansion-panels accordion hover multiple :value="panelsArray" tile>
+    <v-card-text
+      v-if="Object.keys(farmsWithData).length"
+      class="px-0 py-0 overflow-hidden"
+    >
+      <v-expansion-panels
+        accordion
+        hover
+        multiple
+        :value="panelsArray"
+        tile
+        :dark="darkmode"
+        style="border-radius: 24px"
+      >
         <v-expansion-panel v-for="(farm, key) in farmsWithData" :key="key">
-          <v-expansion-panel-header>
+          <v-expansion-panel-header class="bg-transparent">
             <div class="d-flex justify-space-between mr-4" style="width: 100%">
               <span class="mr-2 font-weight-bold">
-                <span> {{ farm.name }} ({{ farm.network }}) - </span>
+                <v-avatar rounded tile size="20" class="mr-2">
+                  <v-img :src="getNetworkLogo(farm.network)" />
+                </v-avatar>
+                <span> {{ farm.name }} - </span>
                 <span class="orange--text text--lighten-1">
                   {{ farm.total | toCurrency(round) }}
                 </span>
@@ -29,7 +43,13 @@
                 >
                   mdi-refresh
                 </v-icon>
-                <v-btn dense outlined color="#5e72e4" class="text-none" small>
+                <v-btn
+                  dense
+                  outlined
+                  color="indigo lighten-1"
+                  class="text-none"
+                  small
+                >
                   <v-icon> mdi-chart-timeline-variant </v-icon>
                   <span class="ml-2 d-none d-sm-block"> View History </span>
                 </v-btn>
@@ -37,7 +57,7 @@
             </div>
           </v-expansion-panel-header>
           <v-expansion-panel-content>
-            <div class="grey pa-0" :class="darkmode ? 'darken-4' : 'lighten-4'">
+            <div class="pa-0">
               <Farm :farm="farm" />
             </div>
           </v-expansion-panel-content>
@@ -88,6 +108,9 @@ export default {
     detectWalletType(walletAddress) {
       return detectWalletType(walletAddress);
     },
+    getNetworkLogo(network) {
+      return require(`@/assets/images/networks/${network}.jpg`);
+    },
   },
 };
 </script>
@@ -95,5 +118,13 @@ export default {
 <style>
 .v-expansion-panel-content__wrap {
   padding: 0 !important;
+}
+
+.theme--dark.v-expansion-panels .v-expansion-panel {
+  background: transparent !important;
+}
+
+.v-expansion-panel::before {
+  box-shadow: none !important;
 }
 </style>

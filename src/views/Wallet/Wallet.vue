@@ -3,7 +3,7 @@
     <v-progress-linear
       v-show="loading"
       :indeterminate="loading"
-      color="#5e72e4"
+      color="indigo lighten-1"
     ></v-progress-linear>
     <v-card v-if="balances.length" style="overflow: hidden" class="rounded-t-0">
       <v-card-text class="px-0 py-0">
@@ -52,7 +52,7 @@
           prev-icon="fa fa-angle-left"
           next-icon="fa fa-angle-right"
           class="pagination"
-          color="#5e72e4"
+          color="indigo lighten-1"
           v-model="page"
           :length="pageCount"
           circle

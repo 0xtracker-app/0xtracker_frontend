@@ -39,7 +39,7 @@
                   :right="userProfiles.length > 0"
                   class="text-none text-caption font-weight-bold white--text"
                   elevation="0"
-                  color="indigo lighten--2"
+                  color="indigo lighten-1"
                 >
                   <v-icon class="mr-2">mdi-plus-thick</v-icon>
                   Add Profile
@@ -77,7 +77,7 @@
                 <v-btn
                   class="text-none px-4 text-caption font-weight-bold white--text"
                   elevation="0"
-                  color="indigo lighten--2"
+                  color="indigo lighten-1"
                   :block="$vuetify.breakpoint.smAndDown"
                   rippple
                   :disabled="!profileName"

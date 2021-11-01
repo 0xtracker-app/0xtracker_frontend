@@ -4,8 +4,8 @@
     <v-container fluid class="pt-0 px-6">
       <v-row class="mt-0">
         <v-col cols="12" lg="12" class="pt-6">
-          <v-card class="card-shadow mb-6" :dark="darkmode">
-            <div class="card-header-padding card-border-bottom card-shadow">
+          <v-card class="mb-6" :dark="darkmode">
+            <div class="card-header-padding card-border-bottom">
               <p
                 class="font-weight-600 text-h3 mb-0"
                 :class="{ 'text-muted': !darkmode }"
@@ -53,7 +53,7 @@
                           "
                           target="_blank"
                           icon
-                          color="#5e72e4"
+                          color="indigo lighten-1"
                         >
                           <v-icon size="14">fas fa-external-link-alt</v-icon>
                         </v-btn>
@@ -64,7 +64,7 @@
                           "
                           target="_blank"
                           icon
-                          color="#5e72e4"
+                          color="indigo lighten-1"
                         >
                           <v-icon size="14">fas fa-external-link-alt</v-icon>
                         </v-btn>
@@ -75,7 +75,7 @@
                           "
                           target="_blank"
                           icon
-                          color="#5e72e4"
+                          color="indigo lighten-1"
                         >
                           <v-icon size="14">fas fa-external-link-alt</v-icon>
                         </v-btn>
@@ -90,7 +90,7 @@
                               icon
                               :color="
                                 searchedWallet === connectedWallet
-                                  ? '#5e72e4'
+                                  ? 'indigo lighten-1'
                                   : ''
                               "
                             >
@@ -255,7 +255,8 @@ export default {
       return approvals;
     },
     approvalsSortedByAmount() {
-      return this.approvals.sort((a, b) =>
+      const _approvals = this.approvals;
+      return _approvals.sort((a, b) =>
         a.balance < b.balance ? 1 : b.balance < a.balance ? -1 : 0
       );
     },

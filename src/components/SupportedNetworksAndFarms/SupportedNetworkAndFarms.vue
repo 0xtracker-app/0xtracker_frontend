@@ -46,7 +46,7 @@
           prev-icon="fa fa-angle-left"
           next-icon="fa fa-angle-right"
           class="pagination"
-          color="#5e72e4"
+          color="indigo lighten-1"
           v-model="page"
           :length="pageCount"
           circle

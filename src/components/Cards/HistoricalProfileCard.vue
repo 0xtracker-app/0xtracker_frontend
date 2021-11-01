@@ -2,48 +2,85 @@
   <v-card class="mb-3" :dark="darkmode" style="background-color: transparent">
     <v-card-text class="card-stats-padding">
       <div
-        class="d-flex flex-column flex-md-row justify-space-between align-center"
+        class="d-flex flex-column flex-lg-row justify-space-between align-center"
       >
-        <div class="d-flex align-center mb-4 mb-md-0">
-          <v-icon> mdi-chart-timeline-variant-shimmer </v-icon>
-          <h4
-            class="font-weight-600 text-uppercase text-h3 mb-0 mx-2"
-            :style="{ color: darkmode ? '#d5d5d5' : '#15121D' }"
-          >
-            Historical Profile
-          </h4>
-          <v-tooltip top :open-on-hover="false" v-model="isTooltipOpen">
-            <template v-slot:activator="{ on, attrs }">
-              <v-chip
-                v-bind="attrs"
-                v-on="on"
-                small
-                color="yellow"
-                class="d-flex align-center text-caption font-weight-bold grey--text text--darken-4"
-                style="font-size: 10px !important"
-              >
-                <v-icon size="15" class="mr-1"> mdi-alert-octagon </v-icon>
-                Beta {{ $vuetify.breakpoint.xlAndUp ? "Feature" : "" }}
-              </v-chip>
-            </template>
-            <span
-              class="text-caption text-white font-weight-bold"
-              @click:outside="isTooltipOpen = false"
+        <div
+          class="d-flex justify-space-between align-center mb-4 mb-lg-0"
+          style="width: 100%"
+        >
+          <div class="d-flex align-center mb-lg-0">
+            <v-icon> mdi-chart-timeline-variant-shimmer </v-icon>
+            <h4
+              class="font-weight-600 text-uppercase text-caption text-uppercase mb-0 mx-2"
+              :style="{ color: darkmode ? '#d5d5d5' : '#15121D' }"
             >
-              This feature is currently in beta version. If you see some bugs,
-              let us know
-              <a
-                href="https://0xtracker.hellonext.co/roadmap"
-                class="font-weight-bold text-decoration-none blue--text text--lighten-2"
+              Historical Profile
+            </h4>
+            <v-tooltip top :open-on-hover="false" v-model="isTooltipOpen">
+              <template v-slot:activator="{ on, attrs }">
+                <v-chip
+                  v-bind="attrs"
+                  v-on="on"
+                  small
+                  color="yellow"
+                  class="d-flex align-center text-caption font-weight-bold grey--text text--darken-4"
+                  style="font-size: 10px !important"
+                >
+                  <v-icon size="15" class="mr-1"> mdi-alert-octagon </v-icon>
+                  Beta {{ $vuetify.breakpoint.xlAndUp ? "Feature" : "" }}
+                </v-chip>
+              </template>
+              <span
+                class="text-caption text-white font-weight-bold"
+                @click:outside="isTooltipOpen = false"
               >
-                here </a
-              >.
-            </span>
+                This feature is currently in beta version. If you see some bugs,
+                let us know
+                <a
+                  href="https://0xtracker.hellonext.co/roadmap"
+                  class="font-weight-bold text-decoration-none blue--text text--lighten-2"
+                >
+                  here </a
+                >.
+              </span>
+            </v-tooltip>
+          </div>
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                depressed
+                outlined
+                icon
+                @click="showHistoricalData = !showHistoricalData"
+                class="rounded-lg"
+                small
+                :ripple="false"
+              >
+                <v-icon v-bind="attrs" v-on="on" class="show-button" size="15">
+                  {{
+                    showHistoricalData ? "mdi-minus-thick" : "mdi-plus-thick"
+                  }}
+                </v-icon>
+              </v-btn>
+            </template>
+            <span v-if="showHistoricalData">Hide Historical Data</span>
+            <span v-else>Show Historical Data</span>
           </v-tooltip>
         </div>
-        <v-btn-toggle v-model="selectedInterval" mandatory dense>
+        <v-btn-toggle
+          v-if="historicalData.length > 0 && showHistoricalData"
+          v-model="selectedInterval"
+          mandatory
+          dense
+          class="ml-0 ml-lg-2"
+          :dark="darkmode"
+          :style="{
+            filter: darkmode
+              ? 'drop-shadow(1px -1px 0px #5C6BC0) drop-shadow(-1px 1px 1px #0C0B10)'
+              : '',
+          }"
+        >
           <v-btn
-            :dark="darkmode"
             v-for="(interval, index) in intervals"
             :key="index"
             active-class="active-btn"
@@ -58,61 +95,66 @@
       <v-progress-linear
         v-show="loading"
         :indeterminate="loading"
-        color="#5e72e4"
+        color="indigo lighten-1"
         slot="progress"
       ></v-progress-linear>
       <v-overlay :absolute="true" :value="loading">
         <div class="text-center"></div>
       </v-overlay>
-      <div v-if="historicalData.length > 0" class="d-flex">
-        <v-row class="d-flex align-center mt-2" style="width: 100%">
-          <v-col cols="12" class="d-flex justify-center">
-            <LineChart
-              :datasets="datasets"
-              :options="options"
-              ref="historicalDataRef"
-              style="width: 100%; overflow: visible"
-              :style="{
-                height: $vuetify.breakpoint.mdAndUp ? '100%' : '300px',
-              }"
-            ></LineChart>
-          </v-col>
-          <v-col cols="12" class="d-flex justify-center flex-column align-end">
-            <div
-              v-for="(data, index) in historicalData"
-              :key="index"
-              class="d-flex align-center mb-1"
-              style="max-width: 350px; width: 100%"
+      <div v-if="showHistoricalData">
+        <div v-if="historicalData.length > 0" class="d-flex">
+          <v-row class="d-flex align-center mt-2" style="width: 100%">
+            <v-col cols="12" class="d-flex justify-center">
+              <LineChart
+                :datasets="datasets"
+                :options="options"
+                ref="historicalDataRef"
+                style="width: 100%; overflow: visible"
+                :style="{
+                  height: $vuetify.breakpoint.mdAndUp ? '100%' : '300px',
+                }"
+              ></LineChart>
+            </v-col>
+            <v-col
+              cols="12"
+              class="d-flex justify-center flex-column align-end"
             >
               <div
-                class="rounded-circle mr-3"
-                style="min-width: 15px"
-                :style="{
-                  width: '15px',
-                  height: '15px',
-                  backgroundColor: colors[index],
-                }"
-              ></div>
-
-              <span
-                class="text-caption font-weight-bold"
-                style="
-                  overflow: hidden;
-                  text-overflow: ellipsis;
-                  white-space: nowrap;
-                "
+                v-for="(data, index) in historicalData"
+                :key="index"
+                class="d-flex align-center mb-1"
+                style="max-width: 350px; width: 100%"
               >
-                {{ data.wallet.walletAddress }}
-              </span>
-            </div>
-          </v-col>
-        </v-row>
-      </div>
-      <div
-        v-else
-        class="d-flex align-center justify-content-center flex-column py-10 w-full"
-      >
-        No data available...
+                <div
+                  class="rounded-circle mr-3"
+                  style="min-width: 15px"
+                  :style="{
+                    width: '15px',
+                    height: '15px',
+                    backgroundColor: colors[index],
+                  }"
+                ></div>
+
+                <span
+                  class="text-caption font-weight-bold"
+                  style="
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                  "
+                >
+                  {{ data.wallet.walletAddress }}
+                </span>
+              </div>
+            </v-col>
+          </v-row>
+        </div>
+        <div
+          v-else
+          class="d-flex align-center justify-content-center flex-column py-10 w-full"
+        >
+          No data available...
+        </div>
       </div>
     </v-card-text>
   </v-card>
@@ -157,6 +199,7 @@ export default {
       ],
       selectedInterval: 0,
       isTooltipOpen: false,
+      showHistoricalData: true,
     };
   },
   watch: {
@@ -395,7 +438,7 @@ export default {
 
 <style>
 .active-btn {
-  background: #5e72e4 !important;
+  background: #5c6bc0 !important;
   color: white !important;
 }
 

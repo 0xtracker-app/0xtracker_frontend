@@ -5,7 +5,7 @@
       <v-progress-linear
         v-show="loading"
         :indeterminate="loading"
-        color="#5e72e4"
+        color="indigo lighten-1"
         slot="progress"
       ></v-progress-linear>
       <v-card class="rounded-t-0">
@@ -65,7 +65,7 @@
                         :value="(item.totalBorrowed / loanAmount) * 100"
                         height="25"
                         rounded
-                        color="#5e72e4"
+                        color="indigo lighten-1"
                       >
                         <strong>
                           {{

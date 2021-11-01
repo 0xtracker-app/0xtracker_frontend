@@ -148,7 +148,7 @@
               class="mx-5 text-decoration-none text-overline font-weight-bold"
               @click="setWalletDialog(false)"
               depressed
-              color="#5e72e4"
+              color="indigo lighten-1"
               outlined
             >
               Cancel
@@ -158,7 +158,7 @@
               class="mx-5 text-decoration-none text-overline font-weight-bold"
               @click="overlay = false"
               depressed
-              color="#5e72e4"
+              color="indigo lighten-1"
             >
               Proceed
             </v-btn>

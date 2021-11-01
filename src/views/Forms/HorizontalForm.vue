@@ -17,7 +17,7 @@
                 outlined
                 flat
                 color="white"
-                class="font-size-input placeholder-dark input-alternative input-icon mr-2 custom-placeholer-color"
+                class="font-size-input input-alternative input-icon mr-2 custom-placeholder-color"
                 :style="{
                   backgroundColor: darkmode ? '#232228' : 'white',
                 }"
@@ -79,7 +79,7 @@
                   depressed
                   width="25"
                   class="font-weight-600 text-capitalize rounded-circle grow pa-0"
-                  color="#5e72e4"
+                  color="indigo lighten-1"
                   @click="loadPortfolio({ walletAddress: wallet, walletType })"
                   :dark="darkmode"
                 >
@@ -104,7 +104,7 @@
                 >
                   <v-icon
                     size="25"
-                    :color="darkmode ? 'indigo lighten-2' : '#232228'"
+                    :color="darkmode ? 'indigo lighten-1' : '#232228'"
                   >
                     mdi-connection
                   </v-icon>
@@ -236,7 +236,7 @@
               </template>
               <div
                 class="mt-2 rounded-lg"
-                style="max-width: 230px"
+                style="max-width: 230px; min-width: 200px"
                 :style="{
                   backgroundColor: darkmode ? '#0C0B10' : 'white',
                 }"
@@ -248,7 +248,7 @@
                 >
                   <v-list-item
                     v-if="selectedProfile"
-                    class="text-h5 text-uppercase font-weight-bold pb-2"
+                    class="text-h5 text-uppercase font-weight-bold pt-2 pb-4"
                     :style="{
                       borderBottom: darkmode
                         ? '1px solid grey'
@@ -262,7 +262,10 @@
                       style="letter-spacing: 0px"
                       class="d-flex flex-column align-center justify-center mx-auto text-truncate"
                     >
-                      <v-icon size="50" :color="darkmode ? '#5e72e4' : 'grey'">
+                      <v-icon
+                        size="50"
+                        :color="darkmode ? 'indigo lighten-1' : 'grey'"
+                      >
                         mdi-account-circle-outline
                       </v-icon>
                       {{ selectedProfile.name }}
@@ -280,7 +283,7 @@
                   </v-list-item>
                   <div
                     class="custom-scrollbar"
-                    style="max-height: 180px; overflow-y: scroll"
+                    style="max-height: 180px; overflow-y: auto"
                   >
                     <v-list-item
                       dense
@@ -518,7 +521,7 @@ export default {
 </style>
 
 <style>
-.custom-placeholer-color input::placeholder {
+.custom-placeholder-color input::placeholder {
   color: #8e8e90 !important;
 }
 

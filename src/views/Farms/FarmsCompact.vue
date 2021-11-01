@@ -3,7 +3,7 @@
     <v-progress-linear
       v-show="loading"
       :indeterminate="loading"
-      color="#5e72e4"
+      color="indigo lighten-1"
     ></v-progress-linear>
 
     <v-card class="rounded-t-0">
@@ -20,6 +20,7 @@
           sort-by="poolValue"
           :sort-desc="true"
           class="table px-4"
+          mobile-breakpoint="0"
           style="background-color: transparent"
         >
           <template v-slot:item.actions="{ item }">
