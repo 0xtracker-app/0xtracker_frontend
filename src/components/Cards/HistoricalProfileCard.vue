@@ -197,7 +197,7 @@ export default {
           value: 90,
         },
       ],
-      selectedInterval: 0,
+      selectedInterval: 1,
       isTooltipOpen: false,
       showHistoricalData: true,
     };

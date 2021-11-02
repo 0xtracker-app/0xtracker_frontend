@@ -1,6 +1,19 @@
 <template>
-  <div>
-    <v-container fluid>
+  <div
+    :class="[
+      darkmode ? 'darkmodebg' : 'lightmodebg',
+      $vuetify.breakpoint.mobile ? 'full-width' : '',
+      mini && !$vuetify.breakpoint.mobile ? 'app-bar-full' : 'app-bar',
+    ]"
+    style="position: fixed; top: 0; z-index: 6"
+  >
+    <v-app-bar
+      fluid
+      class="px-4 bg-transparent"
+      elevation="0"
+      elevate-on-scroll
+      scroll-target="#scroll-reference"
+    >
       <v-row class="d-flex">
         <v-col class="d-flex align-center px-0" cols="12">
           <v-btn
@@ -38,7 +51,7 @@
           <HorizontalForm style="width: 100%" />
         </v-col>
       </v-row>
-    </v-container>
+    </v-app-bar>
   </div>
 </template>
 <script>
@@ -69,7 +82,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters("generalStore", ["darkmode"]),
+    ...mapGetters("generalStore", ["darkmode", "mini"]),
   },
   watch: {
     toggleActive(val) {
@@ -78,3 +91,17 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.app-bar {
+  width: calc(100% - 250px);
+}
+
+.app-bar-full {
+  width: calc(100% - 56px);
+}
+
+.full-width {
+  width: 100%;
+}
+</style>

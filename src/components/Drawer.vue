@@ -13,6 +13,9 @@
           ? '#232228'
           : '#f3f4fd'
         : 'transparent',
+      boxShadow: $vuetify.breakpoint.mobile
+        ? 'black -20px 0px 50px !important'
+        : 'none !important',
     }"
   >
     <div class="flex-column d-flex fill-height justify-space-between py-6">
@@ -174,7 +177,6 @@ export default {
     },
   },
   data: () => ({
-    mini: false,
     togglerActive: false,
     itemsSimple: [
       {
@@ -203,20 +205,20 @@ export default {
     currentRoute() {
       return this.$route.name;
     },
-    ...mapGetters("generalStore", ["darkmode"]),
+    ...mapGetters("generalStore", ["darkmode", "mini"]),
     ...mapGetters("walletStore", ["connectedWallet", "connectedWalletShort"]),
   },
   watch: {
     "$vuetify.breakpoint.mobile"(val) {
-      if (val) this.mini = !val;
+      if (val) this.toggleMini(!val);
     },
   },
   methods: {
-    ...mapActions("generalStore", ["setWalletDialog"]),
+    ...mapActions("generalStore", ["setWalletDialog", "toggleMini"]),
     ...mapActions("walletStore", ["connectWallet"]),
     minifyDrawer() {
       this.togglerActive = !this.togglerActive;
-      this.mini = !this.mini;
+      this.toggleMini();
       const body = document.getElementsByTagName("body")[0];
 
       if (body.classList.contains("drawer-mini")) {
@@ -228,9 +230,3 @@ export default {
   },
 };
 </script>
-
-<style>
-.v-navigation-drawer {
-  box-shadow: none !important;
-}
-</style>

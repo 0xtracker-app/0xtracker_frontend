@@ -1,7 +1,7 @@
 <template>
   <v-form class="py-1" ref="form" v-model="valid" lazy-validation>
     <v-row no-gutters class="px-4 px-md-0">
-      <v-col cols="12" class="overflow-hidden">
+      <v-col cols="12">
         <v-row class="flex-nowrap d-flex">
           <v-col
             md="8"
@@ -9,7 +9,7 @@
             :cols="fieldActive ? '12' : '6'"
             :class="fieldActive ? 'flex-shrink-0' : 'flex-shrink-1'"
           >
-            <div class="d-flex">
+            <div class="d-flex align-center">
               <v-text-field
                 v-model="wallet"
                 :disabled="loading"
@@ -17,7 +17,7 @@
                 outlined
                 flat
                 color="white"
-                class="font-size-input input-alternative input-icon mr-2 custom-placeholder-color"
+                class="font-size-input input-alternative input-icon mr-2 custom-placeholder-color search-bar"
                 :style="{
                   backgroundColor: darkmode ? '#232228' : 'white',
                 }"
@@ -70,7 +70,7 @@
                   </span>
                 </template>
               </v-text-field>
-              <div class="d-none d-sm-flex mt-3 ml-2">
+              <div class="d-none d-sm-flex ml-2">
                 <v-btn
                   :disabled="loading || !walletType"
                   :ripple="false"
@@ -89,21 +89,21 @@
             </div>
           </v-col>
           <v-col class="d-flex justify-end align-center">
-            <v-tooltip top :color="darkmode ? 'white' : 'primary'">
+            <v-tooltip bottom :color="darkmode ? 'white' : 'primary'">
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
                   v-bind="attrs"
                   v-on="on"
                   class="mr-4 rounded-circle px-0 elevation-0"
                   large
-                  style="height: 48px; min-width: 48px"
+                  style="height: 40px; min-width: 40px"
                   :style="{
                     backgroundColor: darkmode ? '#232228' : 'white',
                   }"
                   @click="setWalletDialog(true)"
                 >
                   <v-icon
-                    size="25"
+                    size="20"
                     :color="darkmode ? 'indigo lighten-1' : '#232228'"
                   >
                     mdi-connection
@@ -130,12 +130,12 @@
                   v-on="on"
                   class="mr-4 rounded-circle px-0 elevation-0"
                   large
-                  style="height: 48px; min-width: 48px"
+                  style="height: 40px; min-width: 40px"
                   :style="{
                     backgroundColor: darkmode ? '#232228' : 'white',
                   }"
                 >
-                  <v-icon size="25" :color="darkmode ? 'white' : '#232228'">
+                  <v-icon size="20" :color="darkmode ? 'white' : '#232228'">
                     mdi-cog-outline
                   </v-icon>
                 </v-btn>
@@ -220,7 +220,7 @@
                   v-on="on"
                   class="mr-4 rounded-circle px-0 elevation-0"
                   large
-                  style="height: 48px; min-width: 48px"
+                  style="height: 40px; min-width: 40px"
                   :style="{
                     backgroundColor: darkmode ? '#232228' : 'white',
                   }"
@@ -228,7 +228,7 @@
                   <v-icon
                     :dark="darkmode"
                     :color="darkmode ? 'white' : '#232228'"
-                    size="30"
+                    size="25"
                   >
                     mdi-account-outline
                   </v-icon>
@@ -542,5 +542,14 @@ export default {
   -webkit-box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.3);
   box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.3);
   background-color: #5e72e4;
+}
+
+.search-bar .v-input__slot {
+  min-height: 40px !important;
+}
+
+.search-bar .v-input__prepend-inner,
+.search-bar .v-input__append-inner {
+  margin-top: 14px !important;
 }
 </style>

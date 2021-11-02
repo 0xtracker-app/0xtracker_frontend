@@ -3,6 +3,7 @@
     <v-card-text
       v-if="Object.keys(farmsWithData).length"
       class="px-0 py-0 overflow-hidden"
+      style="border-radius: 0 0 24px 24px"
     >
       <v-expansion-panels
         accordion
@@ -11,7 +12,6 @@
         :value="panelsArray"
         tile
         :dark="darkmode"
-        style="border-radius: 24px"
       >
         <v-expansion-panel v-for="(farm, key) in farmsWithData" :key="key">
           <v-expansion-panel-header class="bg-transparent">

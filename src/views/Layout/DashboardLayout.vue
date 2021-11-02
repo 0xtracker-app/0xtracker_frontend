@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <drawer :drawer="drawer"></drawer>
+    <drawer :drawer="drawer" style="z-index: 7"></drawer>
     <v-main :class="[darkmode ? 'darkmodebg' : 'lightmodebg']">
       <div class="mx-md-4">
         <div
@@ -9,28 +9,13 @@
           class="position-absolute drawer-state"
         ></div>
         <app-bar
-          v-if="$route.name != 'Portfolio'"
-          background="bg-primary"
-          has-bg
-          @drawer-toggle="drawer = !drawer"
-          :toggle-active="drawer"
-        ></app-bar>
-        <app-bar
-          v-else-if="$route.name == 'Portfolio'"
-          background="bg-default"
-          has-bg
-          @drawer-toggle="drawer = !drawer"
-          :toggle-active="drawer"
-        ></app-bar>
-        <app-bar
-          v-else
           background="transparent"
           linkColor="rgba(0,0,0,.6)"
           @drawer-toggle="drawer = !drawer"
           :toggle-active="drawer"
         ></app-bar>
         <fade-transition :duration="200" origin="center top" mode="out-in">
-          <div>
+          <div style="margin-top: 65px" id="scroll-reference">
             <div
               style="border-radius: 28px"
               :style="{ backgroundColor: darkmode ? '#232228' : '#f3f4fd' }"
