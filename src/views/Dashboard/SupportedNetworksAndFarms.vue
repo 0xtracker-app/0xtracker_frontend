@@ -38,7 +38,7 @@
       </v-row>
       <v-row v-else>
         <v-col class="mx-auto pt-0" lg="8">
-          <v-overlay :absolute="true" :value="loading">
+          <v-overlay :absolute="true" :value="loading" style="z-index: 8">
             <div class="text-center">
               <v-progress-circular indeterminate color="white" />
             </div>
