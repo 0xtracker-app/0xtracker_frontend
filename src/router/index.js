@@ -40,8 +40,8 @@ const routes = [
         component: Rev0x,
       },
       {
-        path: "/settings",
-        name: "Settings",
+        path: "/profiles",
+        name: "Profiles",
         component: Settings,
       },
       {

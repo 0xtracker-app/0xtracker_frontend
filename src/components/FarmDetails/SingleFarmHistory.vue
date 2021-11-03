@@ -29,7 +29,7 @@
               <v-col cols="6" md="4" class="my-2 text-center">
                 <v-row justify="center">
                   <p class="text-h4 mb-0 text-muted font-weight-bold">
-                    Total Withdrawls
+                    Total Withdrawals
                   </p>
                 </v-row>
                 <v-row justify="center" class="font-weight-bold text-h2">
@@ -107,7 +107,7 @@
             </v-row>
             <v-row>
               <v-col class="d-flex justify-center justify-sm-start">
-                <v-list dense flat>
+                <v-list dense flat style="background-color: transparent">
                   <v-subheader>Deposits</v-subheader>
                   <v-list-item-group color="primary">
                     <v-list-item
@@ -141,8 +141,13 @@
                 </v-list>
               </v-col>
               <v-col class="d-flex justify-center justify-sm-start">
-                <v-list dense flat disabled>
-                  <v-subheader>Withdrawls</v-subheader>
+                <v-list
+                  dense
+                  flat
+                  disabled
+                  style="background-color: transparent"
+                >
+                  <v-subheader>Withdrawals</v-subheader>
                   <v-list-item-group color="primary">
                     <v-list-item
                       v-for="(item, i) in farmInfo.transactions.withdrawls"
@@ -218,5 +223,10 @@ export default {
 .v-dialog {
   box-shadow: 0px 11px 15px -7px rgb(0 0 0 / 20%),
     0px 24px 38px 3px rgb(0 0 0 / 14%), 0px 9px 46px 8px rgb(0 0 0 / 12%);
+  border-radius: 28px;
+}
+
+.theme--dark.v-skeleton-loader .v-skeleton-loader__article {
+  background: transparent !important;
 }
 </style>

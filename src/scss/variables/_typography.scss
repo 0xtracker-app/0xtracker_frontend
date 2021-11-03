@@ -3,7 +3,7 @@ $font-size-root: 1rem;
 
 $headings: (
   'h1': (
-    'size': 1.625rem,
+    'size': 2rem,
     'line-height': 1.5,
     'letter-spacing': normal,
   ),
@@ -33,3 +33,7 @@ $headings: (
     'letter-spacing': normal,
   ),
 );
+
+.font-serif {
+  font-family: 'Allerta', serif;
+}

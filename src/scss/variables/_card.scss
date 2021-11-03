@@ -1,4 +1,8 @@
 $card-elevation: 0 !default;
-$card-border-radius: .375rem !default;
+$card-border-radius: 28px !default;
 $card-text-line-height: 1.5 !default;
 $card-text-letter-spacing: unset !default;
+
+.theme--dark.v-card {
+  background:#171721;
+}

@@ -1,19 +1,23 @@
 <template>
   <div>
-    <HeaderTopDashboard />
-    <v-container class="px-6 mt-n16">
+    <v-container>
       <v-row>
-        <v-col class="mx-auto pt-0" lg="8">
+        <v-col class="mx-auto pt-0" lg="10">
           <v-text-field
             v-model="search"
             :disabled="loading"
             rounded
             outlined
-            solo
-            class="font-size-input input-alternative input-icon"
+            flat
+            class="font-size-input input-icon mr-2"
+            hide-details
             :dark="darkmode"
             :placeholder="`Search ${farms.length} farms...`"
-          />
+          >
+            <template slot="prepend-inner">
+              <v-icon size=".875rem" color="grey">fas fa-search</v-icon>
+            </template>
+          </v-text-field>
         </v-col>
       </v-row>
       <v-row
@@ -23,7 +27,8 @@
           v-for="(networkWithFarms, network) in farmsByNetwork"
           :key="network"
           class="mx-auto pt-0"
-          lg="8"
+          cols="12"
+          lg="10"
         >
           <SupportedNetworkAndFarms
             :network="network"
@@ -33,7 +38,7 @@
       </v-row>
       <v-row v-else>
         <v-col class="mx-auto pt-0" lg="8">
-          <v-overlay :absolute="true" :value="loading">
+          <v-overlay :absolute="true" :value="loading" style="z-index: 8">
             <div class="text-center">
               <v-progress-circular indeterminate color="white" />
             </div>
@@ -45,13 +50,11 @@
 </template>
 <script>
 import { mapActions, mapGetters } from "vuex";
-import HeaderTopDashboard from "@/components/HeaderTopDashboard.vue";
 import SupportedNetworkAndFarms from "@/components/SupportedNetworksAndFarms/SupportedNetworkAndFarms.vue";
 
 export default {
   name: "SupportedNetworksAndFarms",
   components: {
-    HeaderTopDashboard,
     SupportedNetworkAndFarms,
   },
   data: () => ({

@@ -164,7 +164,7 @@ $btn-ls: .025em !default;
 $btn-toggle-active-bg: #d2e3ee !default;
 
 // Card
-$card-box-shadow: 0 0 1rem 0 rgb(94, 114, 228, .25) !default;
+$card-box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.25) !default;
 $card-stats-padding: 1rem 1.5rem !default;
 $card-padding: 1.5rem !default;
 $card-header-padding: 1.25rem 1.5rem !default;
@@ -210,8 +210,8 @@ $v-navigation-drawer-brand-height: 78px !default;
 $v-icon-drawer-min-width: 25px !default;
 $v-list-item-icon-mr: 7px !default;
 $v-list-item-mini-font-size: 0.8125rem !default;
-$v-list-item-title-color: rgba(0, 0, 0, .6) !default;
-$v-list-item-title-hover-color: rgba(0, 0, 0, .7) !default;
+$v-list-item-title-color: #8A96A2 !default;
+$v-list-item-title-hover-color: #15121F !default;
 $v-main-margin-left: 250px !default;
 $v-main-mini-margin-left: 56px !default;
 

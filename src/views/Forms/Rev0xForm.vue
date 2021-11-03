@@ -9,7 +9,10 @@
       <v-col md="11" sm="11">
         <v-row>
           <v-col md="6" sm="12">
-            <label for="" class="font-weight-600 mb-2 d-block text-white"
+            <label
+              for=""
+              class="font-weight-600 mb-2 d-block"
+              :style="{ color: darkmode ? '#5C6BC0' : '#232228' }"
               >Wallet Address</label
             >
             <v-text-field
@@ -39,7 +42,10 @@
             </v-text-field>
           </v-col>
           <v-col md="6" sm="12">
-            <label for="" class="font-weight-600 mb-2 d-block text-white"
+            <label
+              for=""
+              class="font-weight-600 mb-2 d-block"
+              :style="{ color: darkmode ? '#5C6BC0' : '#232228' }"
               >Network</label
             >
             <v-autocomplete
@@ -90,7 +96,9 @@
           @click="loadApprovals()"
           :dark="darkmode"
         >
-          <v-icon size="18" color="#5e72e4">fa-arrow-circle-right</v-icon>
+          <v-icon size="18" color="indigo lighten-1"
+            >fa-arrow-circle-right</v-icon
+          >
         </v-btn>
       </v-col>
     </v-row>

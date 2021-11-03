@@ -16,7 +16,8 @@
       >
         <img
           :src="slide.src"
-          style="max-width: 900px; width: 100%; height: auto"
+          style="width: 100%; height: auto"
+          class="rounded-lg overflow-hidden"
         />
       </v-carousel-item>
     </v-carousel>

@@ -1,153 +1,160 @@
 <template>
-  <div>
-    <HeaderTopDashboard />
-    <v-container class="px-6 mt-n16">
+  <div class="mt-12">
+    <v-container class="px-6">
       <v-row>
-        <v-col class="mx-auto pt-0" xl="8">
-          <v-card class="card-shadow mb-30" :dark="darkmode">
-            <v-card-text class="card-padding">
-              <v-hover
-                v-slot="{ hover }"
-                v-for="(settingsOption, key) in settingsOptions"
-                :key="key"
+        <v-col class="mx-auto pt-0" xl="12">
+          <v-dialog
+            v-model="dialog"
+            width="500"
+            :overlay-color="darkmode ? 'grey' : 'rgb(33, 33, 33)'"
+            :overlay-opacity="darkmode ? 0.2 : 0.46"
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <div
+                v-if="userProfiles.length === 0"
+                class="d-flex flex-column align-center"
+                :class="{ 'my-12': userProfiles.length === 0 }"
               >
-                <v-chip
-                  class="ma-2"
-                  @click="settingsOption.actionMethod"
+                <div
+                  class="d-flex flex-column align-center justify-center text-h4 mb-4 text-center"
                   :class="[
-                    darkmode ? '' : 'grey--text',
-                    hover && !darkmode ? 'text--darken-4' : 'text--darken-1',
+                    darkmode ? 'white--text' : 'grey--text text--darken-2',
                   ]"
                 >
                   <v-icon
-                    v-if="settingsOption.showCondition"
-                    class="pr-1"
+                    size="30"
                     :class="[
-                      darkmode ? '' : 'grey--text',
-                      hover && !darkmode ? 'text--darken-4' : 'text--darken-1',
-                      key === 1 ? 'yellow--text' : '',
+                      darkmode ? 'white--text' : 'grey--text text--darken-2',
                     ]"
                   >
-                    {{ settingsOption.onIcon }}
+                    mdi-account-off-outline
                   </v-icon>
-                  <v-icon v-else class="pr-1">
-                    {{ settingsOption.offIcon }}
-                  </v-icon>
-                  {{ settingsOption.text }}
-                </v-chip>
-              </v-hover>
-            </v-card-text>
-          </v-card>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col class="mx-auto pt-0" xl="8">
-          <v-card class="card-shadow mb-30" :dark="darkmode">
-            <v-card-text class="card-padding">
-              <v-card-text>
-                <v-chip-group v-if="userProfiles.length > 0" class="mt-6">
-                  <v-chip
-                    v-for="(profile, key) in userProfiles"
-                    :key="key"
-                    class="ma-2 no-default-hover"
-                    close
-                    link
-                    :class="[darkmode ? 'btn-dark-hover' : 'btn-light-hover']"
-                    :to="`/profiles/${key}/`"
-                    @click:close="removeProfile(key)"
-                  >
-                    <span class="px-2">
-                      {{ profile.name }}
-                    </span>
-                  </v-chip>
-                </v-chip-group>
-                <v-dialog
-                  v-model="dialog"
-                  width="500"
-                  :overlay-color="darkmode ? 'grey' : 'rgb(33, 33, 33)'"
-                  :overlay-opacity="darkmode ? 0.2 : 0.46"
+                  You have no profile yet. Try to create one!
+                </div>
+                <v-btn
+                  v-bind="attrs"
+                  v-on="on"
+                  :absolute="userProfiles.length > 0"
+                  :top="userProfiles.length > 0"
+                  :right="userProfiles.length > 0"
+                  class="text-none text-caption font-weight-bold white--text"
+                  elevation="0"
+                  color="indigo lighten-1"
                 >
-                  <template v-slot:activator="{ on, attrs }">
-                    <div
-                      class="d-flex flex-column align-center"
-                      :class="{ 'my-12': userProfiles.length === 0 }"
+                  <v-icon class="mr-2">mdi-plus-thick</v-icon>
+                  Add Profile
+                </v-btn>
+              </div>
+            </template>
+
+            <v-card :dark="darkmode" class="black-shadow">
+              <v-card-title
+                class="text-h4 font-weight-bold flex justify-center lighten-2"
+              >
+                Add Profile
+              </v-card-title>
+              <v-divider></v-divider>
+
+              <v-card-text>
+                <v-row class="d-flex justify-center mt-6">
+                  <v-col cols="12" md="8">
+                    <v-text-field
+                      placeholder="Enter profile name"
+                      class="text-h5"
+                      dense
+                      v-model="profileName"
+                      :counter="10"
                     >
-                      <div
-                        v-if="userProfiles.length === 0"
-                        class="d-flex flex-column align-center justify-center text-h3 grey--text mb-4 text-center"
-                        :class="[
-                          darkmode ? 'text--darken-2' : 'text--lighten-1',
-                        ]"
-                      >
-                        <v-icon
-                          size="30"
-                          class="grey--text"
-                          :class="[
-                            darkmode ? 'text--darken-2' : 'text--lighten-1',
-                          ]"
-                        >
-                          mdi-account-off-outline
-                        </v-icon>
-                        You have no profile yet. Try to create one!
-                      </div>
-                      <v-btn
-                        v-bind="attrs"
-                        v-on="on"
-                        :absolute="userProfiles.length > 0"
-                        :top="userProfiles.length > 0"
-                        :right="userProfiles.length > 0"
-                        class="text-none"
-                      >
-                        <v-icon class="mr-2">mdi-plus-thick</v-icon>
-                        Add Profile
-                      </v-btn>
-                    </div>
-                  </template>
-
-                  <v-card :dark="darkmode" class="black-shadow">
-                    <v-card-title
-                      class="text-h4 font-weight-bold flex justify-center lighten-2"
-                    >
-                      Add Profile
-                    </v-card-title>
-                    <v-divider></v-divider>
-
-                    <v-card-text>
-                      <v-row class="d-flex justify-center mt-6">
-                        <v-col cols="12" md="8">
-                          <v-text-field
-                            placeholder="Enter profile name"
-                            class="text-h5"
-                            dense
-                            v-model="profileName"
-                            :counter="10"
-                          >
-                            <template v-slot:label>
-                              <span style="font-size: 14px">Profile Name</span>
-                            </template>
-                          </v-text-field>
-                        </v-col>
-                      </v-row>
-                    </v-card-text>
-
-                    <v-card-actions class="pb-4 px-6 flex justify-end">
-                      <v-btn
-                        class="text-none px-4"
-                        elevation="0"
-                        :block="$vuetify.breakpoint.smAndDown"
-                        rippple
-                        :disabled="!profileName"
-                        @click="createNewProfile(profileName), (dialog = false)"
-                      >
-                        <v-icon class="mr-2">mdi-plus-thick</v-icon>
-                        Create New Profile
-                      </v-btn>
-                    </v-card-actions>
-                  </v-card>
-                </v-dialog>
+                      <template v-slot:label>
+                        <span style="font-size: 14px">Profile Name</span>
+                      </template>
+                    </v-text-field>
+                  </v-col>
+                </v-row>
               </v-card-text>
-            </v-card-text>
-          </v-card>
+
+              <v-card-actions class="pb-4 px-6 flex justify-end">
+                <v-btn
+                  class="text-none px-4 text-caption font-weight-bold white--text"
+                  elevation="0"
+                  color="indigo lighten-1"
+                  :block="$vuetify.breakpoint.smAndDown"
+                  rippple
+                  :disabled="!profileName"
+                  @click="createNewProfile(profileName), (dialog = false)"
+                >
+                  <v-icon class="mr-2">mdi-plus-thick</v-icon>
+                  Create New Profile
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+          <v-row v-if="userProfiles.length > 0" class="d-flex">
+            <v-col
+              v-for="(profile, key) in userProfiles"
+              :key="key"
+              cols="12"
+              sm="6"
+              md="4"
+              lg="3"
+              xl="2"
+              class="flex-grow-1"
+            >
+              <v-card
+                @click="$router.replace(`/profiles/${key}/`)"
+                :dark="darkmode"
+                flat
+                class="profile-card fill-height"
+                :ripple="false"
+                :style="{
+                  filter: darkmode
+                    ? 'drop-shadow(1px -1px 0px #5C6BC0) drop-shadow(-1px 1px 1px #0C0B10)'
+                    : '',
+                }"
+              >
+                <v-card-title class="d-flex flex-column">
+                  <v-btn
+                    @click.stop="removeProfile(key)"
+                    icon
+                    class="text-caption text-none font-weight-bold ml-auto"
+                    :class="[darkmode ? 'white--text' : 'grey--text']"
+                    elevation="0"
+                    small
+                    :dark="darkmode"
+                    circle
+                  >
+                    <v-icon size="16"> mdi-close-thick </v-icon>
+                  </v-btn>
+                </v-card-title>
+                <v-card-text
+                  class="text-center pb-10 text-h3 font-weight-bold"
+                  :class="[darkmode ? 'white--text' : 'grey--text']"
+                >
+                  {{ profile.name }}
+                </v-card-text>
+              </v-card>
+            </v-col>
+            <v-col cols="12" sm="6" md="4" lg="3" xl="2" class="flex-grow-1">
+              <v-card
+                @click="dialog = true"
+                :dark="darkmode"
+                :style="{
+                  border: darkmode ? '3px dashed #5C6BC0' : '3px dashed grey',
+                }"
+                :ripple="false"
+                style="background-color: transparent"
+                class="fill-height d-flex justify-center align-center"
+              >
+                <v-card-text
+                  class="text-center font-weight-600 text-h3 d-flex flex-column"
+                  :class="[darkmode ? 'white--text' : 'grey--text']"
+                >
+                  <v-icon size="30">mdi-plus</v-icon>
+                  Create new
+                </v-card-text>
+              </v-card>
+            </v-col>
+          </v-row>
         </v-col>
       </v-row>
     </v-container>
@@ -155,18 +162,14 @@
 </template>
 <script>
 import { mapActions, mapGetters } from "vuex";
-import HeaderTopDashboard from "@/components/HeaderTopDashboard.vue";
 
 export default {
-  name: "Settings",
+  name: "Profiles",
   data() {
     return {
       dialog: false,
       profileName: "",
     };
-  },
-  components: {
-    HeaderTopDashboard,
   },
   computed: {
     ...mapGetters("generalStore", [
@@ -244,5 +247,14 @@ export default {
 .v-dialog {
   box-shadow: 0px 11px 15px -7px rgb(0 0 0 / 20%),
     0px 24px 38px 3px rgb(0 0 0 / 14%), 0px 9px 46px 8px rgb(0 0 0 / 12%);
+  border-radius: 28px;
+}
+
+.v-card--link:focus:before {
+  opacity: 0;
+}
+
+.profile-card:focus::after {
+  opacity: 0 !important;
 }
 </style>

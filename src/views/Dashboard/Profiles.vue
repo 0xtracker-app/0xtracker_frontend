@@ -1,10 +1,9 @@
 <template>
   <div>
-    <HeaderTopDashboard />
-    <v-container fluid class="pt-0 px-6 mt-n13">
+    <v-container fluid class="pt-0 px-6">
       <p
         class="font-weight-600 text-h3 mb-0"
-        :class="!darkmode ? 'white--text' : 'grey--text text--lighten-2'"
+        :class="darkmode ? 'white--text' : 'grey--text text--darken-2'"
       >
         Name :
         <span class="font-weight-bold">
@@ -13,21 +12,28 @@
       </p>
       <v-row class="mt-0">
         <v-col cols="12" lg="12" class="pt-6">
-          <v-card class="card-shadow mb-6" :dark="darkmode">
-            <div class="card-border-bottom card-shadow">
-              <div
-                class="card-header-padding d-flex justify-space-between align-center"
-              >
+          <v-card
+            class="mb-6"
+            :dark="darkmode"
+            :style="{
+              filter: darkmode
+                ? 'drop-shadow(1px -1px 0px #5C6BC0) drop-shadow(-1px 1px 1px #0C0B10)'
+                : '',
+            }"
+          >
+            <v-card-text class="card-stats-padding" :dark="darkmode">
+              <div class="d-flex justify-space-between align-center">
                 <p
-                  class="font-weight-600 text-h3 mb-0"
+                  class="font-weight-600 text-caption text-uppercase mb-0 white--text"
                   :class="{ 'text-muted': !darkmode }"
                 >
                   Wallets
                 </p>
                 <v-btn
                   v-if="userProfiles[$route.params.id].wallets.length > 0"
-                  class="text-none px-4"
+                  class="text-none text-caption font-weight-bold white--text px-4"
                   elevation="0"
+                  color="indigo lighten-1"
                   rippple
                   @click="dialog = true"
                 >
@@ -35,15 +41,14 @@
                   Add Wallet
                 </v-btn>
               </div>
-              <v-divider></v-divider>
+              <v-divider class="my-2"></v-divider>
               <div class="card-header-padding">
-                <v-list flat>
+                <v-list flat class="bg-transparent">
                   <v-list-item-group>
                     <v-list-item
                       v-for="(wallet, i) in userProfiles[$route.params.id]
                         .wallets"
                       :key="i"
-                      ripple
                       class="rounded-xl"
                     >
                       <v-list-item-content class="py-0 py-md-4">
@@ -73,7 +78,8 @@
                             <v-icon
                               size="24"
                               @click="openEditDialog(i)"
-                              class="grey--text text--darken-1 rounded-circle pa-1"
+                              class="rounded-circle pa-1"
+                              color="indigo"
                             >
                               mdi-credit-card-edit
                             </v-icon>
@@ -163,15 +169,16 @@
 
                     <v-card-actions class="pb-4 px-6 flex justify-end">
                       <v-btn
-                        class="text-none px-4"
+                        class="text-none text-caption font-weight-bold white--text px-4"
                         elevation="0"
+                        color="indigo lighten-1"
                         :block="$vuetify.breakpoint.smAndDown"
                         rippple
                         :disabled="!walletAddress || !walletType"
                         @click="updateExistingWallet()"
                       >
                         <v-icon class="mr-2">
-                          mdi-credit-card-plus-outline
+                          mdi-credit-card-edit-outline
                         </v-icon>
                         Update Wallet
                       </v-btn>
@@ -180,22 +187,28 @@
                 </v-dialog>
                 <div
                   v-if="userProfiles[$route.params.id].wallets.length === 0"
-                  class="d-flex flex-column align-center justify-center text-h3 grey--text mb-4 text-center"
-                  :class="[darkmode ? 'text--darken-2' : 'text--lighten-1']"
+                  class="d-flex flex-column align-center justify-center text-h4 mb-4 text-center"
+                  :class="[
+                    darkmode ? 'white--text' : 'grey--text text--darken-2',
+                  ]"
                 >
                   <v-icon
                     size="30"
-                    class="grey--text"
-                    :class="[darkmode ? 'text--darken-2' : 'text--lighten-1']"
+                    class="mb-4"
+                    :class="[
+                      darkmode ? 'white--text' : 'grey--text text--darken-2',
+                    ]"
                   >
                     mdi-account-off-outline
                   </v-icon>
                   You have no wallet yet. You can add one!
                   <v-btn
-                    class="text-none px-4 mt-4"
+                    class="text-none text-caption font-weight-bold white--text mt-6"
                     elevation="0"
+                    color="indigo lighten-1"
                     rippple
                     @click="dialog = true"
+                    :dark="darkmode"
                   >
                     <v-icon class="mr-2">mdi-credit-card-plus-outline</v-icon>
                     Add Wallet
@@ -207,7 +220,7 @@
                   :overlay-color="darkmode ? 'grey' : 'rgb(33, 33, 33)'"
                   :overlay-opacity="darkmode ? 0.2 : 0.46"
                 >
-                  <v-card :dark="darkmode">
+                  <v-card :dark="darkmode" class="black-shadow">
                     <v-card-title
                       class="text-h4 font-weight-bold flex justify-center lighten-2"
                     >
@@ -257,8 +270,9 @@
 
                     <v-card-actions class="pb-4 px-6 flex justify-end">
                       <v-btn
-                        class="text-none px-4"
+                        class="text-none text-caption font-weight-bold white--text px-4"
                         elevation="0"
+                        color="indigo lighten-1"
                         :block="$vuetify.breakpoint.smAndDown"
                         rippple
                         :disabled="!walletAddress || !walletType"
@@ -279,63 +293,79 @@
                   </v-card>
                 </v-dialog>
               </div>
-            </div>
+            </v-card-text>
           </v-card>
         </v-col>
       </v-row>
       <v-row class="mt-0">
         <v-col cols="12" lg="12" class="pt-6">
-          <v-card class="card-shadow mb-6" :dark="darkmode">
-            <div class="card-header-padding card-border-bottom card-shadow">
+          <v-card
+            class="mb-6"
+            :dark="darkmode"
+            :style="{
+              filter: darkmode
+                ? 'drop-shadow(1px -1px 0px #5C6BC0) drop-shadow(-1px 1px 1px #0C0B10)'
+                : '',
+            }"
+          >
+            <v-card-text class="card-stats-padding" :dark="darkmode">
               <p
-                class="font-weight-600 text-h3 mb-0"
+                class="font-weight-600 text-caption text-uppercase mb-0 white--text"
                 :class="{ 'text-muted': !darkmode }"
               >
                 Selected Farms
               </p>
-            </div>
 
-            <v-col
-              v-for="(networkWithFarms, network) in farmsByNetwork"
-              :key="network"
-            >
-              <v-row class="mx-0 my-0 px-3 pt-3">
-                {{ $tc(network) }}
-                <v-switch
-                  :input-value="
-                    checkNetwork($route.params.id, network, networkWithFarms)
-                  "
-                  @change="
-                    toggleNetwork({
-                      profileKey: $route.params.id,
-                      allFarms: networkWithFarms,
-                      network: network,
-                    })
-                  "
-                />
-              </v-row>
-
-              <div :class="{ 'chips-grid': $vuetify.breakpoint.smAndUp }">
-                <v-chip
-                  v-for="(farm, key) in networkWithFarms"
-                  :key="key"
-                  class="ma-2"
-                  label
-                  :outlined="
-                    checkFarm($route.params.id, farm.sendValue, network)
-                  "
-                  @click="
-                    toggleFarm({
-                      sendValue: farm.sendValue,
-                      profileKey: $route.params.id,
-                      network: network,
-                    })
-                  "
+              <v-divider class="my-2"></v-divider>
+              <v-col
+                v-for="(networkWithFarms, network) in farmsByNetwork"
+                :key="network"
+              >
+                <v-row
+                  class="mx-0 my-0 pt-3 font-weight-bold white--text text-h4"
+                  :class="[
+                    darkmode ? 'white--text' : 'grey--text text--darken-1',
+                  ]"
                 >
-                  {{ farm.name }}
-                </v-chip>
-              </div>
-            </v-col>
+                  {{ $tc(network) }}
+                  <v-switch
+                    :input-value="
+                      checkNetwork($route.params.id, network, networkWithFarms)
+                    "
+                    color="indigo lighten-1"
+                    @change="
+                      toggleNetwork({
+                        profileKey: $route.params.id,
+                        allFarms: networkWithFarms,
+                        network: network,
+                      })
+                    "
+                  />
+                </v-row>
+
+                <div :class="{ 'chips-grid': $vuetify.breakpoint.smAndUp }">
+                  <v-chip
+                    v-for="(farm, key) in networkWithFarms"
+                    :key="key"
+                    class="ma-2 font-weight-600 text-caption"
+                    label
+                    color="indigo lighten-1"
+                    :outlined="
+                      checkFarm($route.params.id, farm.sendValue, network)
+                    "
+                    @click="
+                      toggleFarm({
+                        sendValue: farm.sendValue,
+                        profileKey: $route.params.id,
+                        network: network,
+                      })
+                    "
+                  >
+                    {{ farm.name }}
+                  </v-chip>
+                </div>
+              </v-col>
+            </v-card-text>
           </v-card>
         </v-col>
       </v-row>
@@ -475,7 +505,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .v-input--selection-controls {
   margin-top: 0;
   padding-top: 0;
@@ -485,5 +515,13 @@ export default {
 .chips-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
+}
+</style>
+
+<style>
+.v-dialog {
+  box-shadow: 0px 11px 15px -7px rgb(0 0 0 / 20%),
+    0px 24px 38px 3px rgb(0 0 0 / 14%), 0px 9px 46px 8px rgb(0 0 0 / 12%);
+  border-radius: 28px;
 }
 </style>

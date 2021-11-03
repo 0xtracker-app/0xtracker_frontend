@@ -1,63 +1,61 @@
 <template>
   <div class="px-3">
     <v-container>
-      <v-card class="card-shadow mb-6" :dark="darkmode">
-        <div class="card-header-padding card-border-bottom card-shadow mb-5">
+      <div class="mb-6">
+        <div class="card-header-padding card-border-bottom mb-5">
           <p
-            class="font-weight-600 text-h3 mb-0 text-center"
-            :class="{ 'text-muted': !darkmode }"
+            class="font-weight-bold text-h2 text-uppercase mb-0 text-center"
+            :style="{ color: darkmode ? 'white' : '#15121D' }"
           >
             Check Out Our Sponsors!
           </p>
         </div>
-        <v-row align="center" no-gutters style="height: 100px">
-          <v-col>
-            <div class="text-center">
-              <a href="https://jetswap.finance/" target="_blank">
-                <v-avatar>
-                  <v-img
-                    max-height="50"
-                    max-width="50"
-                    src="@/assets/images/sponsors-footer/jetswap.png"
-                  ></v-img>
-                </v-avatar>
-                <p :class="{ 'text-white': darkmode }">Jetswap</p>
-              </a>
-            </div>
-          </v-col>
-          <v-col>
-            <div class="text-center">
-              <a
-                href="https://pancakehunny.finance/?utm_source=0xtracker.app&utm_medium=logo&utm_campaign=oct_2021uvicucu"
-                target="_blank"
-              >
-                <v-avatar>
-                  <v-img
-                    max-height="50"
-                    max-width="50"
-                    src="@/assets/images/sponsors-footer/hunny.gif"
-                  ></v-img>
-                </v-avatar>
-                <p :class="{ 'text-white': darkmode }">Pancake Hunny</p>
-              </a>
-            </div>
-          </v-col>
-          <v-col>
-            <div class="text-center">
-              <a href="https://www.thegrandbanks.finance/" target="_blank">
-                <v-avatar>
-                  <v-img
-                    max-height="50"
-                    max-width="50"
-                    src="@/assets/images/sponsors-footer/grand.png"
-                  ></v-img>
-                </v-avatar>
-                <p :class="{ 'text-white': darkmode }">The Grand Banks</p>
-              </a>
-            </div>
-          </v-col>
+        <v-row align="center" justify="center" no-gutters style="height: 100px">
+          <div class="text-center font-weight-bold" style="min-width: 150px">
+            <a href="https://jetswap.finance/" target="_blank">
+              <v-avatar>
+                <v-img
+                  max-height="50"
+                  max-width="50"
+                  src="@/assets/images/sponsors-footer/jetswap.png"
+                ></v-img>
+              </v-avatar>
+              <p :class="{ 'text-white': darkmode }" class="mt-2">Jetswap</p>
+            </a>
+          </div>
+          <div class="text-center font-weight-bold" style="min-width: 150px">
+            <a
+              href="https://pancakehunny.finance/?utm_source=0xtracker.app&utm_medium=logo&utm_campaign=oct_2021uvicucu"
+              target="_blank"
+            >
+              <v-avatar>
+                <v-img
+                  max-height="50"
+                  max-width="50"
+                  src="@/assets/images/sponsors-footer/hunny.gif"
+                ></v-img>
+              </v-avatar>
+              <p :class="{ 'text-white': darkmode }" class="mt-2">
+                Pancake Hunny
+              </p>
+            </a>
+          </div>
+          <div class="text-center font-weight-bold" style="min-width: 150px">
+            <a href="https://www.thegrandbanks.finance/" target="_blank">
+              <v-avatar>
+                <v-img
+                  max-height="50"
+                  max-width="50"
+                  src="@/assets/images/sponsors-footer/grand.png"
+                ></v-img>
+              </v-avatar>
+              <p :class="{ 'text-white': darkmode }" class="mt-2">
+                The Grand Banks
+              </p>
+            </a>
+          </div>
         </v-row>
-      </v-card>
+      </div>
     </v-container>
   </div>
 </template>

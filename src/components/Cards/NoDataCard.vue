@@ -1,8 +1,9 @@
 <template>
   <v-card>
     <v-progress-linear
+      v-if="loading"
       :indeterminate="loading"
-      color="#5e72e4"
+      color="indigo lighten-1"
     ></v-progress-linear>
     <v-card-text class="text-center">
       <p v-if="loading"></p>

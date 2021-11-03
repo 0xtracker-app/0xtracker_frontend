@@ -8,13 +8,15 @@
           v-for="(farm, key) in farmsWithoutData"
           :key="key"
           class="ma-2"
-          close
-          close-icon="fas fa-redo"
           :disabled="loading"
+          elevation="0"
           @click="getPoolsForSingleFarm({ key, selectedFarm: farm })"
         >
           <v-icon left v-if="farm.error"> fas fa-exclamation-circle </v-icon>
           {{ farm.name }}
+          <v-icon right v-if="farm.error" size="15" class="px-1">
+            fas fa-redo
+          </v-icon>
         </v-chip>
       </div>
     </v-card-text>

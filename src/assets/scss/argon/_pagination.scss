@@ -24,3 +24,8 @@
     box-shadow: $btn-shadow-hover;
   }
 }
+
+.theme--dark.v-pagination .v-pagination__item:not(.v-pagination__item--active),
+.theme--dark.v-pagination .v-pagination__navigation {
+  background: transparent !important;
+}

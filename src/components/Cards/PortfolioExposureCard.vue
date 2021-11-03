@@ -1,5 +1,13 @@
 <template>
-  <v-card class="card-shadow mb-6" :dark="darkmode">
+  <v-card
+    class="mb-6"
+    :dark="darkmode"
+    :style="{
+      filter: darkmode
+        ? 'drop-shadow(1px -1px 0px #5C6BC0) drop-shadow(-1px 1px 1px #0C0B10)'
+        : '',
+    }"
+  >
     <v-card-text class="card-stats-padding">
       <div class="d-flex justify-space-between align-center">
         <div class="d-flex align-center">
@@ -30,28 +38,34 @@
             </v-btn>
           </template>
 
-          <v-card :dark="darkmode" class="black-shadow">
+          <v-card
+            :dark="darkmode"
+            class="black-shadow"
+            style="max-height: 600px"
+          >
             <v-card-title
               class="text-h4 font-weight-bold flex justify-center lighten-2"
             >
-              Platform Distribution
+              Token Distribution
             </v-card-title>
             <v-divider></v-divider>
 
             <v-card-text
-              class="custom-scrollbar"
-              style="max-height: calc(90vh - 520px); overflow-y: auto"
+              class="custom-scrollbar pa-0"
+              style="max-height: 500px; overflow-y: auto; overflow-x: hidden"
             >
-              <v-row class="d-flex justify-center mt-6">
+              <v-row class="d-flex justify-center">
                 <v-col cols="12">
                   <v-data-table
                     dense
                     :headers="headers"
                     :items="tokens"
                     item-key="name"
-                    class="elevation-1"
+                    class="elevation-0"
                     hide-default-footer
                     :items-per-page="-1"
+                    mobile-breakpoint="0"
+                    style="background-color: transparent"
                   >
                     <template v-slot:item="{ item }">
                       <tr>
@@ -86,7 +100,7 @@
       <v-progress-linear
         v-show="loading"
         :indeterminate="loading"
-        color="#5e72e4"
+        color="indigo lighten-1"
         slot="progress"
       ></v-progress-linear>
       <v-overlay :absolute="true" :value="loading">
@@ -94,12 +108,12 @@
       </v-overlay>
       <div class="d-flex" v-if="tokens.length > 0">
         <v-row class="d-flex align-center">
-          <v-col cols="12" sm="6" class="pa-10 d-flex justify-center">
+          <v-col cols="12" md="4" class="pa-10 d-flex justify-center">
             <div>
               <DoughnutChart
                 :chart-data="chartData"
                 :options="options"
-                style="max-height: 200px; max-width: 200px"
+                style="max-height: 150px; max-width: 150px"
                 :chart-labels="chartLabels"
                 :colors="colors"
                 ref="portfolioExposureChart"
@@ -108,7 +122,7 @@
           </v-col>
           <v-col
             cols="12"
-            sm="6"
+            md="8"
             class="pa-10 d-flex flex-column justify-center"
           >
             <v-flex
@@ -348,7 +362,7 @@ export default {
         elements: {
           arc: {
             borderWidth: 5,
-            borderColor: this.darkmode ? "#1E1E1E" : "white",
+            borderColor: this.darkmode ? "#171721" : "white",
           },
         },
         legend: {
@@ -413,6 +427,7 @@ export default {
 .v-dialog {
   box-shadow: 0px 11px 15px -7px rgb(0 0 0 / 20%),
     0px 24px 38px 3px rgb(0 0 0 / 14%), 0px 9px 46px 8px rgb(0 0 0 / 12%);
+  border-radius: 28px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {

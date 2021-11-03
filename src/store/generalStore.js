@@ -11,6 +11,7 @@ const generalStore = {
     walletDialog: false,
     singleFarmDialog: false,
     compactView: false,
+    mini: false,
   },
   getters: {
     alerts: (state) => state.alerts,
@@ -23,6 +24,7 @@ const generalStore = {
     walletDialog: (state) => state.walletDialog,
     singleFarmDialog: (state) => state.singleFarmDialog,
     compactView: (state) => state.compactView,
+    mini: (state) => state.mini,
   },
   mutations: {
     ADD_ALERT(state, alert) {
@@ -76,6 +78,13 @@ const generalStore = {
     },
     TOGGLE_COMPACT_VIEW(state) {
       state.compactView = !state.compactView;
+    },
+    TOGGLE_MINI(state, value = null) {
+      if (value !== null) {
+        state.mini = value;
+      } else {
+        state.mini = !state.mini;
+      }
     },
   },
   actions: {
@@ -170,6 +179,9 @@ const generalStore = {
     toggleSmallValues({ commit }) {
       commit("TOGGLE_SMALL_VALUES");
       this.dispatch("generalStore/saveSession");
+    },
+    toggleMini({ commit }, value) {
+      commit("TOGGLE_MINI", value);
     },
   },
 };

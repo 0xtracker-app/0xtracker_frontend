@@ -69,7 +69,7 @@
           :ripple="false"
           height="43"
           class="font-weight-600 text-capitalize btn-primary py-3 px-6 rounded-sm"
-          color="#5e72e4"
+          color="indigo lighten-1"
           @click="loadPortfolio()"
           >Go!</v-btn
         >
