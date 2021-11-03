@@ -6,7 +6,7 @@
           <v-col
             md="8"
             lg="6"
-            :cols="fieldActive ? '12' : '6'"
+            :cols="fieldActive ? '12' : '12'"
             :class="fieldActive ? 'flex-shrink-0' : 'flex-shrink-1'"
           >
             <div class="d-flex align-center">
@@ -17,7 +17,7 @@
                 outlined
                 flat
                 color="white"
-                class="font-size-input input-alternative input-icon mr-2 custom-placeholder-color search-bar"
+                class="font-size-input input-alternative input-icon mr-2 custom-placeholder-color search-bar search-input"
                 :style="{
                   backgroundColor: darkmode ? '#232228' : 'white',
                 }"
@@ -70,7 +70,7 @@
                   </span>
                 </template>
               </v-text-field>
-              <div class="d-none d-sm-flex ml-2">
+              <div class="ml-2">
                 <v-btn
                   :disabled="loading || !walletType"
                   :ripple="false"
@@ -88,7 +88,10 @@
               </div>
             </div>
           </v-col>
-          <v-col class="d-flex justify-end align-center">
+          <v-col
+            v-if="$vuetify.breakpoint.smAndUp || !fieldActive"
+            class="d-flex justify-end align-center"
+          >
             <v-tooltip bottom :color="darkmode ? 'white' : 'primary'">
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
@@ -218,7 +221,7 @@
                 <v-btn
                   v-bind="attrs"
                   v-on="on"
-                  class="mr-4 rounded-circle px-0 elevation-0"
+                  class="rounded-circle px-0 elevation-0"
                   large
                   style="height: 40px; min-width: 40px"
                   :style="{
@@ -496,7 +499,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .bg-gradient-default {
   background: linear-gradient(87deg, #172b4d, #1a174d) !important;
 }
@@ -518,11 +521,19 @@ export default {
   box-shadow: none;
   filter: drop-shadow(0px 0px 20px #5e72e444);
 }
+
+.search-input {
+  max-width: calc(100%) !important;
+}
 </style>
 
 <style>
 .custom-placeholder-color input::placeholder {
   color: #8e8e90 !important;
+}
+
+.v-data-table-header-mobile {
+  display: none;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
