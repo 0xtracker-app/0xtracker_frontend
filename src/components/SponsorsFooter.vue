@@ -20,7 +20,12 @@
                   src="@/assets/images/sponsors-footer/jetswap.png"
                 ></v-img>
               </v-avatar>
-              <p :class="{ 'text-white': darkmode }" class="mt-2">Jetswap</p>
+              <p
+                :style="{ color: darkmode ? 'white' : '#5C6BC0' }"
+                class="mt-2 font-weight-bold text-subtitle-2"
+              >
+                Jetswap
+              </p>
             </a>
           </div>
           <div class="text-center font-weight-bold" style="min-width: 150px">
@@ -35,7 +40,10 @@
                   src="@/assets/images/sponsors-footer/hunny.gif"
                 ></v-img>
               </v-avatar>
-              <p :class="{ 'text-white': darkmode }" class="mt-2">
+              <p
+                :style="{ color: darkmode ? 'white' : '#5C6BC0' }"
+                class="mt-2 font-weight-bold text-subtitle-2"
+              >
                 Pancake Hunny
               </p>
             </a>
@@ -49,7 +57,10 @@
                   src="@/assets/images/sponsors-footer/grand.png"
                 ></v-img>
               </v-avatar>
-              <p :class="{ 'text-white': darkmode }" class="mt-2">
+              <p
+                :style="{ color: darkmode ? 'white' : '#5C6BC0' }"
+                class="mt-2 font-weight-bold text-subtitle-2"
+              >
                 The Grand Banks
               </p>
             </a>

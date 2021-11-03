@@ -4,7 +4,7 @@
     fixed
     app
     floating
-    :mini-variant.sync="miniData"
+    :mini-variant="mini"
     :value="drawer"
     :dark="darkmode"
     :style="{
