@@ -82,7 +82,7 @@
             </v-list-item-group>
           </v-list>
 
-          <div class="border-bottom mx-2" />
+          <v-divider class="mx-2"> </v-divider>
 
           <v-list nav dense>
             <v-list-item-group>
@@ -90,24 +90,33 @@
                 @click="setWalletDialog(true)"
                 class="pb-1 no-default-hover"
                 :ripple="false"
-                active-class=""
               >
-                <v-list-item-icon>
+                <v-list-item-icon :class="{ 'px-2': !mini }">
                   <v-icon
                     v-if="connectedWallet"
+                    size="20"
                     v-text="'fas fa-plug v-icon-drawer'"
                     color="green"
                   />
-                  <v-icon v-else v-text="'fas fa-plug v-icon-drawer'" />
+                  <v-icon
+                    v-else
+                    size="20"
+                    v-text="'fas fa-plug v-icon-drawer'"
+                  />
                 </v-list-item-icon>
                 <v-list-item-content>
                   <v-list-item-title
                     v-if="connectedWallet"
                     :class="{ 'text-white': darkmode }"
+                    class="font-weight-600"
                   >
                     Connected: {{ connectedWalletShort }}
                   </v-list-item-title>
-                  <v-list-item-title v-else :class="{ 'text-white': darkmode }">
+                  <v-list-item-title
+                    v-else
+                    :class="{ 'text-white': darkmode }"
+                    class="font-weight-600"
+                  >
                     Connect Wallet
                   </v-list-item-title>
                 </v-list-item-content>
