@@ -31,14 +31,14 @@
                 <div class="d-flex flex-column">
                   <span
                     :style="{
-                      fontSize: $vuetify.breakpoint.mobile ? '10px' : '18px',
+                      fontSize: $vuetify.breakpoint.mobile ? '10px' : '14px',
                     }"
                   >
                     {{ farm.name }}
                   </span>
                   <span
                     :style="{
-                      fontSize: $vuetify.breakpoint.mobile ? '12px' : '18px',
+                      fontSize: $vuetify.breakpoint.mobile ? '12px' : '14px',
                     }"
                   >
                     <span class="orange--text text--lighten-1">
