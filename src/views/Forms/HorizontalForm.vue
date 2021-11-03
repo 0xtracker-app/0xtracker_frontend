@@ -221,7 +221,7 @@
                 <v-btn
                   v-bind="attrs"
                   v-on="on"
-                  class="mr-4 rounded-circle px-0 elevation-0"
+                  class="rounded-circle px-0 elevation-0"
                   large
                   style="height: 40px; min-width: 40px"
                   :style="{
@@ -530,6 +530,10 @@ export default {
 <style>
 .custom-placeholder-color input::placeholder {
   color: #8e8e90 !important;
+}
+
+.v-data-table-header-mobile {
+  display: none;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {

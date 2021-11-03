@@ -20,77 +20,79 @@
           sort-by="poolValue"
           :sort-desc="true"
           class="table px-4"
-          mobile-breakpoint="0"
           style="background-color: transparent"
         >
           <template v-slot:item.actions="{ item }">
-            <v-card-actions
-              v-if="item.contractAddress && item.rawPending > 0 && item.poolID"
-            >
-              <v-spacer />
-              <v-tooltip top>
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn
-                    text
-                    :disabled="
-                      !connectedWallet ||
-                      item.rawPending < 1 ||
-                      item.network != connectedWalletNetwork ||
-                      item.wallet !== connectedWallet
-                    "
-                    @click="
-                      claimReward({
-                        contractAddress: item.contractAddress,
-                        poolIndex: item.poolID,
-                        rawTokens: item.rawPending,
-                      })
-                    "
-                    v-bind="attrs"
-                    v-on="on"
-                    elevation="2"
-                    outlined
-                    x-small
+            <div class="d-flex flex-row flex-sm-column">
+              <v-card-actions
+                v-if="
+                  item.contractAddress && item.rawPending > 0 && item.poolID
+                "
+              >
+                <v-tooltip top>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                      text
+                      :disabled="
+                        !connectedWallet ||
+                        item.rawPending < 1 ||
+                        item.network != connectedWalletNetwork ||
+                        item.wallet !== connectedWallet
+                      "
+                      block
+                      @click="
+                        claimReward({
+                          contractAddress: item.contractAddress,
+                          poolIndex: item.poolID,
+                          rawTokens: item.rawPending,
+                        })
+                      "
+                      v-bind="attrs"
+                      v-on="on"
+                      elevation="2"
+                      outlined
+                      x-small
+                    >
+                      HARVEST
+                    </v-btn>
+                  </template>
+                  <span>Claim Rewards</span>
+                </v-tooltip>
+              </v-card-actions>
+              <v-card-actions v-if="item.contractAddress && item.poolID">
+                <v-tooltip top>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                      text
+                      block
+                      :disabled="
+                        !connectedWallet ||
+                        item.network != connectedWalletNetwork ||
+                        item.wallet !== connectedWallet
+                      "
+                      @click="
+                        emergencyHarvest({
+                          contractAddress: item.contractAddress,
+                          poolIndex: item.poolID,
+                          rawTokens: item.rawStakes,
+                        })
+                      "
+                      v-bind="attrs"
+                      v-on="on"
+                      elevation="2"
+                      outlined
+                      x-small
+                    >
+                      E. WITHDRAW
+                    </v-btn>
+                  </template>
+                  <span
+                    >Withdraw without caring about rewards. EMERGENCY
+                    ONLY.</span
                   >
-                    HARVEST
-                  </v-btn>
-                </template>
-                <span>Claim Rewards</span>
-              </v-tooltip>
-              <v-spacer />
-            </v-card-actions>
-            <v-card-actions v-if="item.contractAddress && item.poolID">
-              <v-spacer />
-              <v-tooltip top>
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn
-                    text
-                    :disabled="
-                      !connectedWallet ||
-                      item.network != connectedWalletNetwork ||
-                      item.wallet !== connectedWallet
-                    "
-                    @click="
-                      emergencyHarvest({
-                        contractAddress: item.contractAddress,
-                        poolIndex: item.poolID,
-                        rawTokens: item.rawStakes,
-                      })
-                    "
-                    v-bind="attrs"
-                    v-on="on"
-                    elevation="2"
-                    outlined
-                    x-small
-                  >
-                    E. WITHDRAW
-                  </v-btn>
-                </template>
-                <span
-                  >Withdraw without caring about rewards. EMERGENCY ONLY.</span
-                >
-              </v-tooltip>
-              <v-spacer />
-            </v-card-actions>
+                </v-tooltip>
+              </v-card-actions>
+            </div>
           </template>
           <template v-slot:item.farmName="{ item }">
             <div class="d-flex">
@@ -252,5 +254,25 @@ export default {
 <style>
 .v-data-table__progress .column {
   padding: 0px !important;
+}
+
+.v-data-table__mobile-row {
+  min-height: 20px !important;
+}
+
+.v-data-table__mobile-row:last-child {
+  padding-bottom: 20px !important;
+}
+
+.v-data-table__mobile-table-row {
+  padding: 0px 10px;
+}
+
+.v-data-table__mobile-row__header {
+  font-size: 0.75rem;
+}
+
+.v-data-table__mobile-row__cell {
+  font-size: 0.75rem;
 }
 </style>
