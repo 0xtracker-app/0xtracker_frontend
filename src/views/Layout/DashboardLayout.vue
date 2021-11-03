@@ -91,6 +91,16 @@ export default {
       }
     },
   },
+  watch: {
+    "$vuetify.breakpoint.mobile": {
+      immediate: true,
+      deep: true,
+      handler(val) {
+        if (!val) this.drawer = true;
+        else this.drawer = false;
+      },
+    },
+  },
   mounted() {
     this.initScrollbar();
     document.body.classList.add(

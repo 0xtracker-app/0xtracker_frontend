@@ -4,7 +4,7 @@
     fixed
     app
     floating
-    :mini-variant="mini"
+    :mini-variant.sync="miniData"
     :value="drawer"
     :dark="darkmode"
     :style="{
@@ -200,6 +200,7 @@ export default {
         title: "Profiles",
       },
     ],
+    miniData: false,
   }),
   computed: {
     currentRoute() {
@@ -209,8 +210,26 @@ export default {
     ...mapGetters("walletStore", ["connectedWallet", "connectedWalletShort"]),
   },
   watch: {
+    miniData: {
+      immediate: true,
+      deep: true,
+      handler(val) {
+        this.toggleMini(val);
+      },
+    },
     "$vuetify.breakpoint.mobile"(val) {
-      if (val) this.toggleMini(!val);
+      if (val) {
+        this.toggleMini(false);
+        this.miniData = false;
+      }
+      const body = document.getElementsByTagName("body")[0];
+      if (body.classList.contains("drawer-mini") && val) {
+        body.classList.remove("drawer-mini");
+      } else {
+        if (this.miniData && !body.classList.contains("drawer-mini")) {
+          body.classList.add("drawer-mini");
+        }
+      }
     },
   },
   methods: {
@@ -219,12 +238,15 @@ export default {
     minifyDrawer() {
       this.togglerActive = !this.togglerActive;
       this.toggleMini();
+      this.miniData = true;
       const body = document.getElementsByTagName("body")[0];
 
-      if (body.classList.contains("drawer-mini")) {
-        body.classList.remove("drawer-mini");
-      } else {
-        body.classList.add("drawer-mini");
+      if (!this.$vuetify.breakpoint.mobile) {
+        if (body.classList.contains("drawer-mini")) {
+          body.classList.remove("drawer-mini");
+        } else {
+          body.classList.add("drawer-mini");
+        }
       }
     },
   },

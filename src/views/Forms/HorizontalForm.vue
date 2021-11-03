@@ -1,6 +1,6 @@
 <template>
   <v-form class="py-1" ref="form" v-model="valid" lazy-validation>
-    <v-row no-gutters class="px-4 px-md-0">
+    <v-row class="px-4 px-md-0">
       <v-col cols="12">
         <v-row class="flex-nowrap d-flex">
           <v-col

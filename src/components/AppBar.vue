@@ -9,25 +9,25 @@
   >
     <v-app-bar
       fluid
-      class="px-4 bg-transparent"
+      class="bg-transparent"
       elevation="0"
       elevate-on-scroll
       scroll-target="#scroll-reference"
     >
-      <v-row class="d-flex">
+      <v-row class="d-flex pr-o pr-sm-8">
         <v-col class="d-flex align-center px-0" cols="12">
           <v-btn
             elevation="0"
             :ripple="false"
             height="43"
-            class="font-weight-600 text-capitalize drawer-toggler py-3 px-0 px-sm-6 rounded-sm"
+            class="font-weight-600 text-capitalize drawer-toggler py-3 rounded-sm"
             :class="{
               'btn-dark-toggler-hover': !hasBg,
               'btn-toggler-hover': hasBg,
               active: togglerActive,
             }"
             :style="{
-              minWidth: $vuetify.breakpoint.smAndDown ? '32px' : 'auto',
+              minWidth: $vuetify.breakpoint.mobile ? '32px' : 'auto',
             }"
             v-if="$vuetify.breakpoint.mobile"
             color="transparent"
@@ -85,8 +85,12 @@ export default {
     ...mapGetters("generalStore", ["darkmode", "mini"]),
   },
   watch: {
-    toggleActive(val) {
-      this.togglerActive = val;
+    toggleActive: {
+      immediate: true,
+      deep: true,
+      handler(val) {
+        this.togglerActive = val;
+      },
     },
   },
 };
