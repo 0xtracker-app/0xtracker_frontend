@@ -112,7 +112,7 @@
         >
           <v-card
             :outlined="!darkmode"
-            class="py-3 px-2"
+            class="py-sm-3 px-sm-2"
             :dark="darkmode"
             :style="{
               filter: darkmode

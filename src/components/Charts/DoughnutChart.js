@@ -48,6 +48,9 @@ export default {
     chartData() {
       this.render();
     },
+    darkmode() {
+      this.render();
+    },
   },
   mounted() {
     this.render();

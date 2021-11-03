@@ -3,11 +3,7 @@
     <drawer :drawer="drawer" style="z-index: 7"></drawer>
     <v-main :class="[darkmode ? 'darkmodebg' : 'lightmodebg']">
       <div class="mx-md-4">
-        <div
-          @click="drawer = false"
-          v-if="drawer"
-          class="position-absolute drawer-state"
-        ></div>
+        <div @click="drawer = false" v-if="drawer" class="drawer-state"></div>
         <app-bar
           background="transparent"
           linkColor="rgba(0,0,0,.6)"
@@ -17,7 +13,7 @@
         <fade-transition :duration="200" origin="center top" mode="out-in">
           <div style="margin-top: 65px" id="scroll-reference">
             <div
-              style="border-radius: 28px"
+              style="border-radius: 28px; min-height: 90vh"
               :style="{ backgroundColor: darkmode ? '#232228' : '#f3f4fd' }"
               class="pa-xl-12 pa-md-6 pa-2"
             >
@@ -27,7 +23,6 @@
             </div>
           </div>
         </fade-transition>
-        <SponsorsFooter />
         <Footer v-if="!$route.meta.hideFooter" />
         <v-snackbar :value="alerts.length" :timeout="-1">
           <template v-for="(alert, index) in alerts">
@@ -62,13 +57,11 @@ import { mapGetters } from "vuex";
 import { FadeTransition } from "vue2-transitions";
 import Drawer from "@/components/Drawer.vue";
 import AppBar from "@/components/AppBar.vue";
-import SponsorsFooter from "@/components/SponsorsFooter.vue";
 import Footer from "@/components/Footer.vue";
 import HeaderTopDashboard from "@/components/HeaderTopDashboard.vue";
 
 export default {
   components: {
-    SponsorsFooter,
     Footer,
     FadeTransition,
     Drawer,
@@ -89,6 +82,16 @@ export default {
       if (isWindows) {
         initScrollbar("sidenav");
       }
+    },
+  },
+  watch: {
+    "$vuetify.breakpoint.mobile": {
+      immediate: true,
+      deep: true,
+      handler(val) {
+        if (!val) this.drawer = true;
+        else this.drawer = false;
+      },
     },
   },
   mounted() {

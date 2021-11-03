@@ -82,7 +82,7 @@
             </v-list-item-group>
           </v-list>
 
-          <div class="border-bottom mx-2" />
+          <v-divider class="mx-2"> </v-divider>
 
           <v-list nav dense>
             <v-list-item-group>
@@ -90,24 +90,33 @@
                 @click="setWalletDialog(true)"
                 class="pb-1 no-default-hover"
                 :ripple="false"
-                active-class=""
               >
-                <v-list-item-icon>
+                <v-list-item-icon :class="{ 'px-2': !mini }">
                   <v-icon
                     v-if="connectedWallet"
+                    size="20"
                     v-text="'fas fa-plug v-icon-drawer'"
                     color="green"
                   />
-                  <v-icon v-else v-text="'fas fa-plug v-icon-drawer'" />
+                  <v-icon
+                    v-else
+                    size="20"
+                    v-text="'fas fa-plug v-icon-drawer'"
+                  />
                 </v-list-item-icon>
                 <v-list-item-content>
                   <v-list-item-title
                     v-if="connectedWallet"
                     :class="{ 'text-white': darkmode }"
+                    class="font-weight-600"
                   >
                     Connected: {{ connectedWalletShort }}
                   </v-list-item-title>
-                  <v-list-item-title v-else :class="{ 'text-white': darkmode }">
+                  <v-list-item-title
+                    v-else
+                    :class="{ 'text-white': darkmode }"
+                    class="font-weight-600"
+                  >
                     Connect Wallet
                   </v-list-item-title>
                 </v-list-item-content>
@@ -200,6 +209,7 @@ export default {
         title: "Profiles",
       },
     ],
+    miniData: false,
   }),
   computed: {
     currentRoute() {
@@ -209,8 +219,26 @@ export default {
     ...mapGetters("walletStore", ["connectedWallet", "connectedWalletShort"]),
   },
   watch: {
+    miniData: {
+      immediate: true,
+      deep: true,
+      handler(val) {
+        this.toggleMini(val);
+      },
+    },
     "$vuetify.breakpoint.mobile"(val) {
-      if (val) this.toggleMini(!val);
+      if (val) {
+        this.toggleMini(false);
+        this.miniData = false;
+      }
+      const body = document.getElementsByTagName("body")[0];
+      if (body.classList.contains("drawer-mini") && val) {
+        body.classList.remove("drawer-mini");
+      } else {
+        if (this.miniData && !body.classList.contains("drawer-mini")) {
+          body.classList.add("drawer-mini");
+        }
+      }
     },
   },
   methods: {
@@ -219,12 +247,15 @@ export default {
     minifyDrawer() {
       this.togglerActive = !this.togglerActive;
       this.toggleMini();
+      this.miniData = true;
       const body = document.getElementsByTagName("body")[0];
 
-      if (body.classList.contains("drawer-mini")) {
-        body.classList.remove("drawer-mini");
-      } else {
-        body.classList.add("drawer-mini");
+      if (!this.$vuetify.breakpoint.mobile) {
+        if (body.classList.contains("drawer-mini")) {
+          body.classList.remove("drawer-mini");
+        } else {
+          body.classList.add("drawer-mini");
+        }
       }
     },
   },

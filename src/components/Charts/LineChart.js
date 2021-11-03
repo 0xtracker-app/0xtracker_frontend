@@ -57,6 +57,9 @@ export default {
     options() {
       this.render();
     },
+    darkmode() {
+      this.render();
+    },
   },
   data() {
     return {

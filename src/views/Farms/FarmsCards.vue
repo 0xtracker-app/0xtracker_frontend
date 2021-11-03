@@ -15,17 +15,39 @@
       >
         <v-expansion-panel v-for="(farm, key) in farmsWithData" :key="key">
           <v-expansion-panel-header class="bg-transparent">
-            <div class="d-flex justify-space-between mr-4" style="width: 100%">
-              <span class="mr-2 font-weight-bold">
-                <v-avatar rounded tile size="20" class="mr-2">
+            <div
+              class="d-flex justify-space-between mr-4 align-center"
+              style="width: 100%"
+            >
+              <div class="mr-2 font-weight-bold d-flex align-center">
+                <v-avatar
+                  rounded
+                  tile
+                  :size="$vuetify.breakpoint.mobile ? '25' : '40'"
+                  class="mr-2"
+                >
                   <v-img :src="getNetworkLogo(farm.network)" />
                 </v-avatar>
-                <span> {{ farm.name }} - </span>
-                <span class="orange--text text--lighten-1">
-                  {{ farm.total | toCurrency(round) }}
-                </span>
-                ({{ farm.pendingTotal | toCurrency(round) }})
-              </span>
+                <div class="d-flex flex-column">
+                  <span
+                    :style="{
+                      fontSize: $vuetify.breakpoint.mobile ? '10px' : '14px',
+                    }"
+                  >
+                    {{ farm.name }}
+                  </span>
+                  <span
+                    :style="{
+                      fontSize: $vuetify.breakpoint.mobile ? '12px' : '14px',
+                    }"
+                  >
+                    <span class="orange--text text--lighten-1">
+                      {{ farm.total | toCurrency(round) }}
+                    </span>
+                    ({{ farm.pendingTotal | toCurrency(round) }})
+                  </span>
+                </div>
+              </div>
               <div class="d-flex align-center">
                 <v-icon
                   class="mr-4"
