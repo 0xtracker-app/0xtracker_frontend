@@ -10,6 +10,7 @@ const generalStore = {
     version: 5,
     walletDialog: false,
     singleFarmDialog: false,
+    singleFarmHistoryDialog: false,
     compactView: false,
     mini: false,
   },
@@ -23,6 +24,7 @@ const generalStore = {
     smallValues: (state) => state.smallValues,
     walletDialog: (state) => state.walletDialog,
     singleFarmDialog: (state) => state.singleFarmDialog,
+    singleFarmHistoryDialog: (state) => state.singleFarmHistoryDialog,
     compactView: (state) => state.compactView,
     mini: (state) => state.mini,
   },
@@ -60,6 +62,9 @@ const generalStore = {
     },
     SET_SINGLE_FARM_DIALOG(state, value) {
       state.singleFarmDialog = value;
+    },
+    SET_SINGLE_FARM_HISTORY_DIALOG(state, value) {
+      state.singleFarmHistoryDialog = value;
     },
     SET_COMPACT_VIEW(state, value) {
       state.compactView = value;
@@ -145,6 +150,9 @@ const generalStore = {
     },
     setSingleFarmDialog({ commit }, value) {
       commit("SET_SINGLE_FARM_DIALOG", value);
+    },
+    setSingleFarmHistoryDialog({ commit }, value) {
+      commit("SET_SINGLE_FARM_HISTORY_DIALOG", value);
     },
     saveSession({ rootState, state }) {
       const sessionToStore = {

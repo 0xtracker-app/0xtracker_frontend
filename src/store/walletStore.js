@@ -326,7 +326,10 @@ const walletStore = {
     selectedInterval: 1,
     historicalData: [],
     historicalDataLoading: false,
+    singleHistoricalData: [],
+    singleHistoricalDataLoading: false,
     selectedProfile: null,
+    selectedSingleInterval: 7,
   },
   getters: {
     connectedWallet: (state) => state.connectedWallet,
@@ -348,7 +351,9 @@ const walletStore = {
     walletRules: (state) => state.walletRules,
     recentQuery: (state) => state.recentQuery,
     selectedInterval: (state) => state.selectedInterval,
+    selectedSingleInterval: (state) => state.selectedSingleInterval,
     historicalData: (state) => state.historicalData,
+    singleHistoricalData: (state) => state.singleHistoricalData,
     selectedProfile: (state) => state.selectedProfile,
   },
   mutations: {
@@ -382,11 +387,20 @@ const walletStore = {
     SET_SELECTED_INTERVAL(state, value) {
       state.selectedInterval = value;
     },
+    SET_SELECTED_SINGLE_INTERVAL(state, value) {
+      state.selectedSingleInterval = value;
+    },
     SET_HISTORICAL_DATA_LOADING(state, value) {
       state.historicalDataLoading = value;
     },
     SET_SELECTED_PROFILE(state, value) {
       state.selectedProfile = value;
+    },
+    SET_SINGLE_HISTORICAL_DATA(state, value) {
+      state.singleHistoricalData = value;
+    },
+    SET_SINGLE_HISTORICAL_DATA_LOADING(state, value) {
+      state.singleHistoricalDataLoading = value;
     },
   },
   actions: {
@@ -787,8 +801,52 @@ const walletStore = {
       );
 
       await Promise.all(fetchHistoricalDataProcessesArray).then(() => {
-        commit("SET_HISTORICAL_DATA", _historicalData);
+        commit(
+          "SET_HISTORICAL_DATA",
+          _historicalData.sort((a, b) =>
+            a.wallet.walletAddress.localeCompare(b.wallet.walletAddress)
+          )
+        );
         commit("SET_HISTORICAL_DATA_LOADING", false);
+      });
+    },
+    async loadSingleHistoricalProfile(
+      { commit, rootState },
+      { profile, farm }
+    ) {
+      commit("SET_SINGLE_HISTORICAL_DATA_LOADING", true);
+      commit("generalStore/SET_SINGLE_FARM_HISTORY_DIALOG", true, {
+        root: true,
+      });
+      commit("SET_SINGLE_HISTORICAL_DATA", []);
+
+      let _singleHistoricalData = [];
+
+      const fetchSingleHistoricalDataProcessesArray = profile.wallets.map(
+        async (wallet) => {
+          await axios
+            .get(
+              `${
+                process.env.VUE_APP_USER_BALANCE
+              }?wallet=${wallet.walletAddress.toLowerCase()}&days=${
+                rootState.walletStore.selectedSingleInterval
+              }&farm_id=${farm}`
+            )
+            .then(({ data }) => {
+              _singleHistoricalData = [
+                ..._singleHistoricalData,
+                {
+                  wallet,
+                  data,
+                },
+              ];
+            });
+        }
+      );
+
+      await Promise.all(fetchSingleHistoricalDataProcessesArray).then(() => {
+        commit("SET_SINGLE_HISTORICAL_DATA", _singleHistoricalData);
+        commit("SET_SINGLE_HISTORICAL_DATA_LOADING", false);
       });
     },
     async loadProfile(
@@ -903,6 +961,15 @@ const walletStore = {
       commit("SET_SELECTED_INTERVAL", value);
       if (state.recentQuery.profile) {
         dispatch("loadHistoricalProfile", state.recentQuery.profile);
+      }
+    },
+    setSelectedSingleInterval({ state, dispatch, commit }, { value, farm }) {
+      commit("SET_SELECTED_SINGLE_INTERVAL", value);
+      if (state.recentQuery.profile) {
+        dispatch("loadSingleHistoricalProfile", {
+          profile: state.recentQuery.profile,
+          farm: farm,
+        });
       }
     },
   },

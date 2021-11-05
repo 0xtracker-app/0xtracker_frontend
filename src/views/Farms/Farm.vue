@@ -120,20 +120,27 @@
                 : '',
             }"
           >
-            <v-card-title class="font-weight-600 text-uppercase text-h3">
-              <v-avatar
-                style="position: absolute; left: 30px"
-                size="25"
-                v-if="pool.token1"
+            <v-card-title
+              class="font-weight-600 text-uppercase text-h3 d-flex justify-space-between"
+            >
+              <div
+                class="d-flex flex-shrink-1 flex-grow-0"
+                style="position: relative"
               >
-                <v-img :src="getTokenLogo(pool.network, pool.token1)" />
-              </v-avatar>
-              <v-avatar size="25" class="mr-4">
-                <v-img :src="getTokenLogo(pool.network, pool.token0)" />
-              </v-avatar>
-
-              {{ pool.tokenPair }}
-              <v-spacer />
+                <v-avatar
+                  style="position: absolute; left: 10px"
+                  size="25"
+                  v-if="pool.token1"
+                >
+                  <v-img :src="getTokenLogo(pool.network, pool.token1)" />
+                </v-avatar>
+                <v-avatar size="25" class="mr-4">
+                  <v-img :src="getTokenLogo(pool.network, pool.token0)" />
+                </v-avatar>
+                <div>
+                  {{ pool.tokenPair }}
+                </div>
+              </div>
               <span class="font-weight-bold" style="font-size: 22px">
                 {{ (pool.lpPrice + pool.pendingAmount) | toCurrency(round) }}
               </span>

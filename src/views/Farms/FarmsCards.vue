@@ -71,6 +71,7 @@
                   color="indigo lighten-1"
                   class="text-none"
                   small
+                  @click.stop="openHistoricalChartModal(farm)"
                 >
                   <v-icon> mdi-chart-timeline-variant </v-icon>
                   <span class="ml-2 d-none d-sm-block"> View History </span>
@@ -85,17 +86,20 @@
           </v-expansion-panel-content>
         </v-expansion-panel>
       </v-expansion-panels>
+      <SingleFarmHistoryChart :farm="selectedFarm" />
     </v-card-text>
   </v-card>
 </template>
 <script>
 import { mapActions, mapGetters } from "vuex";
 import { detectWalletType } from "@/util/helpers";
+import SingleFarmHistoryChart from "@/components/FarmDetails/SingleFarmHistoryChart";
 import Farm from "./Farm.vue";
 
 export default {
   components: {
     Farm,
+    SingleFarmHistoryChart,
   },
   props: {
     farmsWithData: Array,
@@ -114,10 +118,12 @@ export default {
         { text: "Price", value: "tokenPrice" },
         { text: "Value", value: "tokenValue" },
       ],
+      selectedFarm: null,
     };
   },
   computed: {
     ...mapGetters("generalStore", ["darkmode", "round"]),
+    ...mapGetters("walletStore", ["recentQuery"]),
     panelsArray: function () {
       return Array.from(
         { length: Object.keys(this.farmsWithData).length },
@@ -127,11 +133,19 @@ export default {
   },
   methods: {
     ...mapActions("poolStore", ["getPoolsForSingleFarm"]),
+    ...mapActions("walletStore", ["loadSingleHistoricalProfile"]),
     detectWalletType(walletAddress) {
       return detectWalletType(walletAddress);
     },
     getNetworkLogo(network) {
       return require(`@/assets/images/networks/${network}.jpg`);
+    },
+    async openHistoricalChartModal(farm) {
+      this.selectedFarm = farm;
+      await this.loadSingleHistoricalProfile({
+        profile: this.recentQuery.profile,
+        farm: farm.sendValue,
+      });
     },
   },
 };
