@@ -180,7 +180,9 @@ export default {
       immediate: true,
       deep: true,
       handler() {
-        this.generateDatasets();
+        if (this.singleHistoricalData.length > 0 && this.farm) {
+          this.generateDatasets();
+        }
       },
     },
     selectedSingleInterval: {
@@ -356,7 +358,7 @@ export default {
     },
   },
   mounted() {
-    if (!this.loading) {
+    if (!this.loading && this.singleHistoricalData.length > 0 && this.farm) {
       this.generateDatasets();
     }
   },
@@ -375,11 +377,13 @@ export default {
       );
 
       this.color = this.colors[
-        this.historicalData.findIndex((element) => {
-          if (element.wallet.walletAddress === this.farm.wallet) {
-            return true;
-          }
-        })
+        this.historicalData.length > 0
+          ? this.historicalData.findIndex((element) => {
+              if (element.wallet.walletAddress === this.farm.wallet) {
+                return true;
+              }
+            })
+          : 0
       ];
     },
     generateDatasets() {
@@ -392,7 +396,7 @@ export default {
       let _singleHistoricalData = [];
 
       if (singleHistoricalData) {
-        singleHistoricalData.forEach((data, index) => {
+        singleHistoricalData.forEach((data) => {
           let color = null;
 
           this.$nextTick(() => {
