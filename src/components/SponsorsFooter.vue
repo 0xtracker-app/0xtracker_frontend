@@ -30,7 +30,7 @@
           </div>
           <div class="text-center font-weight-bold" style="min-width: 150px">
             <a
-              href="https://pancakehunny.finance/?utm_source=0xtracker.app&utm_medium=logo&utm_campaign=oct_2021uvicucu"
+              href="https://hunny.finance/?utm_source=0xtracker.app&utm_medium=logo&utm_campaign=oct_2021uvicucu"
               target="_blank"
             >
               <v-avatar>
@@ -44,7 +44,7 @@
                 :style="{ color: darkmode ? 'white' : '#5C6BC0' }"
                 class="mt-2 font-weight-bold text-subtitle-2"
               >
-                Pancake Hunny
+                Hunny Finance
               </p>
             </a>
           </div>
