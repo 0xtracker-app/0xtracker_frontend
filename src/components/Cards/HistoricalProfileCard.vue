@@ -276,7 +276,7 @@ export default {
                     ? 12
                     : this.selectedInterval === 1
                     ? 7
-                    : this.intervals[this.selectedInterval].value / 2
+                    : 6
                   : 4,
                 padding: 10,
               },

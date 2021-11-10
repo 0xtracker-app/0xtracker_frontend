@@ -4,7 +4,7 @@
       v-model="singleFarmHistoryDialog"
       @click:outside="setSingleFarmHistoryDialog(false)"
       persistent
-      max-width="600"
+      max-width="1000"
       :overlay-color="darkmode ? 'grey' : 'rgb(33, 33, 33)'"
       :overlay-opacity="darkmode ? 0.2 : 0.46"
     >
@@ -259,7 +259,7 @@ export default {
                     ? 12
                     : this.selectedSingleInterval === 1
                     ? 7
-                    : this.intervals[this.selectedSingleInterval].value / 2
+                    : 6
                   : 4,
                 padding: 10,
               },
