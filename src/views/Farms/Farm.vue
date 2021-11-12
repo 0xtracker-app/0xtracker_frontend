@@ -201,12 +201,32 @@
             </v-card-text>
             <v-card-actions v-if="pool.contractAddress && pool.rawPending > 0">
               <v-spacer />
-              <!-- <v-btn text>
-                  <v-icon class="fa fa-plus"></v-icon>
-              </v-btn>
-              <v-btn text>
-                  <v-icon class="fa fa-minus"></v-icon>
-              </v-btn> -->
+              <v-tooltip top>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn
+                    text
+                    icon
+                    @click="
+                      getPoolItemDetails({
+                        item: {
+                          ...pool,
+                          wallet: farm.wallet,
+                        },
+                      })
+                    "
+                    v-bind="attrs"
+                    v-on="on"
+                    v-if="
+                      pool.contractAddress &&
+                      farmInfoNetworks.includes(pool.network)
+                    "
+                  >
+                    <v-icon> mdi-information-outline </v-icon>
+                  </v-btn>
+                </template>
+                <span>View details</span>
+              </v-tooltip>
+
               <v-tooltip top>
                 <template v-slot:activator="{ on, attrs }">
                   <v-btn
@@ -234,6 +254,34 @@
                 </template>
                 <span>Claim Rewards</span>
               </v-tooltip>
+              <v-tooltip top>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn
+                    text
+                    :disabled="
+                      !connectedWallet ||
+                      farm.network != connectedWalletNetwork ||
+                      farm.wallet !== connectedWallet
+                    "
+                  >
+                    <v-icon
+                      @click="
+                        emergencyHarvest({
+                          contractAddress: pool.contractAddress,
+                          poolIndex: pool.poolID,
+                          rawTokens: pool.rawStakes,
+                        })
+                      "
+                      v-bind="attrs"
+                      v-on="on"
+                      class="fas fa-exclamation-triangle"
+                    />
+                  </v-btn>
+                </template>
+                <span>
+                  Withdraw without caring about rewards. EMERGENCY ONLY.
+                </span>
+              </v-tooltip>
               <v-spacer />
             </v-card-actions>
           </v-card>
@@ -254,6 +302,7 @@ export default {
   computed: {
     ...mapGetters("generalStore", ["noLPPools", "round", "darkmode"]),
     ...mapGetters("walletStore", ["connectedWallet", "connectedWalletNetwork"]),
+    ...mapGetters("poolStore", ["farmInfoNetworks"]),
     poolsWithoutTotalLP: function () {
       if (this.noLPPools) {
         return this.farm.userData;
@@ -270,7 +319,8 @@ export default {
     },
   },
   methods: {
-    ...mapActions("walletStore", ["claimReward"]),
+    ...mapActions("walletStore", ["claimReward", "emergencyHarvest"]),
+    ...mapActions("poolStore", ["getPoolItemDetails"]),
     getTokenLogo(network, token) {
       try {
         return require(`@/assets/images/tokens/${network}/${token.toLowerCase()}.png`);

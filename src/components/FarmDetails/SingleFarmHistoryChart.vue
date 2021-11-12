@@ -1,5 +1,5 @@
 <template>
-  <v-row justify="center">
+  <v-row justify="center" no-gutters>
     <v-dialog
       v-model="singleFarmHistoryDialog"
       @click:outside="setSingleFarmHistoryDialog(false)"

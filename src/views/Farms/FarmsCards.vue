@@ -87,6 +87,7 @@
         </v-expansion-panel>
       </v-expansion-panels>
       <SingleFarmHistoryChart :farm="selectedFarm" />
+      <SingleFarmHistory />
     </v-card-text>
   </v-card>
 </template>
@@ -95,11 +96,13 @@ import { mapActions, mapGetters } from "vuex";
 import { detectWalletType } from "@/util/helpers";
 import SingleFarmHistoryChart from "@/components/FarmDetails/SingleFarmHistoryChart";
 import Farm from "./Farm.vue";
+import SingleFarmHistory from "@/components/FarmDetails/SingleFarmHistory";
 
 export default {
   components: {
     Farm,
     SingleFarmHistoryChart,
+    SingleFarmHistory,
   },
   props: {
     farmsWithData: Array,

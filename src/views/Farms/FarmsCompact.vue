@@ -86,10 +86,9 @@
                       E. WITHDRAW
                     </v-btn>
                   </template>
-                  <span
-                    >Withdraw without caring about rewards. EMERGENCY
-                    ONLY.</span
-                  >
+                  <span>
+                    Withdraw without caring about rewards. EMERGENCY ONLY.
+                  </span>
                 </v-tooltip>
               </v-card-actions>
             </div>
