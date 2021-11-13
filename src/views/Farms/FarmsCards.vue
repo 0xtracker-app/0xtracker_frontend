@@ -19,7 +19,26 @@
               class="d-flex justify-space-between mr-4 align-center"
               style="width: 100%"
             >
-              <div class="mr-2 font-weight-bold d-flex align-center">
+              <div
+                class="mr-2 font-weight-bold d-flex align-center"
+                style="height: 100%"
+              >
+                <v-tooltip top v-if="historicalData.length > 1">
+                  <template v-slot:activator="{ on, attrs }">
+                    <div
+                      :style="{
+                        backgroundColor: farm.color,
+                        height: $vuetify.breakpoint.mobile ? '25px' : '40px',
+                      }"
+                      style="width: 5px; margin-right: 5px"
+                      v-bind="attrs"
+                      v-on="on"
+                    ></div>
+                  </template>
+                  <span class="text-caption font-weight-bold">
+                    {{ farm.wallet }}
+                  </span>
+                </v-tooltip>
                 <v-avatar
                   rounded
                   tile
@@ -126,7 +145,7 @@ export default {
   },
   computed: {
     ...mapGetters("generalStore", ["darkmode", "round"]),
-    ...mapGetters("walletStore", ["recentQuery"]),
+    ...mapGetters("walletStore", ["recentQuery", "historicalData"]),
     panelsArray: function () {
       return Array.from(
         { length: Object.keys(this.farmsWithData).length },

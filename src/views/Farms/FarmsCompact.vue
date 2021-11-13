@@ -115,16 +115,32 @@
             </div>
           </template>
           <template v-slot:item.info="{ item }">
-            <v-btn
-              text
-              icon
-              @click="getPoolItemDetails({ item: item })"
-              v-if="
-                item.contractAddress && farmInfoNetworks.includes(item.network)
-              "
-            >
-              <v-icon> mdi-information-outline </v-icon>
-            </v-btn>
+            <div class="d-flex justify-start fill-height align-center">
+              <v-tooltip top v-if="historicalData.length > 1">
+                <template v-slot:activator="{ on, attrs }">
+                  <div
+                    :style="{ backgroundColor: item.color }"
+                    style="width: 5px; height: 70%; margin-right: 10px"
+                    v-bind="attrs"
+                    v-on="on"
+                  ></div>
+                </template>
+                <span class="text-caption font-weight-bold">
+                  {{ item.wallet }}
+                </span>
+              </v-tooltip>
+              <v-btn
+                text
+                icon
+                @click="getPoolItemDetails({ item: item })"
+                v-if="
+                  item.contractAddress &&
+                  farmInfoNetworks.includes(item.network)
+                "
+              >
+                <v-icon> mdi-information-outline </v-icon>
+              </v-btn>
+            </div>
           </template>
           <template v-slot:item.tokenPair="{ item }">
             <div class="d-flex">
@@ -170,6 +186,8 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import SingleFarmHistory from "@/components/FarmDetails/SingleFarmHistory";
+import { generateColors } from "@/util/helpers";
+import { interpolateSpectral } from "d3";
 
 export default {
   components: {
@@ -199,12 +217,26 @@ export default {
   },
   computed: {
     ...mapGetters("generalStore", ["round", "noLPPools"]),
-    ...mapGetters("walletStore", ["connectedWallet", "connectedWalletNetwork"]),
+    ...mapGetters("walletStore", [
+      "connectedWallet",
+      "connectedWalletNetwork",
+      "historicalData",
+    ]),
     ...mapGetters("poolStore", ["farmInfoNetworks"]),
     loading: function () {
       return this.$store.state.farmStore.loading;
     },
     poolsWithoutTotalLP: function () {
+      const colors = generateColors(
+        this.historicalData.length,
+        interpolateSpectral,
+        {
+          colorStart: 0,
+          colorEnd: 1,
+          useEndAsStart: true,
+        }
+      );
+
       let pools = [];
       for (const key in this.farmsWithData) {
         if (Object.hasOwnProperty.call(this.farmsWithData, key)) {
@@ -223,6 +255,17 @@ export default {
               pools.push(pool);
             }
           }
+
+          pool.color =
+            colors[
+              this.historicalData.length > 0
+                ? this.historicalData.findIndex((element) => {
+                    if (element.wallet.walletAddress === pool.wallet) {
+                      return true;
+                    }
+                  })
+                : 0
+            ];
         }
       }
       return pools;

@@ -19,6 +19,8 @@ import { mapActions, mapGetters } from "vuex";
 import FarmsCards from "./FarmsCards.vue";
 import FarmsCompact from "./FarmsCompact.vue";
 import NoDataCard from "@/components/Cards/NoDataCard.vue";
+import { generateColors } from "@/util/helpers";
+import { interpolateSpectral } from "d3";
 
 export default {
   components: {
@@ -31,6 +33,7 @@ export default {
   },
   computed: {
     ...mapGetters("generalStore", ["compactView", "darkmode", "round"]),
+    ...mapGetters("walletStore", ["historicalData"]),
     loading: function () {
       return this.$store.state.farmStore.loading;
     },
@@ -46,8 +49,27 @@ export default {
             : -1
         )
         .map((contract) => {
+          const colors = generateColors(
+            this.historicalData.length,
+            interpolateSpectral,
+            {
+              colorStart: 0,
+              colorEnd: 1,
+              useEndAsStart: true,
+            }
+          );
           let farm = this.$store.state.farmStore.farmsWithData[contract];
           farm.contract = contract;
+          farm.color =
+            colors[
+              this.historicalData.length > 0
+                ? this.historicalData.findIndex((element) => {
+                    if (element.wallet.walletAddress === farm.wallet) {
+                      return true;
+                    }
+                  })
+                : 0
+            ];
           return farm;
         });
     },

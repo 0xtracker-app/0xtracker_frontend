@@ -676,7 +676,7 @@ const walletStore = {
           commit("SET_WALLET_BALANCES", [
             ...state.walletBalancesList,
             ...response.data.map((walletBalance) => {
-              return { ...walletBalance, network };
+              return { ...walletBalance, network, wallet: state.wallet };
             }),
           ]);
         }
@@ -701,7 +701,7 @@ const walletStore = {
         commit("SET_WALLET_BALANCES", [
           ...state.walletBalancesList,
           ...response.data.map((walletBalance) => {
-            return { ...walletBalance, network };
+            return { ...walletBalance, network, wallet: params.wallet };
           }),
         ]);
       } catch (error) {
@@ -727,7 +727,7 @@ const walletStore = {
           commit("SET_WALLET_BALANCES", [
             ...state.walletBalancesList,
             ...response.data.map((walletBalance) => {
-              return { ...walletBalance, network };
+              return { ...walletBalance, network, wallet: params.wallet };
             }),
           ]);
         } catch (error) {
@@ -754,7 +754,7 @@ const walletStore = {
             commit("SET_WALLET_BALANCES", [
               ...state.walletBalancesList,
               ...response.data.map((walletBalance) => {
-                return { ...walletBalance, network };
+                return { ...walletBalance, network, wallet: params.wallet };
               }),
             ]);
           })
