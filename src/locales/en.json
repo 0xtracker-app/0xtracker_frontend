@@ -15,5 +15,8 @@
   "celo" : "Celo",
   "xdai" : "xDai",
   "solana" : "Solana",
-  "meter" : "Meter"
+  "meter" : "Meter",
+  "cro" : "Cronos",
+  "polis" : "Polis",
+  "boba" : "Boba"
 }
