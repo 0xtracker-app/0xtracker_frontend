@@ -17,6 +17,9 @@ const networkStore = {
       100: "xdai",
       42220: "celo",
       82: "meter",
+      25: "cro",
+      333999: "polis",
+      288: "boba",
     },
   },
   getters: {

@@ -314,6 +314,8 @@ const walletStore = {
       "heco",
       "meter",
       "moon",
+      "polis",
+      "cro",
     ],
     walletRules: [
       (value) => !!value || "Required.",
