@@ -24,16 +24,33 @@
           style="background-color: transparent"
         >
           <template v-slot:item.symbol="{ item }">
-            <div class="d-flex font-weight-bold">
-              <div class="d-flex justify-center align-center">
-                <v-avatar rounded tile size="20" class="mr-4">
-                  <v-img :src="getNetworkLogo(item.network)" />
-                </v-avatar>
-                <v-avatar size="20" class="mr-1">
-                  <v-img :src="getTokenLogo(item.network, item.tokenAddress)" />
-                </v-avatar>
+            <div class="d-flex justify-start align-center fill-height">
+              <v-tooltip top v-if="historicalData.length > 1">
+                <template v-slot:activator="{ on, attrs }">
+                  <div
+                    :style="{ backgroundColor: item.color }"
+                    style="width: 5px; height: 70%; margin-right: 10px"
+                    v-bind="attrs"
+                    v-on="on"
+                  ></div>
+                </template>
+                <span class="text-caption font-weight-bold">
+                  {{ item.wallet }}
+                </span>
+              </v-tooltip>
+              <div class="d-flex font-weight-bold">
+                <div class="d-flex justify-center align-center">
+                  <v-avatar rounded tile size="20" class="mr-4">
+                    <v-img :src="getNetworkLogo(item.network)" />
+                  </v-avatar>
+                  <v-avatar size="20" class="mr-1">
+                    <v-img
+                      :src="getTokenLogo(item.network, item.tokenAddress)"
+                    />
+                  </v-avatar>
+                </div>
+                {{ item.symbol }}
               </div>
-              {{ item.symbol }}
             </div>
           </template>
           <template v-slot:item.tokenBalance="{ item }">
@@ -66,6 +83,8 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import NoDataCard from "@/components/Cards/NoDataCard.vue";
+import { generateColors } from "@/util/helpers";
+import { interpolateSpectral } from "d3";
 
 export default {
   components: {
@@ -89,6 +108,7 @@ export default {
   },
   computed: {
     ...mapGetters("generalStore", ["darkmode", "smallValues", "round"]),
+    ...mapGetters("walletStore", ["historicalData"]),
     loading: function () {
       return (
         this.$store.state.walletStore.loading ||
@@ -99,7 +119,28 @@ export default {
       return this.$store.state.walletStore.walletBalancesList;
     },
     unfilteredBalances: function () {
+      const colors = generateColors(
+        this.historicalData.length,
+        interpolateSpectral,
+        {
+          colorStart: 0,
+          colorEnd: 1,
+          useEndAsStart: true,
+        }
+      );
+
       return this.walletBalancesList.map((balance) => {
+        const color =
+          colors[
+            this.historicalData.length > 0
+              ? this.historicalData.findIndex((element) => {
+                  if (element.wallet.walletAddress === balance.wallet) {
+                    return true;
+                  }
+                })
+              : 0
+          ];
+
         return {
           symbol: balance.symbol,
           tokenBalance: balance.tokenBalance,
@@ -107,6 +148,8 @@ export default {
           tokenValue: balance.tokenBalance * balance.tokenPrice,
           tokenAddress: balance.token_address,
           network: balance.network,
+          wallet: balance.wallet,
+          color: color,
         };
       });
     },

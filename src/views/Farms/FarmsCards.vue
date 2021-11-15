@@ -19,7 +19,26 @@
               class="d-flex justify-space-between mr-4 align-center"
               style="width: 100%"
             >
-              <div class="mr-2 font-weight-bold d-flex align-center">
+              <div
+                class="mr-2 font-weight-bold d-flex align-center"
+                style="height: 100%"
+              >
+                <v-tooltip top v-if="historicalData.length > 1">
+                  <template v-slot:activator="{ on, attrs }">
+                    <div
+                      :style="{
+                        backgroundColor: farm.color,
+                        height: $vuetify.breakpoint.mobile ? '25px' : '40px',
+                      }"
+                      style="width: 5px; margin-right: 5px"
+                      v-bind="attrs"
+                      v-on="on"
+                    ></div>
+                  </template>
+                  <span class="text-caption font-weight-bold">
+                    {{ farm.wallet }}
+                  </span>
+                </v-tooltip>
                 <v-avatar
                   rounded
                   tile
@@ -71,6 +90,7 @@
                   color="indigo lighten-1"
                   class="text-none"
                   small
+                  @click.stop="openHistoricalChartModal(farm)"
                 >
                   <v-icon> mdi-chart-timeline-variant </v-icon>
                   <span class="ml-2 d-none d-sm-block"> View History </span>
@@ -85,17 +105,23 @@
           </v-expansion-panel-content>
         </v-expansion-panel>
       </v-expansion-panels>
+      <SingleFarmHistoryChart :farm="selectedFarm" />
+      <SingleFarmHistory />
     </v-card-text>
   </v-card>
 </template>
 <script>
 import { mapActions, mapGetters } from "vuex";
 import { detectWalletType } from "@/util/helpers";
+import SingleFarmHistoryChart from "@/components/FarmDetails/SingleFarmHistoryChart";
 import Farm from "./Farm.vue";
+import SingleFarmHistory from "@/components/FarmDetails/SingleFarmHistory";
 
 export default {
   components: {
     Farm,
+    SingleFarmHistoryChart,
+    SingleFarmHistory,
   },
   props: {
     farmsWithData: Array,
@@ -114,10 +140,12 @@ export default {
         { text: "Price", value: "tokenPrice" },
         { text: "Value", value: "tokenValue" },
       ],
+      selectedFarm: null,
     };
   },
   computed: {
     ...mapGetters("generalStore", ["darkmode", "round"]),
+    ...mapGetters("walletStore", ["recentQuery", "historicalData"]),
     panelsArray: function () {
       return Array.from(
         { length: Object.keys(this.farmsWithData).length },
@@ -127,11 +155,19 @@ export default {
   },
   methods: {
     ...mapActions("poolStore", ["getPoolsForSingleFarm"]),
+    ...mapActions("walletStore", ["loadSingleHistoricalProfile"]),
     detectWalletType(walletAddress) {
       return detectWalletType(walletAddress);
     },
     getNetworkLogo(network) {
       return require(`@/assets/images/networks/${network}.jpg`);
+    },
+    async openHistoricalChartModal(farm) {
+      this.selectedFarm = farm;
+      await this.loadSingleHistoricalProfile({
+        profile: this.recentQuery.profile,
+        farm: farm.sendValue,
+      });
     },
   },
 };
