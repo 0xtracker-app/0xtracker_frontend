@@ -30,7 +30,7 @@
           </div>
           <div class="text-center font-weight-bold" style="min-width: 150px">
             <a
-              href="https://hunny.finance/?utm_source=0xtracker.app&utm_medium=logo&utm_campaign=oct_2021uvicucu"
+              href="https://dao.hunny.finance/?utm_source=0xtracker.app&utm_medium=logo&utm_campaign=fairlaunch"
               target="_blank"
             >
               <v-avatar>

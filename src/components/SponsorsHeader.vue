@@ -37,7 +37,7 @@ export default {
         {
           src: require("@/assets/images/sponsors-header/hunny.gif"),
           href:
-            "https://hunny.finance/?utm_source=0xtracker.app&utm_medium=banner&utm_campaign=single_asset_stablecoin",
+            "https://dao.hunny.finance/?utm_source=0xtracker.app&utm_medium=banner&utm_campaign=fairlaunch",
         },
         {
           src: require("@/assets/images/sponsors-header/grand.png"),
