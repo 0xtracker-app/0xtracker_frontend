@@ -13,6 +13,7 @@ const generalStore = {
     singleFarmHistoryDialog: false,
     compactView: false,
     mini: false,
+    selectedNetworks: [],
   },
   getters: {
     alerts: (state) => state.alerts,
@@ -27,6 +28,7 @@ const generalStore = {
     singleFarmHistoryDialog: (state) => state.singleFarmHistoryDialog,
     compactView: (state) => state.compactView,
     mini: (state) => state.mini,
+    selectedNetworks: (state) => state.selectedNetworks,
   },
   mutations: {
     ADD_ALERT(state, alert) {
@@ -68,6 +70,9 @@ const generalStore = {
     },
     SET_COMPACT_VIEW(state, value) {
       state.compactView = value;
+    },
+    SET_SELECTED_NETWORKS(state, value) {
+      state.selectedNetworks = value;
     },
     TOGGLE_DARK_MODE(state) {
       state.darkmode = !state.darkmode;
@@ -119,7 +124,7 @@ const generalStore = {
         );
       }
     },
-    restoreSession({ commit }, sessionToRestore) {
+    restoreSession({ rootState, commit }, sessionToRestore) {
       if (sessionToRestore.darkmode)
         commit("SET_DARK_MODE", sessionToRestore.darkmode);
       if (!sessionToRestore.noLPPools)
@@ -130,6 +135,11 @@ const generalStore = {
         commit("SET_SMALL_VALUES", sessionToRestore.smallValues);
       if (sessionToRestore.version)
         commit("SET_VERSION", sessionToRestore.version);
+      if (sessionToRestore.selectedNetworks) {
+        if (sessionToRestore.selectedNetworks.length === 0)
+          commit("SET_SELECTED_NETWORKS", rootState.walletStore.walletNetworks);
+        else commit("SET_SELECTED_NETWORKS", sessionToRestore.selectedNetworks);
+      }
       if (sessionToRestore.wallet)
         commit("walletStore/SET_WALLET", sessionToRestore.wallet, {
           root: true,
@@ -164,6 +174,7 @@ const generalStore = {
         wallet: rootState.walletStore.wallet,
         selectedFarms: rootState.farmStore.selectedFarms,
         compactView: state.compactView,
+        selectedNetworks: state.selectedNetworks,
         userProfiles: rootState.profileStore.userProfiles,
       };
       localStorage.setItem("store", JSON.stringify(sessionToStore));
@@ -186,6 +197,10 @@ const generalStore = {
     },
     toggleSmallValues({ commit }) {
       commit("TOGGLE_SMALL_VALUES");
+      this.dispatch("generalStore/saveSession");
+    },
+    saveSelectedNetworks({ commit }, networks) {
+      commit("SET_SELECTED_NETWORKS", networks);
       this.dispatch("generalStore/saveSession");
     },
     toggleMini({ commit }, value) {
