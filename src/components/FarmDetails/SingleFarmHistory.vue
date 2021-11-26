@@ -96,7 +96,7 @@
                   </p>
                 </v-row>
                 <v-row justify="center" class="font-weight-bold text-h2">
-                  {{ farmInfo.transactions.gasUsed | toCurrency(round) }}
+                  {{ farmInfo.transactions.gasUsed | toSelectedCurrency }}
                 </v-row>
               </v-col>
             </v-row>

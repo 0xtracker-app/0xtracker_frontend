@@ -76,7 +76,7 @@
                           </v-avatar>
                           {{ item.name }}
                         </td>
-                        <td>${{ item.total.toFixed(2) }}</td>
+                        <td>{{ item.total | toSelectedCurrency }}</td>
                         <td>
                           <span class="text-right" style="min-width: 50px">
                             {{ getPercentage(item.total).toFixed(2) }}%
@@ -142,7 +142,7 @@
               class="text-caption font-weight-bold"
               :class="darkmode ? 'blue--text' : ''"
             >
-              ${{ farm.total.toFixed(2) }}
+              {{ farm.total | toSelectedCurrency }}
             </span>
           </v-tooltip>
           <span class="text-right" style="min-width: 50px">

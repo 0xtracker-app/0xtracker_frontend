@@ -78,7 +78,7 @@
                           {{ item.name }}
                         </td>
                         <td>{{ item.amount.toFixed(2) }}</td>
-                        <td>${{ item.value.toFixed(2) }}</td>
+                        <td>{{ item.value | toSelectedCurrency }}</td>
                         <td>
                           <span
                             class="text-right"

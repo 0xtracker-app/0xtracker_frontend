@@ -45,8 +45,8 @@
                     }}%</strong
                   >
                 </v-progress-linear>
-                {{ farm.mintedFAI | toCurrency(round) }}/{{
-                  loanAmount | toCurrency(round)
+                {{ farm.mintedFAI | toSelectedCurrency }}/{{
+                  loanAmount | toSelectedCurrency
                 }}
               </p>
               <p
@@ -68,8 +68,8 @@
                     }}%
                   </strong>
                 </v-progress-linear>
-                {{ farm.mintedFAI | toCurrency(round) }} /
-                {{ loanAmount | toCurrency(round) }}
+                {{ farm.mintedFAI | toSelectedCurrency }} /
+                {{ loanAmount | toSelectedCurrency }}
               </p>
             </v-card-text>
           </v-card>
@@ -95,8 +95,8 @@
                     }}%
                   </strong>
                 </v-progress-linear>
-                {{ farm.totalBorrowed | toCurrency(round) }} /
-                {{ loanAmount | toCurrency(round) }}
+                {{ farm.totalBorrowed | toSelectedCurrency }} /
+                {{ loanAmount | toSelectedCurrency }}
               </p>
             </v-card-text>
           </v-card>
@@ -142,7 +142,7 @@
                 </div>
               </div>
               <span class="font-weight-bold" style="font-size: 22px">
-                {{ (pool.lpPrice + pool.pendingAmount) | toCurrency(round) }}
+                {{ (pool.lpPrice + pool.pendingAmount) | toSelectedCurrency }}
               </span>
             </v-card-title>
             <v-card-text>
@@ -153,7 +153,7 @@
               <p v-if="pool.borrowed" class="mb-0">
                 <strong>Total Borrowed:</strong>
                 {{ pool.borrowed | to2Decimals(round) }} ({{
-                  pool.borrowedUSD | toCurrency(round)
+                  pool.borrowedUSD | toSelectedCurrency
                 }})
               </p>
               <p v-if="pool.lpTotal" class="mb-0">
@@ -168,7 +168,7 @@
                 >
                   <strong>Pending {{ gReward.symbol }}:</strong>
                   {{ gReward.pending | to2Decimals(round) }} ({{
-                    gReward.pendingAmount | toCurrency(round)
+                    gReward.pendingAmount | toSelectedCurrency
                   }})
                 </p>
               </div>
@@ -177,25 +177,25 @@
                 {{ pool.pending | to2Decimals(round) }} ({{
                   pool.pendingELE ||
                   pool.pendingRewardAmount ||
-                  pool.pendingAmount | toCurrency(round)
+                  pool.pendingAmount | toSelectedCurrency
                 }})
               </p>
               <p v-if="pool.pendingNerve" class="mb-0">
                 <strong>Pending 11NRV:</strong>
                 {{ pool.pendingNerve | to2Decimals(round) }} ({{
-                  pool.pendingNRVAmount | toCurrency(round)
+                  pool.pendingNRVAmount | toSelectedCurrency
                 }})
               </p>
               <p v-if="pool.pendingBunny" class="mb-0">
                 <strong>Pending BUNNY:</strong>
                 {{ pool.pendingBunny | to2Decimals(round) }} ({{
-                  pool.pendingBunnyAmount | toCurrency(round)
+                  pool.pendingBunnyAmount | toSelectedCurrency
                 }})
               </p>
               <p v-if="pool.pendingMerlin" class="mb-0">
                 <strong>Pending MERLIN:</strong>
                 {{ pool.pendingMerlin | to2Decimals(round) }} ({{
-                  pool.pendingMerlinAmount | toCurrency(round)
+                  pool.pendingMerlinAmount | toSelectedCurrency
                 }})
               </p>
             </v-card-text>

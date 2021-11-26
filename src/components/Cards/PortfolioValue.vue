@@ -15,7 +15,7 @@
               class="font-weight-bold text-h1 mb-0"
               :class="[darkmode ? 'white--text' : 'grey--text text--darken-3']"
             >
-              {{ totalValue | toCurrency(round) }}
+              {{ totalValue | toSelectedCurrency }}
             </h1>
             <div
               class="font-weight-600 text-uppercase text-h4 grey--text"
@@ -60,7 +60,12 @@ import { mapGetters } from "vuex";
 export default {
   name: "Portfolio",
   computed: {
-    ...mapGetters("generalStore", ["darkmode", "round"]),
+    ...mapGetters("generalStore", [
+      "darkmode",
+      "round",
+      "selectedCurrency",
+      "currencyRates",
+    ]),
     loading: function () {
       return (
         this.$store.state.farmStore.loading ||

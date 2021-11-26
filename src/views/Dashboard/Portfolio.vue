@@ -221,7 +221,7 @@
                       lendingFarms.length > 0 && !$store.state.farmStore.loading
                     "
                   >
-                    Total: {{ total | toCurrency(round) }}
+                    Total: {{ total | toSelectedCurrency }}
                   </span>
                   <v-tooltip bottom>
                     <template v-slot:activator="{ on, attrs }">

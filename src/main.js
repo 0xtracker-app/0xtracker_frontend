@@ -8,6 +8,7 @@ import store from "./store";
 import "./filters/shortenContractFilter";
 import "./filters/to2DecimalsFilter";
 import "./filters/toCurrencyFilter";
+import "./filters/toSelectedCurrencyFilter";
 
 Vue.config.productionTip = false;
 

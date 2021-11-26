@@ -57,10 +57,10 @@
             {{ item.tokenBalance | to2Decimals(round) }}
           </template>
           <template v-slot:item.tokenPrice="{ item }">
-            {{ item.tokenPrice | toCurrency(round) }}
+            {{ item.tokenPrice | toSelectedCurrency }}
           </template>
           <template v-slot:item.tokenValue="{ item }">
-            {{ item.tokenValue | toCurrency(round) }}
+            {{ item.tokenValue | toSelectedCurrency }}
           </template>
         </v-data-table>
       </v-card-text>
