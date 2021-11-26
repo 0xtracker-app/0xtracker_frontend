@@ -107,7 +107,12 @@ export default {
     };
   },
   computed: {
-    ...mapGetters("generalStore", ["darkmode", "smallValues", "round"]),
+    ...mapGetters("generalStore", [
+      "darkmode",
+      "smallValues",
+      "round",
+      "selectedNetworks",
+    ]),
     ...mapGetters("walletStore", ["historicalData"]),
     loading: function () {
       return (
@@ -156,7 +161,9 @@ export default {
     balances: function () {
       const unfilteredBalances = this.unfilteredBalances;
       return unfilteredBalances.filter(
-        (balance) => this.smallValues || balance.tokenValue > 1
+        (balance) =>
+          (this.smallValues || balance.tokenValue > 1) &&
+          this.selectedNetworks.some((network) => network === balance.network)
       );
     },
     total: function () {

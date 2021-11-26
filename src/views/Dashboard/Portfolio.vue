@@ -392,13 +392,15 @@ export default {
     },
     total() {
       return this.lendingFarms.length > 0
-        ? this.lendingFarms.reduce((previousValue, currentValue) => {
-            const previousTotal =
-              previousValue.poolTotal - previousValue.totalBorrowed;
-            const currentTotal =
-              currentValue.poolTotal - currentValue.totalBorrowed;
-            return previousTotal + currentTotal;
-          })
+        ? this.lendingFarms.length !== 1
+          ? this.lendingFarms.reduce((previousValue, currentValue) => {
+              const previousTotal =
+                previousValue.poolTotal - previousValue.totalBorrowed;
+              const currentTotal =
+                currentValue.poolTotal - currentValue.totalBorrowed;
+              return previousTotal + currentTotal;
+            })
+          : this.lendingFarms[0].poolTotal - this.lendingFarms[0].totalBorrowed
         : 0;
     },
   },

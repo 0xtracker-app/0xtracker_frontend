@@ -181,7 +181,12 @@ const poolStore = {
                 for (const contract in response.data) {
                   if (Object.hasOwnProperty.call(response.data, contract)) {
                     const farm = response.data[contract];
-                    if (farm.type === "lending") {
+                    if (
+                      farm.type === "lending" &&
+                      rootState.generalStore.selectedNetworks.some(
+                        (network) => network === farm.network
+                      )
+                    ) {
                       commit(
                         "farmStore/SET_LENDING_FARMS",
                         [...rootState.farmStore.lendingFarms, farm],
