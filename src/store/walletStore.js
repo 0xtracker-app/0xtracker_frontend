@@ -934,24 +934,8 @@ const walletStore = {
       });
 
       await Promise.all(processesArray).then(async () => {
+        await dispatch("executeFilter");
         await dispatch("loadHistoricalProfile", profile);
-        let farmsWithData = {};
-
-        Object.entries(rootState.farmStore.farmsWithData).forEach(
-          ([key, value]) => {
-            if (
-              rootState.generalStore.selectedNetworks.some(
-                (network) => network === value.network
-              )
-            ) {
-              farmsWithData = {
-                ...farmsWithData,
-                [key]: value,
-              };
-            }
-          }
-        );
-        commit("farmStore/SET_FARMS_WITH_DATA", farmsWithData, { root: true });
         commit("farmStore/SET_LOADING", false, { root: true });
       });
     },
@@ -992,6 +976,27 @@ const walletStore = {
           farm: farm,
         });
       }
+    },
+    executeFilter({ rootState, commit }) {
+      let farmsWithData = {};
+
+      Object.entries(rootState.farmStore.farmsWithData).forEach(
+        ([key, value]) => {
+          if (
+            rootState.generalStore.selectedNetworks.some(
+              (network) => network === value.network
+            )
+          ) {
+            farmsWithData = {
+              ...farmsWithData,
+              [key]: value,
+            };
+          }
+        }
+      );
+      commit("farmStore/SET_FILTERED_FARMS_WITH_DATA", farmsWithData, {
+        root: true,
+      });
     },
   },
 };

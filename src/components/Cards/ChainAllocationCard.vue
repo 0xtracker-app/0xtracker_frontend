@@ -195,7 +195,7 @@ export default {
     },
     farmsByNetwork() {
       const farmsGroupedByNetwork = groupBy(
-        Object.entries(this.$store.state.farmStore.farmsWithData).map(
+        Object.entries(this.$store.state.farmStore.filteredFarmsWithData).map(
           ([, value]) => value
         ),
         "network"
@@ -215,7 +215,7 @@ export default {
       return networks;
     },
     total() {
-      return Object.entries(this.$store.state.farmStore.farmsWithData)
+      return Object.entries(this.$store.state.farmStore.filteredFarmsWithData)
         .map(([, value]) => value.total)
         .reduce((prev, next) => prev + next);
     },

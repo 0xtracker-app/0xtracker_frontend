@@ -169,11 +169,15 @@ export default {
     this.networks = this.selectedNetworks;
   },
   methods: {
-    ...mapActions("walletStore", ["loadPortfolio", "loadProfile"]),
+    ...mapActions("walletStore", [
+      "loadPortfolio",
+      "loadProfile",
+      "executeFilter",
+    ]),
     ...mapActions("generalStore", ["saveSelectedNetworks"]),
     saveFilters() {
       this.saveSelectedNetworks(this.networks);
-      this.executeRecentQuery();
+      this.executeFilter();
       this.filterDialog = false;
     },
     executeRecentQuery() {

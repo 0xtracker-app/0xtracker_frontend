@@ -141,8 +141,6 @@ const generalStore = {
         if (response.status === 200 && response.data.success) {
           commit("SET_CURRENCY_RATES", response.data.rates);
         }
-
-        console.log(state.currencyRates);
       } catch (error) {
         commit(
           "generalStore/ADD_ALERT",

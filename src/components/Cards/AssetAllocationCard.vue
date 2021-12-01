@@ -191,14 +191,16 @@ export default {
       return this.$store.state.farmStore.loading;
     },
     farms() {
-      const farms = Object.entries(this.$store.state.farmStore.farmsWithData)
+      const farms = Object.entries(
+        this.$store.state.farmStore.filteredFarmsWithData
+      )
         .map(([, value]) => value)
         .sort((a, b) => b.total - a.total);
 
       return farms;
     },
     total() {
-      return Object.entries(this.$store.state.farmStore.farmsWithData)
+      return Object.entries(this.$store.state.farmStore.filteredFarmsWithData)
         .map(([, value]) => value.total)
         .reduce((prev, next) => prev + next);
     },

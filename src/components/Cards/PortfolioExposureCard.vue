@@ -261,7 +261,7 @@ export default {
     },
     tokens() {
       let tokens = [];
-      Object.entries(this.$store.state.farmStore.farmsWithData)
+      Object.entries(this.$store.state.farmStore.filteredFarmsWithData)
         .map(([, value]) => [
           ...Object.entries(value.userData).map(([, value]) => value),
         ])
