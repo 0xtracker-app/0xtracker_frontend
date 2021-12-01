@@ -34,6 +34,7 @@
     "trezor-address-validator": "git+https://github.com/kimcorros/trezor-address-validator.git#fix/export-bech32-in-utils",
     "vue": "2.6.12",
     "vue-chartjs": "^3.5.1",
+    "vue-check-view": "^0.3.0",
     "vue-i18n": "^8.25.0",
     "vue-router": "3.5.1",
     "vue2-transitions": "0.3.0",

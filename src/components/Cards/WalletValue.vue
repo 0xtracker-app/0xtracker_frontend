@@ -1,56 +1,73 @@
 <template>
-  <div class="card-container">
-    <v-card
-      class="mb-6 overflow-hidden"
-      :dark="darkmode"
-      :class="[darkmode ? 'card-border-green' : '']"
-    >
-      <v-card-text
-        class="card-stats-padding pa-6"
-        :class="[darkmode ? 'card-content-green' : '']"
+  <div>
+    <div v-if="!valueOnly" class="card-container">
+      <v-card
+        class="mb-6 overflow-hidden"
+        :dark="darkmode"
+        :class="[darkmode ? 'card-border-green' : '']"
       >
-        <v-row no-gutters>
-          <v-col cols="" class="d-flex flex-column align-start">
-            <h1
-              class="font-weight-bold text-h1 mb-0"
-              :class="[darkmode ? 'white--text' : 'grey--text text--darken-3']"
-            >
-              {{ walletValue | toSelectedCurrency }}
-            </h1>
-            <div
-              class="font-weight-600 text-uppercase text-h4 grey--text"
-              :class="[darkmode ? 'text--lighten-3' : 'text--darken-1']"
-            >
-              Wallet
+        <v-card-text
+          class="card-stats-padding pa-6"
+          :class="[darkmode ? 'card-content-green' : '']"
+        >
+          <v-row no-gutters>
+            <v-col cols="" class="d-flex flex-column align-start">
+              <h1
+                class="font-weight-bold text-h1 mb-0"
+                :class="[
+                  darkmode ? 'white--text' : 'grey--text text--darken-3',
+                ]"
+              >
+                {{ walletValue | toSelectedCurrency }}
+              </h1>
+              <div
+                class="font-weight-600 text-uppercase text-h4 grey--text"
+                :class="[darkmode ? 'text--lighten-3' : 'text--darken-1']"
+              >
+                Wallet
+              </div>
+            </v-col>
+            <div style="position: relative">
+              <v-icon
+                size="100"
+                :class="[
+                  darkmode ? 'white--text' : 'grey--text text--darken-3',
+                ]"
+                style="
+                  position: absolute;
+                  top: -25px;
+                  right: 0px;
+                  transform: rotate(-25deg);
+                  z-index: 0;
+                  opacity: 0.25;
+                "
+              >
+                fas fa-wallet
+              </v-icon>
             </div>
-          </v-col>
-          <div style="position: relative">
-            <v-icon
-              size="100"
-              :class="[darkmode ? 'white--text' : 'grey--text text--darken-3']"
-              style="
-                position: absolute;
-                top: -25px;
-                right: 0px;
-                transform: rotate(-25deg);
-                z-index: 0;
-                opacity: 0.25;
-              "
-            >
-              fas fa-wallet
-            </v-icon>
+          </v-row>
+        </v-card-text>
+        <v-overlay :absolute="true" :value="loading">
+          <div class="text-center">
+            <v-progress-circular
+              indeterminate
+              color="white"
+            ></v-progress-circular>
           </div>
-        </v-row>
-      </v-card-text>
-      <v-overlay :absolute="true" :value="loading">
-        <div class="text-center">
-          <v-progress-circular
-            indeterminate
-            color="white"
-          ></v-progress-circular>
-        </div>
-      </v-overlay>
-    </v-card>
+        </v-overlay>
+      </v-card>
+    </div>
+    <div v-else class="d-flex">
+      <div
+        class="font-weight-600 text-uppercase text-subtitle-2 grey--text mr-2"
+        :class="[darkmode ? 'text--lighten-3' : 'text--darken-1']"
+      >
+        Wallet
+      </div>
+      <h6 class="font-weight-bold text-subtitle-2 mb-0" style="color: #1fbfa9">
+        {{ walletValue | toSelectedCurrency }}
+      </h6>
+    </div>
   </div>
 </template>
 
@@ -71,6 +88,12 @@ export default {
     },
     walletValue: function () {
       return this.$store.state.walletStore.walletValue;
+    },
+  },
+  props: {
+    valueOnly: {
+      type: Boolean,
+      default: false,
     },
   },
 };
