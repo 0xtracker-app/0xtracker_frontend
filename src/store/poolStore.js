@@ -51,6 +51,7 @@ const poolStore = {
       try {
         commit("SET_LOADING", true);
         commit("farmStore/SET_FARMS_WITH_DATA", {}, { root: true });
+        commit("farmStore/SET_FILTERED_FARMS_WITH_DATA", {}, { root: true });
         commit("farmStore/SET_FARMS_WITHOUT_DATA", {}, { root: true });
         await dispatch("farmStore/getFarms", null, { root: true });
         const farmsArray =
@@ -151,6 +152,7 @@ const poolStore = {
       try {
         commit("farmStore/SET_FARMS_WITH_DATA", {}, { root: true });
         commit("farmStore/SET_FARMS_WITHOUT_DATA", {}, { root: true });
+        commit("farmStore/SET_FILTERED_FARMS_WITH_DATA", {}, { root: true });
         commit("farmStore/SET_LENDING_FARMS", [], { root: true });
         const farmsArray = selectedFarms;
         let requestArray = farmsArray.map(async (selectedFarm) => {
