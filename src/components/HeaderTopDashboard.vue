@@ -80,7 +80,21 @@
                   class="d-flex justify-space-between align-center"
                 >
                   <h4 class="text-h4 font-weight-bold">Networks:</h4>
-                  <v-btn
+                  <div>
+                    <v-switch
+                      v-model="selectedAll"
+                      flat
+                      color="indigo lighten-1"
+                      @change="handleChange"
+                    >
+                      <template #label>
+                        <span class="text-none text-caption font-weight-bold">
+                          Select All
+                        </span>
+                      </template>
+                    </v-switch>
+                  </div>
+                  <!-- <v-btn
                     small
                     outlined
                     color="indigo lighten-1"
@@ -88,7 +102,7 @@
                     @click="networks = walletNetworks"
                   >
                     Select All
-                  </v-btn>
+                  </v-btn> -->
                 </v-col>
                 <v-col
                   cols="auto"
@@ -163,10 +177,24 @@ export default {
     return {
       filterDialog: false,
       networks: [],
+      selectedAll: true,
     };
   },
   mounted() {
     this.networks = this.selectedNetworks;
+  },
+  watch: {
+    networks: {
+      immediate: false,
+      deep: true,
+      handler(value) {
+        if (value.length !== this.walletNetworks.length) {
+          this.selectedAll = false;
+        } else {
+          this.selectedAll = true;
+        }
+      },
+    },
   },
   methods: {
     ...mapActions("walletStore", [
@@ -186,6 +214,10 @@ export default {
       } else if (this.recentQuery?.type === "profile") {
         this.loadProfile(this.recentQuery);
       }
+    },
+    handleChange(e) {
+      if (e) this.networks = this.walletNetworks;
+      else this.networks = [];
     },
   },
 };

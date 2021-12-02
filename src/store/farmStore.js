@@ -59,6 +59,9 @@ const farmStore = {
     ADD_TO_FARMS_WITHOUT_DATA(state, { key, value }) {
       Vue.set(state.farmsWithoutData, key, value);
     },
+    ADD_TO_FILTERED_FARMS_WITH_DATA(state, { key, value }) {
+      Vue.set(state.filteredFarmsWithData, key, value);
+    },
     REMOVE_FROM_FARMS_WITH_DATA(state, key) {
       Vue.delete(state.farmsWithData, key);
     },

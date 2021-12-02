@@ -210,6 +210,27 @@ const poolStore = {
                         },
                         { root: true }
                       );
+
+                      if (
+                        rootState.generalStore.selectedNetworks.some(
+                          (network) => network === farm.network
+                        )
+                      ) {
+                        commit(
+                          "farmStore/ADD_TO_FILTERED_FARMS_WITH_DATA",
+                          {
+                            key: `${walletAddress}_${contract}`,
+                            value: Object.assign(
+                              {
+                                name: farm.name,
+                                sendValue: selectedFarm.sendValue,
+                              },
+                              farm
+                            ),
+                          },
+                          { root: true }
+                        );
+                      }
                     }
                   }
                 }

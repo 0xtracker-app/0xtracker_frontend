@@ -121,7 +121,7 @@ export default {
       );
     },
     walletBalancesList: function () {
-      return this.$store.state.walletStore.walletBalancesList;
+      return this.$store.state.walletStore.filteredWalletBalancesList;
     },
     unfilteredBalances: function () {
       const colors = generateColors(
