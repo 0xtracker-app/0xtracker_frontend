@@ -47,4 +47,12 @@ export default [
     value: "BTC",
     symbol: "₿",
   },
+  {
+    value: "BNB",
+    symbol: "BNB",
+  },
+  {
+    value: "ETH",
+    symbol: "Ξ",
+  },
 ];
