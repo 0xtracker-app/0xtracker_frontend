@@ -300,6 +300,25 @@ const walletStore = {
     wallet: "",
     walletBalancesList: [],
     filteredWalletBalancesList: [],
+    evmNetworks: [
+      "bsc",
+      "oke",
+      "matic",
+      "ftm",
+      "kcc",
+      "eth",
+      "harmony",
+      "avax",
+      "arb",
+      "celo",
+      "xdai",
+      "heco",
+      "meter",
+      "moon",
+      "polis",
+      "cro",
+      "boba",
+    ],
     walletNetworks: [
       "bsc",
       "oke",
@@ -318,6 +337,8 @@ const walletStore = {
       "polis",
       "cro",
       "boba",
+      "cosmos",
+      "solana",
     ],
     walletRules: [
       (value) => !!value || "Required.",
@@ -354,6 +375,7 @@ const walletStore = {
     wallet: (state) => state.wallet,
     walletRules: (state) => state.walletRules,
     walletNetworks: (state) => state.walletNetworks,
+    evmNetworks: (state) => state.evmNetworks,
     recentQuery: (state) => state.recentQuery,
     selectedInterval: (state) => state.selectedInterval,
     selectedSingleInterval: (state) => state.selectedSingleInterval,
@@ -673,7 +695,7 @@ const walletStore = {
     async loadWallet({ commit, state, rootState }) {
       try {
         commit("SET_LOADING", true);
-        for (const network of state.walletNetworks) {
+        for (const network of state.evmNetworks) {
           const response = await axios.get(
             `${process.env.VUE_APP_MYBALANCES_URL}${state.wallet}/${network}`
           );
@@ -782,7 +804,7 @@ const walletStore = {
         commit("SET_FILTERED_WALLET_BALANCES", []);
 
         await Promise.all(
-          state.walletNetworks.map(async (network) => {
+          state.evmNetworks.map(async (network) => {
             const response = await axios.get(
               `${process.env.VUE_APP_MYBALANCES_URL}${params.wallet}/${network}`
             );
