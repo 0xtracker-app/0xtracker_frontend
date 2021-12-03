@@ -16,6 +16,10 @@ export default [
     symbol: "£",
   },
   {
+    value: "MYR",
+    symbol: "RM",
+  },
+  {
     value: "INR",
     symbol: "₹",
   },
