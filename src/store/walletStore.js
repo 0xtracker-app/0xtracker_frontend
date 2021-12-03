@@ -318,6 +318,8 @@ const walletStore = {
       "polis",
       "cro",
       "boba",
+      "cosmos",
+      "solana",
     ],
     walletRules: [
       (value) => !!value || "Required.",
