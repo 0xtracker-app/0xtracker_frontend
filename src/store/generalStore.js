@@ -111,7 +111,7 @@ const generalStore = {
     },
   },
   actions: {
-    async initStore({ commit, state, rootState }) {
+    async initStore({ commit, state }) {
       try {
         if (localStorage.getItem("store")) {
           const storedStore = JSON.parse(localStorage.getItem("store"));
@@ -127,7 +127,7 @@ const generalStore = {
           } else {
             commit("SET_DARK_MODE", false);
           }
-          commit("SET_SELECTED_NETWORKS", rootState.walletStore.walletNetworks);
+
           this.dispatch("generalStore/saveSession");
         }
 
@@ -164,7 +164,7 @@ const generalStore = {
         );
       }
     },
-    restoreSession({ rootState, commit }, sessionToRestore) {
+    restoreSession({ commit }, sessionToRestore) {
       if (sessionToRestore.darkmode)
         commit("SET_DARK_MODE", sessionToRestore.darkmode);
       if (!sessionToRestore.noLPPools)
@@ -175,11 +175,11 @@ const generalStore = {
         commit("SET_SMALL_VALUES", sessionToRestore.smallValues);
       if (sessionToRestore.version)
         commit("SET_VERSION", sessionToRestore.version);
-      if (sessionToRestore.selectedNetworks) {
-        if (sessionToRestore.selectedNetworks.length === 0)
-          commit("SET_SELECTED_NETWORKS", rootState.walletStore.walletNetworks);
-        else commit("SET_SELECTED_NETWORKS", sessionToRestore.selectedNetworks);
-      }
+      // if (sessionToRestore.selectedNetworks) {
+      //   if (sessionToRestore.selectedNetworks.length === 0)
+      //     commit("SET_SELECTED_NETWORKS", rootState.walletStore.walletNetworks);
+      //   else commit("SET_SELECTED_NETWORKS", sessionToRestore.selectedNetworks);
+      // }
       if (sessionToRestore.selectedCurrency) {
         commit("SET_SELECTED_CURRENCY", sessionToRestore.selectedCurrency);
       }
@@ -245,7 +245,7 @@ const generalStore = {
     },
     saveSelectedNetworks({ commit }, networks) {
       commit("SET_SELECTED_NETWORKS", networks);
-      this.dispatch("generalStore/saveSession");
+      // this.dispatch("generalStore/saveSession");
     },
     saveSelectedCurrency({ commit }, currency) {
       commit("SET_SELECTED_CURRENCY", currency);
