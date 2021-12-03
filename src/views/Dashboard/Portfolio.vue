@@ -221,7 +221,7 @@
                       lendingFarms.length > 0 && !$store.state.farmStore.loading
                     "
                   >
-                    Total: {{ total | toCurrency(round) }}
+                    Total: {{ total | toSelectedCurrency }}
                   </span>
                   <v-tooltip bottom>
                     <template v-slot:activator="{ on, attrs }">
@@ -308,7 +308,7 @@ export default {
       );
     },
     walletBalancesList: function () {
-      return this.$store.state.walletStore.walletBalancesList;
+      return this.$store.state.walletStore.filteredWalletBalancesList;
     },
     unfilteredBalances: function () {
       return this.walletBalancesList.map((balance) => {
@@ -330,14 +330,17 @@ export default {
     },
     farmsCsv: function () {
       let array = [];
-      for (const contract in this.$store.state.farmStore.farmsWithData) {
+      for (const contract in this.$store.state.farmStore
+        .filteredFarmsWithData) {
         if (
           Object.hasOwnProperty.call(
-            this.$store.state.farmStore.farmsWithData,
+            this.$store.state.farmStore.filteredFarmsWithData,
             contract
           )
         ) {
-          const farmData = this.$store.state.farmStore.farmsWithData[contract];
+          const farmData = this.$store.state.farmStore.filteredFarmsWithData[
+            contract
+          ];
           // just insert data you want in the pool data here
           for (const pool in farmData.userData) {
             if (
@@ -377,28 +380,32 @@ export default {
       // getting object keys and sorting them highest to lowest into an array based on value of total,
       // then adding the contract to the object so that it can be mapped back and removed from the
       // farmsWith/Without objects when a single refresh is done
-      return Object.keys(this.$store.state.farmStore.farmsWithData)
+      return Object.keys(this.$store.state.farmStore.filteredFarmsWithData)
         .sort((a, b) =>
-          this.$store.state.farmStore.farmsWithData[a].total <
-          this.$store.state.farmStore.farmsWithData[b].total
+          this.$store.state.farmStore.filteredFarmsWithData[a].total <
+          this.$store.state.farmStore.filteredFarmsWithData[b].total
             ? 1
             : -1
         )
         .map((contract) => {
-          let farm = this.$store.state.farmStore.farmsWithData[contract];
+          let farm = this.$store.state.farmStore.filteredFarmsWithData[
+            contract
+          ];
           farm.contract = contract;
           return farm;
         });
     },
     total() {
       return this.lendingFarms.length > 0
-        ? this.lendingFarms.reduce((previousValue, currentValue) => {
-            const previousTotal =
-              previousValue.poolTotal - previousValue.totalBorrowed;
-            const currentTotal =
-              currentValue.poolTotal - currentValue.totalBorrowed;
-            return previousTotal + currentTotal;
-          })
+        ? this.lendingFarms.length !== 1
+          ? this.lendingFarms.reduce((previousValue, currentValue) => {
+              const previousTotal =
+                previousValue.poolTotal - previousValue.totalBorrowed;
+              const currentTotal =
+                currentValue.poolTotal - currentValue.totalBorrowed;
+              return previousTotal + currentTotal;
+            })
+          : this.lendingFarms[0].poolTotal - this.lendingFarms[0].totalBorrowed
         : 0;
     },
   },

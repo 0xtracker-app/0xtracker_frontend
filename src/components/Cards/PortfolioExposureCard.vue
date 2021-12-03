@@ -78,7 +78,7 @@
                           {{ item.name }}
                         </td>
                         <td>{{ item.amount.toFixed(2) }}</td>
-                        <td>${{ item.value.toFixed(2) }}</td>
+                        <td>{{ item.value | toSelectedCurrency }}</td>
                         <td>
                           <span
                             class="text-right"
@@ -261,7 +261,7 @@ export default {
     },
     tokens() {
       let tokens = [];
-      Object.entries(this.$store.state.farmStore.farmsWithData)
+      Object.entries(this.$store.state.farmStore.filteredFarmsWithData)
         .map(([, value]) => [
           ...Object.entries(value.userData).map(([, value]) => value),
         ])

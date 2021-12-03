@@ -21,6 +21,7 @@ const farmStore = {
     cosmosFarms: [],
     solFarms: [],
     farmsWithData: {},
+    filteredFarmsWithData: {},
     farmsWithoutData: {},
     lendingFarms: [],
     loading: false,
@@ -58,6 +59,9 @@ const farmStore = {
     ADD_TO_FARMS_WITHOUT_DATA(state, { key, value }) {
       Vue.set(state.farmsWithoutData, key, value);
     },
+    ADD_TO_FILTERED_FARMS_WITH_DATA(state, { key, value }) {
+      Vue.set(state.filteredFarmsWithData, key, value);
+    },
     REMOVE_FROM_FARMS_WITH_DATA(state, key) {
       Vue.delete(state.farmsWithData, key);
     },
@@ -69,6 +73,9 @@ const farmStore = {
     },
     SET_FARMS_WITHOUT_DATA(state, value) {
       Vue.set(state, "farmsWithoutData", value);
+    },
+    SET_FILTERED_FARMS_WITH_DATA(state, value) {
+      Vue.set(state, "filteredFarmsWithData", value);
     },
     SET_SELECTED_FARMS(state, selectedFarms) {
       state.selectedFarms = selectedFarms;

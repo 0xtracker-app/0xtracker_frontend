@@ -159,10 +159,10 @@
             </div>
           </template>
           <template v-slot:item.pendingAmount="{ item }">
-            {{ item.pendingAmount | toCurrency(round) }}
+            {{ item.pendingAmount | toSelectedCurrency }}
           </template>
           <template v-slot:item.poolValue="{ item }">
-            {{ item.poolValue | toCurrency(round) }}
+            {{ item.poolValue | toSelectedCurrency }}
           </template>
           <template v-slot:item.pending="{ item }">
             <div v-if="item.pending > 0">

@@ -1,3 +1,6 @@
+import currencies from "@/data/currencies";
+import axios from "axios";
+
 const generalStore = {
   namespaced: true,
   state: {
@@ -13,6 +16,9 @@ const generalStore = {
     singleFarmHistoryDialog: false,
     compactView: false,
     mini: false,
+    selectedNetworks: [],
+    selectedCurrency: currencies[0],
+    currencyRates: {},
   },
   getters: {
     alerts: (state) => state.alerts,
@@ -27,6 +33,9 @@ const generalStore = {
     singleFarmHistoryDialog: (state) => state.singleFarmHistoryDialog,
     compactView: (state) => state.compactView,
     mini: (state) => state.mini,
+    selectedNetworks: (state) => state.selectedNetworks,
+    selectedCurrency: (state) => state.selectedCurrency,
+    currencyRates: (state) => state.currencyRates,
   },
   mutations: {
     ADD_ALERT(state, alert) {
@@ -69,6 +78,15 @@ const generalStore = {
     SET_COMPACT_VIEW(state, value) {
       state.compactView = value;
     },
+    SET_SELECTED_NETWORKS(state, value) {
+      state.selectedNetworks = value;
+    },
+    SET_SELECTED_CURRENCY(state, value) {
+      state.selectedCurrency = value;
+    },
+    SET_CURRENCY_RATES(state, value) {
+      state.currencyRates = value;
+    },
     TOGGLE_DARK_MODE(state) {
       state.darkmode = !state.darkmode;
     },
@@ -93,7 +111,7 @@ const generalStore = {
     },
   },
   actions: {
-    initStore({ commit, state }) {
+    async initStore({ commit, state }) {
       try {
         if (localStorage.getItem("store")) {
           const storedStore = JSON.parse(localStorage.getItem("store"));
@@ -111,6 +129,32 @@ const generalStore = {
           }
           this.dispatch("generalStore/saveSession");
         }
+
+        const cryptoCurrencies = ["BTC", "BNB", "ETH"];
+
+        const response = await axios.get(
+          `${process.env.VUE_APP_RATES_API_URL}?base=USD&symbols=${currencies
+            .map((currency) => currency.value)
+            .filter((currency) => !cryptoCurrencies.includes(currency))
+            .join()}`
+        );
+
+        const cryptoRates = await axios.get(
+          `${process.env.VUE_APP_CRYPTO_RATES_API_URL}?ids=bitcoin%2Cethereum%2Cbinancecoin&vs_currencies=usd`
+        );
+
+        const mappedCryptoRates = {
+          BTC: 1 / cryptoRates.data.bitcoin.usd,
+          ETH: 1 / cryptoRates.data.ethereum.usd,
+          BNB: 1 / cryptoRates.data.binancecoin.usd,
+        };
+
+        if (response.status === 200 && response.data.success) {
+          commit("SET_CURRENCY_RATES", {
+            ...response.data.rates,
+            ...mappedCryptoRates,
+          });
+        }
       } catch (error) {
         commit(
           "generalStore/ADD_ALERT",
@@ -119,7 +163,7 @@ const generalStore = {
         );
       }
     },
-    restoreSession({ commit }, sessionToRestore) {
+    restoreSession({ rootState, commit }, sessionToRestore) {
       if (sessionToRestore.darkmode)
         commit("SET_DARK_MODE", sessionToRestore.darkmode);
       if (!sessionToRestore.noLPPools)
@@ -130,6 +174,14 @@ const generalStore = {
         commit("SET_SMALL_VALUES", sessionToRestore.smallValues);
       if (sessionToRestore.version)
         commit("SET_VERSION", sessionToRestore.version);
+      if (sessionToRestore.selectedNetworks) {
+        if (sessionToRestore.selectedNetworks.length === 0)
+          commit("SET_SELECTED_NETWORKS", rootState.walletStore.walletNetworks);
+        else commit("SET_SELECTED_NETWORKS", sessionToRestore.selectedNetworks);
+      }
+      if (sessionToRestore.selectedCurrency) {
+        commit("SET_SELECTED_CURRENCY", sessionToRestore.selectedCurrency);
+      }
       if (sessionToRestore.wallet)
         commit("walletStore/SET_WALLET", sessionToRestore.wallet, {
           root: true,
@@ -164,6 +216,8 @@ const generalStore = {
         wallet: rootState.walletStore.wallet,
         selectedFarms: rootState.farmStore.selectedFarms,
         compactView: state.compactView,
+        selectedNetworks: state.selectedNetworks,
+        selectedCurrency: state.selectedCurrency,
         userProfiles: rootState.profileStore.userProfiles,
       };
       localStorage.setItem("store", JSON.stringify(sessionToStore));
@@ -186,6 +240,14 @@ const generalStore = {
     },
     toggleSmallValues({ commit }) {
       commit("TOGGLE_SMALL_VALUES");
+      this.dispatch("generalStore/saveSession");
+    },
+    saveSelectedNetworks({ commit }, networks) {
+      commit("SET_SELECTED_NETWORKS", networks);
+      this.dispatch("generalStore/saveSession");
+    },
+    saveSelectedCurrency({ commit }, currency) {
+      commit("SET_SELECTED_CURRENCY", currency);
       this.dispatch("generalStore/saveSession");
     },
     toggleMini({ commit }, value) {

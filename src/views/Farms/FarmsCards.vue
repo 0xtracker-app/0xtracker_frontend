@@ -61,9 +61,9 @@
                     }"
                   >
                     <span class="orange--text text--lighten-1">
-                      {{ farm.total | toCurrency(round) }}
+                      {{ farm.total | toSelectedCurrency }}
                     </span>
-                    ({{ farm.pendingTotal | toCurrency(round) }})
+                    ({{ farm.pendingTotal | toSelectedCurrency }})
                   </span>
                 </div>
               </div>

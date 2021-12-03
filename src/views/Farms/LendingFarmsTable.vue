@@ -50,10 +50,10 @@
                   </div>
                 </td>
                 <td>
-                  {{ item.poolTotal | toCurrency(round) }}
+                  {{ item.poolTotal | toSelectedCurrency }}
                 </td>
                 <td>
-                  {{ item.totalBorrowed | toCurrency(round) }}
+                  {{ item.totalBorrowed | toSelectedCurrency }}
                 </td>
                 <td>
                   <v-card-text>
@@ -74,14 +74,14 @@
                           }}%
                         </strong>
                       </v-progress-linear>
-                      {{ item.totalBorrowed | toCurrency(round) }} /
-                      {{ loanAmount | toCurrency(round) }}
+                      {{ item.totalBorrowed | toSelectedCurrency }} /
+                      {{ loanAmount | toSelectedCurrency }}
                     </p>
                   </v-card-text>
                 </td>
                 <td>
                   {{
-                    (item.poolTotal - item.totalBorrowed) | toCurrency(round)
+                    (item.poolTotal - item.totalBorrowed) | toSelectedCurrency
                   }}
                 </td>
               </tr>
@@ -111,13 +111,13 @@
                         {{ item.staked | to2Decimals(round) }}
                       </td>
                       <td>
-                        {{ item.lpPrice | toCurrency(round) }}
+                        {{ item.lpPrice | toSelectedCurrency }}
                       </td>
                       <td>
                         {{ item.borrowed | to2Decimals(round) }}
                       </td>
                       <td>
-                        {{ item.borrowedUSD | toCurrency(round) }}
+                        {{ item.borrowedUSD | toSelectedCurrency }}
                       </td>
                     </tr>
                   </template>

@@ -127,53 +127,103 @@
         </div>
       </div>
 
-      <div
-        v-if="!mini"
-        class="mt-10 mx-2 pa-6 rounded-lg d-flex flex-column text-caption font-weight-600 text-center"
-        :style="{ backgroundColor: darkmode ? '#232228' : '#f3f4fd' }"
-        :class="[darkmode ? 'white--text' : 'grey--text text--darken-3']"
-      >
-        <v-icon size="50" color="indigo lighten-1" class="mb-2">
-          mdi-face-agent
-        </v-icon>
-        Found some bugs? Reach out to the developers!
-        <a
-          href="https://0xtracker.hellonext.co/roadmap"
-          target="_blank"
-          class="text-decoration-none"
-        >
-          <v-btn
-            small
-            outlined
-            color="indigo lighten-1"
-            class="text-none text-caption font-weight-bold mt-6"
+      <div class="d-flex flex-column">
+        <div class="mx-2 mt-10 mb-4 d-flex flex-column justify-center">
+          <span
+            style="font-size: 12px"
+            class="font-weight-600"
+            :class="[darkmode ? 'white--text' : 'grey--text text--darken-3']"
           >
-            Report/Request
-          </v-btn>
-        </a>
-      </div>
-      <v-list v-else nav dense>
-        <v-list-item-group>
-          <v-list-item
+            Currency:
+          </span>
+          <v-select
+            v-model="currency"
+            :items="currencies"
+            item-text="value"
+            item-value="value"
+            return-object
+            :menu-props="darkmode ? 'dark' : 'light'"
+            dense
+            outlined
+            flat
+            color="white"
+            class="d-flex align-center custom-scrollbar"
+            hide-details
+            @change="saveSelectedCurrency(currency)"
+          >
+            <template #selection="{ item }">
+              <div
+                class="d-flex justify-space-between align-center"
+                style="width: 100%"
+              >
+                <span class="font-weight-bold">
+                  {{ item.symbol }}
+                </span>
+                {{ item.value }}
+              </div>
+            </template>
+            <template #item="{ item }">
+              <div
+                class="d-flex justify-space-between align-center"
+                style="width: 100%"
+              >
+                <span class="font-weight-bold">
+                  {{ item.symbol }}
+                </span>
+                {{ item.value }}
+              </div>
+            </template>
+          </v-select>
+        </div>
+        <div
+          v-if="!mini"
+          class="mx-2 px-6 py-4 rounded-lg d-flex flex-column text-caption font-weight-600 text-center"
+          :style="{ backgroundColor: darkmode ? '#232228' : '#f3f4fd' }"
+          :class="[darkmode ? 'white--text' : 'grey--text text--darken-3']"
+        >
+          <v-icon size="50" color="indigo lighten-1" class="mb-2">
+            mdi-face-agent
+          </v-icon>
+          Found some bugs? Reach out to the developers!
+          <a
             href="https://0xtracker.hellonext.co/roadmap"
             target="_blank"
-            class="pb-1 no-default-hover"
-            :ripple="false"
+            class="text-decoration-none"
           >
-            <v-list-item-icon>
-              <v-icon size="30" color="indigo lighten-1" class="mb-2">
-                mdi-face-agent
-              </v-icon>
-            </v-list-item-icon>
-          </v-list-item>
-        </v-list-item-group>
-      </v-list>
+            <v-btn
+              small
+              outlined
+              color="indigo lighten-1"
+              class="text-none text-caption font-weight-bold mt-6"
+            >
+              Report/Request
+            </v-btn>
+          </a>
+        </div>
+        <v-list v-else nav dense>
+          <v-list-item-group>
+            <v-list-item
+              href="https://0xtracker.hellonext.co/roadmap"
+              target="_blank"
+              class="pb-1 no-default-hover"
+              :ripple="false"
+            >
+              <v-list-item-icon>
+                <v-icon size="30" color="indigo lighten-1" class="mb-2">
+                  mdi-face-agent
+                </v-icon>
+              </v-list-item-icon>
+            </v-list-item>
+          </v-list-item-group>
+        </v-list>
+      </div>
     </div>
   </v-navigation-drawer>
 </template>
 <script>
 import { mapActions, mapGetters } from "vuex";
 import WalletConnectDialog from "@/components/Wallet/WalletConnectDialog";
+import currencies from "@/data/currencies";
 
 export default {
   components: {
@@ -210,13 +260,17 @@ export default {
       },
     ],
     miniData: false,
+    currency: null,
   }),
   computed: {
     currentRoute() {
       return this.$route.name;
     },
-    ...mapGetters("generalStore", ["darkmode", "mini"]),
+    ...mapGetters("generalStore", ["darkmode", "mini", "selectedCurrency"]),
     ...mapGetters("walletStore", ["connectedWallet", "connectedWalletShort"]),
+    currencies() {
+      return currencies;
+    },
   },
   watch: {
     miniData: {
@@ -241,8 +295,15 @@ export default {
       }
     },
   },
+  mounted() {
+    this.currency = this.selectedCurrency;
+  },
   methods: {
-    ...mapActions("generalStore", ["setWalletDialog", "toggleMini"]),
+    ...mapActions("generalStore", [
+      "setWalletDialog",
+      "toggleMini",
+      "saveSelectedCurrency",
+    ]),
     ...mapActions("walletStore", ["connectWallet"]),
     minifyDrawer() {
       this.togglerActive = !this.togglerActive;
@@ -261,3 +322,24 @@ export default {
   },
 };
 </script>
+
+<style>
+.v-menu__content::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  background-color: #f5f5f51c;
+}
+
+.v-menu__content::-webkit-scrollbar {
+  width: 6px;
+  background-color: #f5f5f51c;
+}
+
+.v-menu__content::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.3);
+  background-color: #5e72e4;
+}
+</style>

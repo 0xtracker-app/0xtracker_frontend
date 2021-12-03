@@ -299,6 +299,7 @@ const walletStore = {
     walletValue: 0,
     wallet: "",
     walletBalancesList: [],
+    filteredWalletBalancesList: [],
     walletNetworks: [
       "bsc",
       "oke",
@@ -352,6 +353,7 @@ const walletStore = {
     },
     wallet: (state) => state.wallet,
     walletRules: (state) => state.walletRules,
+    walletNetworks: (state) => state.walletNetworks,
     recentQuery: (state) => state.recentQuery,
     selectedInterval: (state) => state.selectedInterval,
     selectedSingleInterval: (state) => state.selectedSingleInterval,
@@ -374,6 +376,9 @@ const walletStore = {
     },
     SET_WALLET_BALANCES(state, value) {
       Vue.set(state, "walletBalancesList", value);
+    },
+    SET_FILTERED_WALLET_BALANCES(state, value) {
+      Vue.set(state, "filteredWalletBalancesList", value);
     },
     SET_WALLET_PROVIDER(state, value) {
       providerActions.setProvider(value);
@@ -665,7 +670,7 @@ const walletStore = {
         commit("SET_LOADING", false);
       }
     },
-    async loadWallet({ commit, state }) {
+    async loadWallet({ commit, state, rootState }) {
       try {
         commit("SET_LOADING", true);
         for (const network of state.walletNetworks) {
@@ -682,6 +687,16 @@ const walletStore = {
               return { ...walletBalance, network, wallet: state.wallet };
             }),
           ]);
+          commit("SET_FILTERED_WALLET_BALANCES", [
+            ...state.filteredWalletBalancesList,
+            ...response.data.map((walletBalance) => {
+              return rootState.generalStore.selectedNetworks.some(
+                (n) => n === walletBalance.network
+              )
+                ? { ...walletBalance, network, wallet: state.wallet }
+                : null;
+            }),
+          ]);
         }
       } catch (error) {
         commit("generalStore/ADD_ALERT", error, { root: true });
@@ -689,7 +704,7 @@ const walletStore = {
         commit("SET_LOADING", false);
       }
     },
-    async loadCosmosWallet({ commit, state }, params) {
+    async loadCosmosWallet({ commit, state, rootState }, params) {
       const network = "cosmos";
       try {
         commit("SET_LOADING", true);
@@ -707,13 +722,23 @@ const walletStore = {
             return { ...walletBalance, network, wallet: params.wallet };
           }),
         ]);
+        commit("SET_FILTERED_WALLET_BALANCES", [
+          ...state.filteredWalletBalancesList,
+          ...response.data.map((walletBalance) => {
+            return rootState.generalStore.selectedNetworks.some(
+              (n) => n === walletBalance.network
+            )
+              ? { ...walletBalance, network, wallet: params.wallet }
+              : null;
+          }),
+        ]);
       } catch (error) {
         commit("generalStore/ADD_ALERT", error, { root: true });
       } finally {
         commit("SET_LOADING", false);
       }
     },
-    async loadSolWallet({ commit, state }, params) {
+    async loadSolWallet({ commit, state, rootState }, params) {
       const network = "solana";
       if (process.env.VUE_APP_SOLANA_WALLET_URL) {
         try {
@@ -733,6 +758,16 @@ const walletStore = {
               return { ...walletBalance, network, wallet: params.wallet };
             }),
           ]);
+          commit("SET_FILTERED_WALLET_BALANCES", [
+            ...state.filteredWalletBalancesList,
+            ...response.data.map((walletBalance) => {
+              return rootState.generalStore.selectedNetworks.some(
+                (n) => n === walletBalance.network
+              )
+                ? { ...walletBalance, network, wallet: params.wallet }
+                : null;
+            }),
+          ]);
         } catch (error) {
           commit("generalStore/ADD_ALERT", error, { root: true });
         } finally {
@@ -740,10 +775,11 @@ const walletStore = {
         }
       }
     },
-    async loadWallets({ commit, state }, params) {
+    async loadWallets({ commit, state, rootState }, params) {
       commit("SET_LOADING", true);
       try {
         commit("SET_WALLET_BALANCES", []);
+        commit("SET_FILTERED_WALLET_BALANCES", []);
 
         await Promise.all(
           state.walletNetworks.map(async (network) => {
@@ -758,6 +794,16 @@ const walletStore = {
               ...state.walletBalancesList,
               ...response.data.map((walletBalance) => {
                 return { ...walletBalance, network, wallet: params.wallet };
+              }),
+            ]);
+            commit("SET_FILTERED_WALLET_BALANCES", [
+              ...state.filteredWalletBalancesList,
+              ...response.data.map((walletBalance) => {
+                return rootState.generalStore.selectedNetworks.some(
+                  (n) => n === walletBalance.network
+                )
+                  ? { ...walletBalance, network, wallet: params.wallet }
+                  : null;
               }),
             ]);
           })
@@ -869,6 +915,7 @@ const walletStore = {
         farms.map((farm) => skipFarmsData.push(farm))
       );
       commit("SET_WALLET_BALANCES", []);
+      commit("SET_FILTERED_WALLET_BALANCES", []);
 
       commit("farmStore/SET_LOADING", true, { root: true });
 
@@ -933,6 +980,7 @@ const walletStore = {
       });
 
       await Promise.all(processesArray).then(async () => {
+        await dispatch("executeFilter");
         await dispatch("loadHistoricalProfile", profile);
         commit("farmStore/SET_LOADING", false, { root: true });
       });
@@ -974,6 +1022,36 @@ const walletStore = {
           farm: farm,
         });
       }
+    },
+    executeFilter({ rootState, commit, state }) {
+      let farmsWithData = {};
+      let walletBalancesList = [];
+
+      Object.entries(rootState.farmStore.farmsWithData).forEach(
+        ([key, value]) => {
+          if (
+            rootState.generalStore.selectedNetworks.some(
+              (network) => network === value.network
+            )
+          ) {
+            farmsWithData = {
+              ...farmsWithData,
+              [key]: value,
+            };
+          }
+        }
+      );
+
+      walletBalancesList = state.walletBalancesList.filter((walletBalance) =>
+        rootState.generalStore.selectedNetworks.some(
+          (network) => network === walletBalance.network
+        )
+      );
+
+      commit("SET_FILTERED_WALLET_BALANCES", walletBalancesList);
+      commit("farmStore/SET_FILTERED_FARMS_WITH_DATA", farmsWithData, {
+        root: true,
+      });
     },
   },
 };

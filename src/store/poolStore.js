@@ -51,6 +51,7 @@ const poolStore = {
       try {
         commit("SET_LOADING", true);
         commit("farmStore/SET_FARMS_WITH_DATA", {}, { root: true });
+        commit("farmStore/SET_FILTERED_FARMS_WITH_DATA", {}, { root: true });
         commit("farmStore/SET_FARMS_WITHOUT_DATA", {}, { root: true });
         await dispatch("farmStore/getFarms", null, { root: true });
         const farmsArray =
@@ -151,6 +152,7 @@ const poolStore = {
       try {
         commit("farmStore/SET_FARMS_WITH_DATA", {}, { root: true });
         commit("farmStore/SET_FARMS_WITHOUT_DATA", {}, { root: true });
+        commit("farmStore/SET_FILTERED_FARMS_WITH_DATA", {}, { root: true });
         commit("farmStore/SET_LENDING_FARMS", [], { root: true });
         const farmsArray = selectedFarms;
         let requestArray = farmsArray.map(async (selectedFarm) => {
@@ -181,7 +183,12 @@ const poolStore = {
                 for (const contract in response.data) {
                   if (Object.hasOwnProperty.call(response.data, contract)) {
                     const farm = response.data[contract];
-                    if (farm.type === "lending") {
+                    if (
+                      farm.type === "lending" &&
+                      rootState.generalStore.selectedNetworks.some(
+                        (network) => network === farm.network
+                      )
+                    ) {
                       commit(
                         "farmStore/SET_LENDING_FARMS",
                         [...rootState.farmStore.lendingFarms, farm],
@@ -203,6 +210,27 @@ const poolStore = {
                         },
                         { root: true }
                       );
+
+                      if (
+                        rootState.generalStore.selectedNetworks.some(
+                          (network) => network === farm.network
+                        )
+                      ) {
+                        commit(
+                          "farmStore/ADD_TO_FILTERED_FARMS_WITH_DATA",
+                          {
+                            key: `${walletAddress}_${contract}`,
+                            value: Object.assign(
+                              {
+                                name: farm.name,
+                                sendValue: selectedFarm.sendValue,
+                              },
+                              farm
+                            ),
+                          },
+                          { root: true }
+                        );
+                      }
                     }
                   }
                 }
