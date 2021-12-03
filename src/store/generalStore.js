@@ -111,7 +111,7 @@ const generalStore = {
     },
   },
   actions: {
-    async initStore({ commit, state }) {
+    async initStore({ commit, state, rootState }) {
       try {
         if (localStorage.getItem("store")) {
           const storedStore = JSON.parse(localStorage.getItem("store"));
@@ -127,6 +127,7 @@ const generalStore = {
           } else {
             commit("SET_DARK_MODE", false);
           }
+          commit("SET_SELECTED_NETWORKS", rootState.walletStore.walletNetworks);
           this.dispatch("generalStore/saveSession");
         }
 
