@@ -31,6 +31,10 @@ export default {
       slide: 0,
       slides: [
         {
+          src: require("@/assets/images/sponsors-header/wagmi.png"),
+          href: "https://wagmidao.io/",
+        },
+        {
           src: require("@/assets/images/sponsors-header/wide-jetswap.gif"),
           href: "https://jetswap.finance/",
         },
