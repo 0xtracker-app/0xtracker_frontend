@@ -9,12 +9,18 @@ Vue.filter("toSelectedCurrency", (value) => {
           store.getters["generalStore/currencyRates"][
             store.getters["generalStore/selectedCurrency"].value
           ]
-        ).toFixed(2)
+        ).toLocaleString("en-US", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })
       : (
           value *
           store.getters["generalStore/currencyRates"][
             store.getters["generalStore/selectedCurrency"].value
           ]
-        ).toFixed(18)
+        ).toLocaleString("en-US", {
+          minimumFractionDigits: 4,
+          maximumFractionDigits: 18,
+        })
   }`;
 });

@@ -147,6 +147,7 @@ const poolStore = {
         evm: process.env.VUE_APP_MYFARM_URL,
         cosmos: process.env.VUE_APP_COSMOS_FARMS_URL,
         solana: process.env.VUE_APP_SOLANA_FARMS_URL,
+        terra: process.env.VUE_APP_TERRA_FARMS_URL,
       };
       commit("SET_LOADING", true);
       try {
@@ -287,6 +288,8 @@ const poolStore = {
               ? process.env.VUE_APP_COSMOS_FARMS_URL
               : wallet.walletType === "Solana"
               ? process.env.VUE_APP_SOLANA_FARMS_URL
+              : wallet.walletType === "Terra"
+              ? process.env.VUE_APP_TERRA_FARMS_URL
               : "";
 
           const response = await axios.get(
@@ -331,10 +334,17 @@ const poolStore = {
         commit("SET_LOADING", false);
       });
     },
+    async getPoolsForAllFailedFarms({ dispatch, rootState }) {
+      for (const [key, value] of Object.entries(
+        rootState.farmStore.farmsWithoutData
+      )) {
+        dispatch("getPoolsForSingleFarm", { key, selectedFarm: value });
+      }
+    },
     async getPoolItemDetails({ commit }, { item }) {
       commit("SET_SINGLE_FARM_LOADING", true);
       commit("generalStore/SET_SINGLE_FARM_DIALOG", true, { root: true });
-      const response = await await axios.get(
+      const response = await axios.get(
         `${process.env.VUE_APP_HISTORICAL_URL}${item.network}/${item.wallet}/${item.contractAddress}/${item.want}`
       );
       commit("SET_FARM_DETAILS", {

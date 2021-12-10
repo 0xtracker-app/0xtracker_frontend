@@ -1,6 +1,7 @@
 import WAValidator from "trezor-address-validator";
 import { ethers } from "ethers";
 import { PublicKey } from "@solana/web3.js";
+import { AccAddress } from "@terra-money/terra.js";
 import { interpolateRainbow } from "d3";
 
 /**
@@ -13,6 +14,7 @@ import { interpolateRainbow } from "d3";
 export const detectWalletType = (wallet) => {
   let isTypeEVM = ethers.utils.isAddress(wallet);
   let isTypeCosmos = WAValidator.validate(wallet, "cosmos");
+  let isTypeTerra = AccAddress.validate(wallet);
   let isTypeSolana;
   try {
     const key = new PublicKey(wallet);
@@ -25,6 +27,8 @@ export const detectWalletType = (wallet) => {
     ? "EVM"
     : isTypeCosmos
     ? "Cosmos"
+    : isTypeTerra
+    ? "Terra"
     : isTypeSolana
     ? "Solana"
     : null;
