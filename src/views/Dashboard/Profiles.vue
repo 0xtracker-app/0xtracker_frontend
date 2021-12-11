@@ -94,7 +94,7 @@
                           >
                             <v-icon
                               size="24"
-                              @click="openEditDialog(i)"
+                              @click.stop="openEditDialog(i)"
                               class="rounded-circle pa-1"
                               color="indigo"
                             >
@@ -106,7 +106,7 @@
                             ></v-spacer>
                             <v-icon
                               size="24"
-                              @click="
+                              @click.stop="
                                 removeWallet({
                                   walletKey: i,
                                   profileKey: $route.params.id,
