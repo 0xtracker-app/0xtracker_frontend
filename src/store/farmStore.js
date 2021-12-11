@@ -20,6 +20,7 @@ const farmStore = {
     farms: [],
     cosmosFarms: [],
     solFarms: [],
+    terraFarms: [],
     farmsWithData: {},
     filteredFarmsWithData: {},
     farmsWithoutData: {},
@@ -32,6 +33,7 @@ const farmStore = {
     farms: (state) => state.farms,
     cosmosFarms: (state) => state.cosmosFarms,
     solFarms: (state) => state.solFarms,
+    terraFarms: (state) => state.terraFarms,
     selectedFarms: (state) => state.selectedFarms,
     farmRules: (state) => state.farmRules,
     lendingFarms: (state) => state.lendingFarms,
@@ -48,6 +50,11 @@ const farmStore = {
     SET_SOL_FARMS(state, farms) {
       state.solFarms = farms.filter(function (el) {
         return el.network == "solana";
+      });
+    },
+    SET_TERRA_FARMS(state, farms) {
+      state.terraFarms = farms.filter(function (el) {
+        return el.network == "terra";
       });
     },
     SET_FARMS_VALUE(state, newValue) {
@@ -95,6 +102,7 @@ const farmStore = {
         commit("SET_FARMS", response.data);
         commit("SET_COSMOS_FARMS", response.data);
         commit("SET_SOL_FARMS", response.data);
+        commit("SET_TERRA_FARMS", response.data);
         commit("SET_LOADING", false);
       } catch (error) {
         commit("generalStore/ADD_ALERT", error, { root: true });

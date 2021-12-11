@@ -42,7 +42,7 @@
                 </v-btn>
               </div>
               <v-divider class="my-2"></v-divider>
-              <div class="card-header-padding">
+              <div>
                 <v-list flat class="bg-transparent">
                   <v-list-item-group>
                     <v-list-item
@@ -50,7 +50,24 @@
                         .wallets"
                       :key="i"
                       class="rounded-xl"
+                      v-clipboard:copy="wallet.walletAddress"
+                      @click="onCopy(i)"
                     >
+                      <div
+                        :ref="`clipboardSuccess${i}`"
+                        style="
+                          position: absolute;
+                          top: 50%;
+                          left: 50%;
+                          transform: translate(-50%, -50%);
+                          background-color: rgba(0, 0, 0, 0.5);
+                          padding: 4px 10px;
+                        "
+                        class="text-caption font-weight-600 text-uppercase rounded-sm text-white d-none"
+                      >
+                        <v-icon> mdi-clipboard </v-icon>
+                        Copied to clipboard!
+                      </div>
                       <v-list-item-content class="py-0 py-md-4">
                         <div
                           class="d-flex flex-column flex-sm-row justify-space-between align-md-center flex-shrink-1"
@@ -374,13 +391,9 @@
 </template>
 <script>
 import { mapActions, mapGetters } from "vuex";
-import HeaderTopDashboard from "@/components/HeaderTopDashboard.vue";
 import { detectWalletType } from "@/util/helpers";
 
 export default {
-  components: {
-    HeaderTopDashboard,
-  },
   data() {
     return {
       valid: true,
@@ -389,7 +402,7 @@ export default {
       walletAddress: "",
       walletType: "",
       currentWalletId: null,
-      walletTypes: ["EVM", "Solana", "Cosmos"],
+      walletTypes: ["EVM", "Solana", "Cosmos", "Terra"],
     };
   },
   computed: {
@@ -500,6 +513,20 @@ export default {
       this.walletAddress = wallet.walletAddress;
       this.walletType = wallet.walletType;
       this.currentWalletId = i;
+    },
+    onCopy(i) {
+      if (this.$refs[`clipboardSuccess${i}`]) {
+        this.$refs[`clipboardSuccess${i}`][0].classList.replace(
+          "d-none",
+          "d-block"
+        );
+        setTimeout(() => {
+          this.$refs[`clipboardSuccess${i}`][0].classList.replace(
+            "d-block",
+            "d-none"
+          );
+        }, 3000);
+      }
     },
   },
 };

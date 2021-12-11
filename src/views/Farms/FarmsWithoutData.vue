@@ -18,6 +18,20 @@
             fas fa-redo
           </v-icon>
         </v-chip>
+        <v-chip
+          v-if="Object.keys(farmsWithoutData).length > 1"
+          color="red"
+          class="ma-2"
+          :disabled="loading"
+          elevation="0"
+          @click="getPoolsForAllFailedFarms()"
+        >
+          <v-icon left> fas fa-exclamation-circle </v-icon>
+          <span class="font-weight-bold text-caption text-uppercase">
+            Retry All
+          </span>
+          <v-icon right size="15" class="px-1"> fas fa-redo </v-icon>
+        </v-chip>
       </div>
     </v-card-text>
   </v-card>
@@ -37,7 +51,10 @@ export default {
     },
   },
   methods: {
-    ...mapActions("poolStore", ["getPoolsForSingleFarm"]),
+    ...mapActions("poolStore", [
+      "getPoolsForSingleFarm",
+      "getPoolsForAllFailedFarms",
+    ]),
   },
 };
 </script>

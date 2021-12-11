@@ -65,6 +65,23 @@
               </p>
             </a>
           </div>
+          <div class="text-center font-weight-bold" style="min-width: 150px">
+            <a href="https://www.wagmidao.io/" target="_blank">
+              <v-avatar>
+                <v-img
+                  max-height="50"
+                  max-width="50"
+                  src="@/assets/images/sponsors-footer/wagmi.svg"
+                ></v-img>
+              </v-avatar>
+              <p
+                :style="{ color: darkmode ? 'white' : '#5C6BC0' }"
+                class="mt-2 font-weight-bold text-subtitle-2"
+              >
+                WagmiDAO
+              </p>
+            </a>
+          </div>
         </v-row>
       </div>
     </v-container>
