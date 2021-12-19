@@ -41,6 +41,7 @@ const profileStore = {
     TOGGLE_SKIP_NETWORK(state, value) {
       const contractList = value.allFarms.map((x) => x.sendValue);
       const selectedNetwork = value.network;
+
       if (state.userProfiles[value.profileKey].skipFarms[selectedNetwork]) {
         if (
           state.userProfiles[value.profileKey].skipFarms[selectedNetwork]
