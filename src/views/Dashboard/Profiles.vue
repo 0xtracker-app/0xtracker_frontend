@@ -314,6 +314,7 @@
           </v-card>
         </v-col>
       </v-row>
+
       <v-row class="mt-0">
         <v-col cols="12" lg="12" class="pt-6">
           <v-card
@@ -326,12 +327,32 @@
             }"
           >
             <v-card-text class="card-stats-padding" :dark="darkmode">
-              <p
-                class="font-weight-600 text-caption text-uppercase mb-0 white--text"
-                :class="{ 'text-muted': !darkmode }"
+              <div
+                class="d-flex flex-column flex-sm-row justify-sm-space-between align-sm-center"
               >
-                Selected Farms
-              </p>
+                <p
+                  class="font-weight-600 text-caption text-uppercase mb-0 white--text"
+                  :class="{ 'text-muted': !darkmode }"
+                >
+                  Selected Farms
+                </p>
+                <div>
+                  <v-text-field
+                    v-model="search"
+                    rounded
+                    outlined
+                    flat
+                    class="font-size-input input-icon"
+                    hide-details
+                    :dark="darkmode"
+                    :placeholder="`Search ${farms.length} farms...`"
+                  >
+                    <template #prepend-inner>
+                      <v-icon size=".875rem" color="grey">fas fa-search</v-icon>
+                    </template>
+                  </v-text-field>
+                </div>
+              </div>
 
               <v-divider class="my-2"></v-divider>
               <v-col
@@ -403,6 +424,7 @@ export default {
       walletType: "",
       currentWalletId: null,
       walletTypes: ["EVM", "Solana", "Cosmos", "Terra"],
+      search: "",
     };
   },
   computed: {
@@ -414,7 +436,10 @@ export default {
     },
     farmsByNetwork() {
       let farmsByNetwork = {};
-      this.farms.forEach((farm) => {
+      const farms = this.farms.filter((farm) => {
+        return this.search ? farm.name.includes(this.search) : true;
+      });
+      farms.forEach((farm) => {
         if (
           this.search &&
           farm.name.toLowerCase().includes(this.search.toLowerCase())
@@ -434,6 +459,7 @@ export default {
           }
         }
       });
+
       return farmsByNetwork;
     },
   },

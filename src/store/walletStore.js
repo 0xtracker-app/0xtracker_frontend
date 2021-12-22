@@ -2,6 +2,7 @@ import Vue from "vue";
 import axios from "axios";
 import { ethers } from "ethers";
 import i18n from "@/i18n";
+import { detectWalletType } from "@/util/helpers";
 
 import { providerState, providerActions } from "./providerState";
 
@@ -300,6 +301,7 @@ const walletStore = {
     wallet: "",
     walletBalancesList: [],
     filteredWalletBalancesList: [],
+    walletsWithoutData: {},
     evmNetworks: [
       "bsc",
       "oke",
@@ -318,6 +320,7 @@ const walletStore = {
       "polis",
       "cro",
       "boba",
+      "theta",
     ],
     walletNetworks: [
       "bsc",
@@ -337,6 +340,7 @@ const walletStore = {
       "polis",
       "cro",
       "boba",
+      "theta",
       "cosmos",
       "solana",
       "terra",
@@ -405,6 +409,15 @@ const walletStore = {
     },
     SET_WALLET_PROVIDER(state, value) {
       providerActions.setProvider(value);
+    },
+    ADD_TO_WALLETS_WITHOUT_DATA(state, { key, value }) {
+      Vue.set(state.walletsWithoutData, key, value);
+    },
+    REMOVE_FROM_WALLETS_WITHOUT_DATA(state, key) {
+      Vue.delete(state.walletsWithoutData, key);
+    },
+    SET_WALLETS_WITHOUT_DATA(state, value) {
+      Vue.set(state, "walletsWithoutData", value);
     },
     SET_WALLET_VALUE(state, value) {
       state.walletValue = value;
@@ -731,112 +744,171 @@ const walletStore = {
     },
     async loadCosmosWallet({ commit, state, rootState }, params) {
       const network = "cosmos";
+      const skipNetworks = Object.keys(params.profile.skipFarms);
       commit("SET_LOADING", true);
-      try {
-        const response = await axios.get(
-          `${process.env.VUE_APP_COSMOS_WALLET_URL}${params.wallet}`
-        );
-        if (!response || !response.data || response.data.error)
-          throw `No wallet data returned for ${i18n.t(
-            network
-          )}, you might need to retry.`;
-        commit("SET_WALLET_BALANCES", [
-          ...state.walletBalancesList,
-          ...response.data.map((walletBalance) => {
-            return { ...walletBalance, network, wallet: params.wallet };
-          }),
-        ]);
-        await commit("SET_FILTERED_WALLET_BALANCES", [
-          ...state.filteredWalletBalancesList,
-          ...response.data
-            .filter(async (walletBalance) => {
-              await rootState.generalStore.selectedNetworks.some(
-                (n) => n === walletBalance.network
-              );
-            })
-            .map((walletBalance) => {
-              return { ...walletBalance, network, wallet: params.wallet };
-            }),
-        ]);
-      } catch (error) {
-        commit("generalStore/ADD_ALERT", error, { root: true });
-      } finally {
-        // commit("SET_LOADING", false);
+
+      if (
+        process.env.VUE_APP_COSMOS_WALLET_URL &&
+        !skipNetworks.includes(network)
+      ) {
+        try {
+          await axios
+            .get(`${process.env.VUE_APP_COSMOS_WALLET_URL}${params.wallet}`)
+            .then(async (response) => {
+              if (!response || !response.data || response.data.error) {
+                commit(
+                  "generalStore/ADD_ALERT",
+                  `No wallet data returned for ${params.wallet}, you might need to retry.`,
+                  { root: true }
+                );
+
+                const paramsTemp = {};
+                Object.assign(paramsTemp, params);
+                paramsTemp.error = true;
+                commit("ADD_TO_WALLETS_WITHOUT_DATA", {
+                  key: paramsTemp.wallet,
+                  value: paramsTemp,
+                });
+              } else {
+                commit("SET_WALLET_BALANCES", [
+                  ...state.walletBalancesList,
+                  ...response.data.map((walletBalance) => {
+                    return { ...walletBalance, network, wallet: params.wallet };
+                  }),
+                ]);
+                await commit("SET_FILTERED_WALLET_BALANCES", [
+                  ...state.filteredWalletBalancesList,
+                  ...response.data
+                    .filter(async (walletBalance) => {
+                      await rootState.generalStore.selectedNetworks.some(
+                        (n) => n === walletBalance.network
+                      );
+                    })
+                    .map((walletBalance) => {
+                      return {
+                        ...walletBalance,
+                        network,
+                        wallet: params.wallet,
+                      };
+                    }),
+                ]);
+              }
+            });
+        } catch (error) {
+          commit("generalStore/ADD_ALERT", error, { root: true });
+        }
       }
     },
     async loadSolWallet({ commit, state, rootState }, params) {
       const network = "solana";
+      const skipNetworks = Object.keys(params.profile.skipFarms);
       commit("SET_LOADING", true);
-      if (process.env.VUE_APP_SOLANA_WALLET_URL) {
+      if (
+        process.env.VUE_APP_SOLANA_WALLET_URL &&
+        !skipNetworks.includes(network)
+      ) {
         try {
-          const response = await axios.get(
-            `${process.env.VUE_APP_SOLANA_WALLET_URL}${params.wallet}`
-          );
-
-          if (!response || !response.data || response.data.error)
-            throw `No wallet data returned for ${i18n.t(
-              network
-            )}, you might need to retry.`;
-          commit("SET_WALLET_BALANCES", [
-            ...state.walletBalancesList,
-            ...response.data.map((walletBalance) => {
-              return { ...walletBalance, network, wallet: params.wallet };
-            }),
-          ]);
-          await commit("SET_FILTERED_WALLET_BALANCES", [
-            ...state.filteredWalletBalancesList,
-            ...response.data
-              .filter(async (walletBalance) => {
-                await rootState.generalStore.selectedNetworks.some(
-                  (n) => n === walletBalance.network
+          await axios
+            .get(`${process.env.VUE_APP_SOLANA_WALLET_URL}${params.wallet}`)
+            .then(async (response) => {
+              if (!response || !response.data || response.data.error) {
+                commit(
+                  "generalStore/ADD_ALERT",
+                  `No wallet data returned for ${params.wallet}, you might need to retry.`,
+                  { root: true }
                 );
-              })
-              .map((walletBalance) => {
-                return { ...walletBalance, network, wallet: params.wallet };
-              }),
-          ]);
+
+                const paramsTemp = {};
+                Object.assign(paramsTemp, params);
+                paramsTemp.error = true;
+                commit("ADD_TO_WALLETS_WITHOUT_DATA", {
+                  key: paramsTemp.wallet,
+                  value: paramsTemp,
+                });
+              } else {
+                commit("SET_WALLET_BALANCES", [
+                  ...state.walletBalancesList,
+                  ...response.data.map((walletBalance) => {
+                    return { ...walletBalance, network, wallet: params.wallet };
+                  }),
+                ]);
+                await commit("SET_FILTERED_WALLET_BALANCES", [
+                  ...state.filteredWalletBalancesList,
+                  ...response.data
+                    .filter(async (walletBalance) => {
+                      await rootState.generalStore.selectedNetworks.some(
+                        (n) => n === walletBalance.network
+                      );
+                    })
+                    .map((walletBalance) => {
+                      return {
+                        ...walletBalance,
+                        network,
+                        wallet: params.wallet,
+                      };
+                    }),
+                ]);
+              }
+            });
         } catch (error) {
           commit("generalStore/ADD_ALERT", error, { root: true });
-        } finally {
-          // commit("SET_LOADING", false);
         }
       }
     },
     async loadTerraWallet({ commit, state, rootState }, params) {
       const network = "terra";
+      const skipNetworks = Object.keys(params.profile.skipFarms);
       commit("SET_LOADING", true);
-      if (process.env.VUE_APP_TERRA_WALLET_URL) {
-        try {
-          const response = await axios.get(
-            `${process.env.VUE_APP_TERRA_WALLET_URL}${params.wallet}`
-          );
 
-          if (!response || !response.data || response.data.error)
-            throw `No wallet data returned for ${i18n.t(
-              network
-            )}, you might need to retry.`;
-          commit("SET_WALLET_BALANCES", [
-            ...state.walletBalancesList,
-            ...response.data.map((walletBalance) => {
-              return { ...walletBalance, network, wallet: params.wallet };
-            }),
-          ]);
-          await commit("SET_FILTERED_WALLET_BALANCES", [
-            ...state.filteredWalletBalancesList,
-            ...response.data
-              .filter(async (walletBalance) => {
-                await rootState.generalStore.selectedNetworks.some(
-                  (n) => n === walletBalance.network
+      if (
+        process.env.VUE_APP_TERRA_WALLET_URL &&
+        !skipNetworks.includes(network)
+      ) {
+        try {
+          await axios
+            .get(`${process.env.VUE_APP_TERRA_WALLET_URL}${params.wallet}`)
+            .then(async (response) => {
+              if (!response || !response.data || response.data.error) {
+                commit(
+                  "generalStore/ADD_ALERT",
+                  `No wallet data returned for ${params.wallet}, you might need to retry.`,
+                  { root: true }
                 );
-              })
-              .map((walletBalance) => {
-                return { ...walletBalance, network, wallet: params.wallet };
-              }),
-          ]);
+
+                const paramsTemp = {};
+                Object.assign(paramsTemp, params);
+                paramsTemp.error = true;
+                commit("ADD_TO_WALLETS_WITHOUT_DATA", {
+                  key: paramsTemp.wallet,
+                  value: paramsTemp,
+                });
+              } else {
+                commit("SET_WALLET_BALANCES", [
+                  ...state.walletBalancesList,
+                  ...response.data.map((walletBalance) => {
+                    return { ...walletBalance, network, wallet: params.wallet };
+                  }),
+                ]);
+                await commit("SET_FILTERED_WALLET_BALANCES", [
+                  ...state.filteredWalletBalancesList,
+                  ...response.data
+                    .filter(async (walletBalance) => {
+                      await rootState.generalStore.selectedNetworks.some(
+                        (n) => n === walletBalance.network
+                      );
+                    })
+                    .map((walletBalance) => {
+                      return {
+                        ...walletBalance,
+                        network,
+                        wallet: params.wallet,
+                      };
+                    }),
+                ]);
+              }
+            });
         } catch (error) {
           commit("generalStore/ADD_ALERT", error, { root: true });
-        } finally {
-          // commit("SET_LOADING", false);
         }
       }
     },
@@ -845,40 +917,106 @@ const walletStore = {
       try {
         commit("SET_WALLET_BALANCES", []);
         commit("SET_FILTERED_WALLET_BALANCES", []);
+        const skipNetworks = Object.keys(params.profile.skipFarms);
+        const networks = state.evmNetworks.filter(
+          (evmNetwork) => !skipNetworks.includes(evmNetwork)
+        );
 
         await Promise.all(
-          state.evmNetworks.map(async (network) => {
-            const response = await axios.get(
-              `${process.env.VUE_APP_MYBALANCES_URL}${params.wallet}/${network}`
-            );
-            if (!response || !response.data || response.data.error)
-              throw `No wallet data returned for ${i18n.t(
-                network
-              )}, you might need to retry.`;
-            commit("SET_WALLET_BALANCES", [
-              ...state.walletBalancesList,
-              ...response.data.map((walletBalance) => {
-                return { ...walletBalance, network, wallet: params.wallet };
-              }),
-            ]);
-            await commit("SET_FILTERED_WALLET_BALANCES", [
-              ...state.filteredWalletBalancesList,
-              ...response.data
-                .filter(async (walletBalance) => {
-                  await rootState.generalStore.selectedNetworks.some(
-                    (n) => n === walletBalance.network
+          networks.map(async (network) => {
+            await axios
+              .get(
+                `${process.env.VUE_APP_MYBALANCES_URL}${params.wallet}/${network}`
+              )
+              .then(async (response) => {
+                if (!response || !response.data || response.data.error) {
+                  commit(
+                    "generalStore/ADD_ALERT",
+                    `No wallet data returned for ${params.wallet}, you might need to retry.`,
+                    { root: true }
                   );
-                })
-                .map((walletBalance) => {
-                  return { ...walletBalance, network, wallet: params.wallet };
-                }),
-            ]);
+
+                  const paramsTemp = {};
+                  Object.assign(paramsTemp, params);
+                  paramsTemp.error = true;
+                  commit("ADD_TO_WALLETS_WITHOUT_DATA", {
+                    key: paramsTemp.wallet,
+                    value: paramsTemp,
+                  });
+                } else {
+                  commit("SET_WALLET_BALANCES", [
+                    ...state.walletBalancesList,
+                    ...response.data.map((walletBalance) => {
+                      return {
+                        ...walletBalance,
+                        network,
+                        wallet: params.wallet,
+                      };
+                    }),
+                  ]);
+                  await commit("SET_FILTERED_WALLET_BALANCES", [
+                    ...state.filteredWalletBalancesList,
+                    ...response.data
+                      .filter(async (walletBalance) => {
+                        await rootState.generalStore.selectedNetworks.some(
+                          (n) => n === walletBalance.network
+                        );
+                      })
+                      .map((walletBalance) => {
+                        return {
+                          ...walletBalance,
+                          network,
+                          wallet: params.wallet,
+                        };
+                      }),
+                  ]);
+                }
+              });
           })
         );
       } catch (error) {
         commit("generalStore/ADD_ALERT", error, { root: true });
-      } finally {
-        // commit("SET_LOADING", false);
+      }
+    },
+    async getSingleFailedWallet({ state, commit, dispatch }, { key, wallet }) {
+      try {
+        commit("SET_LOADING", true);
+        commit("REMOVE_FROM_WALLETS_WITHOUT_DATA", key);
+        const walletType = detectWalletType(wallet.wallet);
+        const profile = state.recentQuery.profile;
+        if (walletType === "EVM") {
+          await dispatch("loadWallets", { wallet: wallet.wallet, profile });
+        } else if (walletType === "Cosmos") {
+          await dispatch("loadCosmosWallet", {
+            wallet: wallet.wallet,
+            profile,
+          });
+        } else if (walletType === "Solana") {
+          await dispatch("loadSolWallet", { wallet: wallet.wallet, profile });
+        } else if (walletType === "Terra") {
+          await dispatch("loadTerraWallet", { wallet: wallet.wallet, profile });
+        }
+
+        commit("SET_LOADING", false);
+      } catch (error) {
+        commit(
+          "generalStore/ADD_ALERT",
+          `No wallet data returned for ${key}, you might need to retry.`,
+          { root: true }
+        );
+
+        const paramsTemp = {};
+        Object.assign(paramsTemp, { key, wallet });
+        paramsTemp.error = true;
+        commit("ADD_TO_WALLETS_WITHOUT_DATA", {
+          key: paramsTemp.wallet,
+          value: paramsTemp,
+        });
+      }
+    },
+    async getAllFailedWallets({ state, dispatch }) {
+      for (const [key, value] of Object.entries(state.walletsWithoutData)) {
+        dispatch("getSingleFailedWallet", { key, wallet: value });
       }
     },
     setWallet({ commit }, wallet) {
@@ -983,12 +1121,13 @@ const walletStore = {
       );
       commit("SET_WALLET_BALANCES", []);
       commit("SET_FILTERED_WALLET_BALANCES", []);
+      commit("SET_WALLETS_WITHOUT_DATA", {});
 
       commit("farmStore/SET_LOADING", true, { root: true });
 
       const processesArray = profile.wallets.map(async (wallet) => {
         if (wallet.walletType === "EVM") {
-          dispatch("loadWallets", { wallet: wallet.walletAddress });
+          dispatch("loadWallets", { wallet: wallet.walletAddress, profile });
           await Promise.all(
             rootState.farmStore.farms.map(async (selectFarm) => {
               if (
@@ -1010,6 +1149,7 @@ const walletStore = {
         } else if (wallet.walletType === "Cosmos") {
           dispatch("loadCosmosWallet", {
             wallet: wallet.walletAddress,
+            profile,
           });
           await Promise.all(
             rootState.farmStore.cosmosFarms.map(async (selectFarm) => {
@@ -1027,7 +1167,7 @@ const walletStore = {
             })
           );
         } else if (wallet.walletType === "Solana") {
-          dispatch("loadSolWallet", { wallet: wallet.walletAddress });
+          dispatch("loadSolWallet", { wallet: wallet.walletAddress, profile });
           await Promise.all(
             rootState.farmStore.solFarms.map(async (selectFarm) => {
               if (!skipFarmsData.includes(selectFarm.sendValue)) {
@@ -1044,7 +1184,10 @@ const walletStore = {
             })
           );
         } else if (wallet.walletType === "Terra") {
-          dispatch("loadTerraWallet", { wallet: wallet.walletAddress });
+          dispatch("loadTerraWallet", {
+            wallet: wallet.walletAddress,
+            profile,
+          });
           await Promise.all(
             rootState.farmStore.terraFarms.map(async (selectFarm) => {
               if (!skipFarmsData.includes(selectFarm.sendValue)) {

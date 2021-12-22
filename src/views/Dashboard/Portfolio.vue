@@ -62,6 +62,7 @@
             <v-card-text class="px-0 py-0">
               <v-slide-y-transition>
                 <div v-show="showWallet">
+                  <WalletsWithoutData />
                   <v-divider></v-divider>
                   <Wallet />
                 </div>
@@ -275,6 +276,7 @@ import KPICards from "@/views/Dashboard/Widgets/KPICards.vue";
 import Wallet from "@/views/Wallet/Wallet.vue";
 import Farms from "@/views/Farms/Farms.vue";
 import FarmsWithoutData from "@/views/Farms/FarmsWithoutData.vue";
+import WalletsWithoutData from "@/views/Wallet/WalletsWithoutData.vue";
 import LendingFarmsTable from "@/views/Farms/LendingFarmsTable.vue";
 import HistoricalProfileCard from "@/components/Cards/HistoricalProfileCard.vue";
 import SponsorsHeader from "@/components/SponsorsHeader.vue";
@@ -287,6 +289,7 @@ export default {
     Wallet,
     Farms,
     FarmsWithoutData,
+    WalletsWithoutData,
     LendingFarmsTable,
     HistoricalProfileCard,
     SponsorsHeader,
