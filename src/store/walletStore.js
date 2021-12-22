@@ -320,6 +320,7 @@ const walletStore = {
       "polis",
       "cro",
       "boba",
+      "theta",
     ],
     walletNetworks: [
       "bsc",
@@ -339,6 +340,7 @@ const walletStore = {
       "polis",
       "cro",
       "boba",
+      "theta",
       "cosmos",
       "solana",
       "terra",
