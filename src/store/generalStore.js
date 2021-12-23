@@ -193,10 +193,11 @@ const generalStore = {
         });
       if (sessionToRestore.compactView)
         commit("SET_COMPACT_VIEW", sessionToRestore.compactView);
-      if (sessionToRestore.userProfiles)
+      if (sessionToRestore.userProfiles) {
         commit("profileStore/SET_PROFILES", sessionToRestore.userProfiles, {
           root: true,
         });
+      }
     },
     setWalletDialog({ commit }, value) {
       commit("SET_WALLET_DIALOG", value);

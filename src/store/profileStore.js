@@ -12,6 +12,14 @@ const profileStore = {
     SET_PROFILES(state, value) {
       state.userProfiles = value;
     },
+    REMOVE_FROM_PROFILE_SKIP_NETWORKS(state, { selectedNetwork, profileKey }) {
+      state.userProfiles[profileKey].skipNetworks = state.userProfiles[
+        profileKey
+      ].skipNetworks.filter((network) => selectedNetwork !== network);
+    },
+    ADD_TO_PROFILE_SKIP_NETWORKS(state, { selectedNetwork, profileKey }) {
+      state.userProfiles[profileKey].skipNetworks.push(selectedNetwork);
+    },
     CREATE_PROFILE(state, value) {
       state.userProfiles.push({
         name: value,
@@ -41,6 +49,18 @@ const profileStore = {
     TOGGLE_SKIP_NETWORK(state, value) {
       const contractList = value.allFarms.map((x) => x.sendValue);
       const selectedNetwork = value.network;
+
+      if (
+        state.userProfiles[value.profileKey].skipNetworks.includes(
+          selectedNetwork
+        )
+      ) {
+        state.userProfiles[value.profileKey].skipNetworks = state.userProfiles[
+          value.profileKey
+        ].skipNetworks.filter((network) => selectedNetwork !== network);
+      } else {
+        state.userProfiles[value.profileKey].skipNetworks.push(selectedNetwork);
+      }
 
       if (state.userProfiles[value.profileKey].skipFarms[selectedNetwork]) {
         if (
@@ -83,6 +103,36 @@ const profileStore = {
           value.sendValue,
         ]);
       }
+
+      const selectedNetwork = value.network;
+      const farmLength = value.allFarms.length;
+      let isNetworkSelected = false;
+
+      if (farmObj.hasOwnProperty(selectedNetwork)) {
+        if (farmObj[selectedNetwork].length === farmLength) {
+          isNetworkSelected = true;
+        } else {
+          isNetworkSelected = false;
+        }
+      } else {
+        isNetworkSelected = true;
+      }
+
+      if (isNetworkSelected) {
+        state.userProfiles[value.profileKey].skipNetworks.push(selectedNetwork);
+      } else {
+        if (
+          state.userProfiles[value.profileKey].skipNetworks.includes(
+            selectedNetwork
+          )
+        ) {
+          state.userProfiles[
+            value.profileKey
+          ].skipNetworks = state.userProfiles[
+            value.profileKey
+          ].skipNetworks.filter((network) => selectedNetwork !== network);
+        }
+      }
     },
   },
   actions: {
@@ -112,6 +162,14 @@ const profileStore = {
     },
     toggleFarm({ commit }, value) {
       commit("TOGGLE_SKIP_FARM", value);
+      this.dispatch("generalStore/saveSession");
+    },
+    removeFromProfileSkipNetworks({ commit }, value) {
+      commit("REMOVE_FROM_PROFILE_SKIP_NETWORKS", value);
+      this.dispatch("generalStore/saveSession");
+    },
+    addToProfileSkipNetworks({ commit }, value) {
+      commit("ADD_TO_PROFILE_SKIP_NETWORKS", value);
       this.dispatch("generalStore/saveSession");
     },
   },

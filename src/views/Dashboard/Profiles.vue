@@ -396,6 +396,7 @@
                         sendValue: farm.sendValue,
                         profileKey: $route.params.id,
                         network: network,
+                        allFarms: networkWithFarms,
                       })
                     "
                   >
@@ -484,15 +485,11 @@ export default {
       "toggleNetwork",
       "toggleFarm",
     ]),
-    checkNetwork(profileKey, network, allFarms) {
-      const farmObj = this.userProfiles[profileKey].skipFarms;
-      const farmLength = allFarms.length;
-      if (farmObj.hasOwnProperty(network)) {
-        if (farmObj[network].length == farmLength) {
-          return false;
-        } else {
-          return true;
-        }
+    checkNetwork(profileKey, network) {
+      const skipNetworks = this.userProfiles[profileKey].skipNetworks;
+
+      if (skipNetworks.length && skipNetworks.includes(network)) {
+        return false;
       } else {
         return true;
       }
