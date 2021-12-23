@@ -487,9 +487,7 @@ export default {
     ]),
     checkNetwork(profileKey, network) {
       const skipNetworks = this.userProfiles[profileKey].skipNetworks;
-      if (network === "bsc") {
-        console.log(skipNetworks);
-      }
+
       if (skipNetworks.length && skipNetworks.includes(network)) {
         return false;
       } else {

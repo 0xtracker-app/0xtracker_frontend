@@ -12,6 +12,14 @@ const profileStore = {
     SET_PROFILES(state, value) {
       state.userProfiles = value;
     },
+    REMOVE_FROM_PROFILE_SKIP_NETWORKS(state, { selectedNetwork, profileKey }) {
+      state.userProfiles[profileKey].skipNetworks = state.userProfiles[
+        profileKey
+      ].skipNetworks.filter((network) => selectedNetwork !== network);
+    },
+    ADD_TO_PROFILE_SKIP_NETWORKS(state, { selectedNetwork, profileKey }) {
+      state.userProfiles[profileKey].skipNetworks.push(selectedNetwork);
+    },
     CREATE_PROFILE(state, value) {
       state.userProfiles.push({
         name: value,
@@ -154,6 +162,14 @@ const profileStore = {
     },
     toggleFarm({ commit }, value) {
       commit("TOGGLE_SKIP_FARM", value);
+      this.dispatch("generalStore/saveSession");
+    },
+    removeFromProfileSkipNetworks({ commit }, value) {
+      commit("REMOVE_FROM_PROFILE_SKIP_NETWORKS", value);
+      this.dispatch("generalStore/saveSession");
+    },
+    addToProfileSkipNetworks({ commit }, value) {
+      commit("ADD_TO_PROFILE_SKIP_NETWORKS", value);
       this.dispatch("generalStore/saveSession");
     },
   },
