@@ -744,7 +744,7 @@ const walletStore = {
     },
     async loadCosmosWallet({ commit, state, rootState }, params) {
       const network = "cosmos";
-      const skipNetworks = Object.keys(params.profile.skipFarms);
+      const skipNetworks = params.profile.skipNetworks;
       commit("SET_LOADING", true);
 
       if (
@@ -801,7 +801,7 @@ const walletStore = {
     },
     async loadSolWallet({ commit, state, rootState }, params) {
       const network = "solana";
-      const skipNetworks = Object.keys(params.profile.skipFarms);
+      const skipNetworks = params.profile.skipNetworks;
       commit("SET_LOADING", true);
       if (
         process.env.VUE_APP_SOLANA_WALLET_URL &&
@@ -857,7 +857,7 @@ const walletStore = {
     },
     async loadTerraWallet({ commit, state, rootState }, params) {
       const network = "terra";
-      const skipNetworks = Object.keys(params.profile.skipFarms);
+      const skipNetworks = params.profile.skipNetworks;
       commit("SET_LOADING", true);
 
       if (
@@ -917,7 +917,8 @@ const walletStore = {
       try {
         commit("SET_WALLET_BALANCES", []);
         commit("SET_FILTERED_WALLET_BALANCES", []);
-        const skipNetworks = Object.keys(params.profile.skipFarms);
+        const skipNetworks = params.profile.skipNetworks;
+
         const networks = state.evmNetworks.filter(
           (evmNetwork) => !skipNetworks.includes(evmNetwork)
         );

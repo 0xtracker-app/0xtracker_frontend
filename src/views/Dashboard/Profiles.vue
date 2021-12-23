@@ -396,6 +396,7 @@
                         sendValue: farm.sendValue,
                         profileKey: $route.params.id,
                         network: network,
+                        allFarms: networkWithFarms,
                       })
                     "
                   >

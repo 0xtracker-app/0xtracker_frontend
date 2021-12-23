@@ -42,6 +42,18 @@ const profileStore = {
       const contractList = value.allFarms.map((x) => x.sendValue);
       const selectedNetwork = value.network;
 
+      if (
+        state.userProfiles[value.profileKey].skipNetworks.includes(
+          selectedNetwork
+        )
+      ) {
+        state.userProfiles[value.profileKey].skipNetworks = state.userProfiles[
+          value.profileKey
+        ].skipNetworks.filter((network) => selectedNetwork !== network);
+      } else {
+        state.userProfiles[value.profileKey].skipNetworks.push(selectedNetwork);
+      }
+
       if (state.userProfiles[value.profileKey].skipFarms[selectedNetwork]) {
         if (
           state.userProfiles[value.profileKey].skipFarms[selectedNetwork]
@@ -82,6 +94,36 @@ const profileStore = {
         Vue.set(state.userProfiles[value.profileKey].skipFarms, value.network, [
           value.sendValue,
         ]);
+      }
+
+      const selectedNetwork = value.network;
+      const farmLength = value.allFarms.length;
+      let isNetworkSelected = false;
+
+      if (farmObj.hasOwnProperty(selectedNetwork)) {
+        if (farmObj[selectedNetwork].length === farmLength) {
+          isNetworkSelected = true;
+        } else {
+          isNetworkSelected = false;
+        }
+      } else {
+        isNetworkSelected = true;
+      }
+
+      if (isNetworkSelected) {
+        state.userProfiles[value.profileKey].skipNetworks.push(selectedNetwork);
+      } else {
+        if (
+          state.userProfiles[value.profileKey].skipNetworks.includes(
+            selectedNetwork
+          )
+        ) {
+          state.userProfiles[
+            value.profileKey
+          ].skipNetworks = state.userProfiles[
+            value.profileKey
+          ].skipNetworks.filter((network) => selectedNetwork !== network);
+        }
       }
     },
   },
