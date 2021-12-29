@@ -321,6 +321,7 @@ const walletStore = {
       "cro",
       "boba",
       "theta",
+      "aurora",
     ],
     walletNetworks: [
       "bsc",
@@ -341,6 +342,7 @@ const walletStore = {
       "cro",
       "boba",
       "theta",
+      "aurora",
       "cosmos",
       "solana",
       "terra",
