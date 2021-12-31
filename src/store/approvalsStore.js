@@ -146,6 +146,22 @@ const approvalsStore = {
         commit("SET_LOADING", false);
       }
     },
+    async signMessage({ commit, rootGetters, rootState, state }) {
+      try {
+        commit("SET_LOADING", true);
+        if (!rootGetters["walletStore/connectedWalletProvider"])
+          throw "No wallet provider detected. Did you connect your Wallet?";
+        const provider = rootGetters["walletStore/connectedWalletProvider"];
+        const signer = provider.getSigner();
+        const message = "I authorize deletion of these records.";
+        const signature = await signer.signMessage(message);
+
+        console.log(signature);
+      } catch (error) {
+        commit("generalStore/ADD_ALERT", error, { root: true });
+        commit("SET_LOADING", false);
+      }
+    },
     setSelectedNetwork({ commit }, network) {
       commit("SET_SELECTED_NETWORK", network);
     },
