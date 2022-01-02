@@ -9,6 +9,7 @@ const SupportedNetworksAndFarms = () =>
 const Rev0x = () => import("../views/Dashboard/Rev0x.vue");
 const EditProfile = () => import("../views/Dashboard/Profiles.vue");
 const Settings = () => import("../views/Dashboard/Settings.vue");
+const MessageSigner = () => import("../views/Dashboard/MessageSigner.vue");
 
 Vue.use(VueRouter);
 
@@ -48,6 +49,11 @@ const routes = [
         path: "/profiles/:id",
         name: "Edit Profile",
         component: EditProfile,
+      },
+      {
+        path: "/signer",
+        name: "Message Signer",
+        component: MessageSigner,
       },
     ],
   },
