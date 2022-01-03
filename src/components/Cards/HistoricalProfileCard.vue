@@ -45,37 +45,33 @@
               </span>
             </v-tooltip>
           </div>
-          <div>
+          <div class="d-flex">
             <v-tooltip
               bottom
               v-if="
                 $vuetify.breakpoint.mdAndDown &&
-                connectedWallet &&
                 historicalData.length > 0 &&
                 showHistoricalData
               "
             >
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  depressed
-                  outlined
-                  icon
-                  @click="$router.push('cleaner')"
-                  class="rounded-lg mr-2"
-                  small
-                  :ripple="false"
-                >
-                  <v-icon
-                    v-bind="attrs"
-                    v-on="on"
-                    class="show-button"
-                    size="15"
+              <template v-slot:activator="{ on }">
+                <div v-on="on">
+                  <v-btn
+                    depressed
+                    outlined
+                    icon
+                    @click="$router.push('cleaner')"
+                    class="rounded-lg mr-2"
+                    small
+                    :ripple="false"
+                    :disabled="!connectedWallet"
                   >
-                    mdi-broom
-                  </v-icon>
-                </v-btn>
+                    <v-icon class="show-button" size="15"> mdi-broom </v-icon>
+                  </v-btn>
+                </div>
               </template>
-              <span>Select Data To Remove (Clean)</span>
+              <span v-if="connectedWallet">Select Data To Remove (Clean)</span>
+              <span v-else>Connect wallet to clean up records</span>
             </v-tooltip>
             <v-tooltip bottom v-if="$vuetify.breakpoint.mdAndDown">
               <template v-slot:activator="{ on, attrs }">
@@ -133,28 +129,29 @@
           bottom
           v-if="
             $vuetify.breakpoint.lgAndUp &&
-            connectedWallet &&
             historicalData.length > 0 &&
             showHistoricalData
           "
         >
           <template v-slot:activator="{ on, attrs }">
-            <v-btn
-              depressed
-              outlined
-              icon
-              @click="$router.push('cleaner')"
-              class="rounded-lg ml-2"
-              style="text-decoration: none"
-              small
-              :ripple="false"
-            >
-              <v-icon v-bind="attrs" v-on="on" class="show-button" size="15">
-                mdi-broom
-              </v-icon>
-            </v-btn>
+            <div v-on="on">
+              <v-btn
+                depressed
+                outlined
+                icon
+                @click="$router.push('cleaner')"
+                class="rounded-lg ml-2"
+                style="text-decoration: none"
+                small
+                :ripple="false"
+                :disabled="!connectedWallet"
+              >
+                <v-icon class="show-button" size="15"> mdi-broom </v-icon>
+              </v-btn>
+            </div>
           </template>
-          <span>Select Data To Remove (Clean)</span>
+          <span v-if="connectedWallet">Select Data To Remove (Clean)</span>
+          <span v-else>Connect wallet to clean up records</span>
         </v-tooltip>
         <v-tooltip bottom v-if="$vuetify.breakpoint.lgAndUp">
           <template v-slot:activator="{ on, attrs }">
