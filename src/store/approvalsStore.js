@@ -61,12 +61,14 @@ const approvalsStore = {
     searchedWallet: "",
     selectedNetwork: "",
     wallet: "",
+    signature: "",
   },
   getters: {
     approvals: (state) => state.approvals,
     searchedWallet: (state) => state.searchedWallet,
     selectedNetwork: (state) => state.selectedNetwork,
     wallet: (state) => state.wallet,
+    signature: (state) => state.signature,
   },
   mutations: {
     SET_APPROVALS(state, value) {
@@ -83,6 +85,9 @@ const approvalsStore = {
     },
     SET_WALLET(state, value) {
       state.wallet = value;
+    },
+    SET_SIGNATURE(state, value) {
+      state.signature = value;
     },
   },
   actions: {
@@ -143,6 +148,46 @@ const approvalsStore = {
           });
       } catch (error) {
         commit("generalStore/ADD_ALERT", error, { root: true });
+        commit("SET_LOADING", false);
+      }
+    },
+    async signMessage({ commit, rootGetters }) {
+      try {
+        commit("SET_LOADING", true);
+        if (!rootGetters["walletStore/connectedWalletProvider"])
+          throw "No wallet provider detected. Did you connect your Wallet?";
+        const provider = rootGetters["walletStore/connectedWalletProvider"];
+        const signer = provider.getSigner();
+        const message = "I authorize deletion of these records.";
+        const signature = await signer.signMessage(message);
+
+        commit("SET_SIGNATURE", signature);
+      } catch (error) {
+        commit("generalStore/ADD_ALERT", error, { root: true });
+      } finally {
+        commit("SET_LOADING", false);
+      }
+    },
+    async deleteData({ dispatch, commit }, { wallet, signature, timestamps }) {
+      try {
+        commit("SET_LOADING", true);
+        await axios.post(`${process.env.VUE_APP_DELETE_RECORDS_API_URL}`, {
+          wallet,
+          signature,
+          timestamps,
+        });
+
+        dispatch(
+          "walletStore/removeHistoricalData",
+          {
+            wallet,
+            timestamps,
+          },
+          { root: true }
+        );
+      } catch (error) {
+        commit("generalStore/ADD_ALERT", error, { root: true });
+      } finally {
         commit("SET_LOADING", false);
       }
     },

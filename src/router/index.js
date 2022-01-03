@@ -9,6 +9,7 @@ const SupportedNetworksAndFarms = () =>
 const Rev0x = () => import("../views/Dashboard/Rev0x.vue");
 const EditProfile = () => import("../views/Dashboard/Profiles.vue");
 const Settings = () => import("../views/Dashboard/Settings.vue");
+const DataCleaner = () => import("../views/Dashboard/DataCleaner.vue");
 
 Vue.use(VueRouter);
 
@@ -48,6 +49,11 @@ const routes = [
         path: "/profiles/:id",
         name: "Edit Profile",
         component: EditProfile,
+      },
+      {
+        path: "/cleaner",
+        name: "Clean Historical Data",
+        component: DataCleaner,
       },
     ],
   },
