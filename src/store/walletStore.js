@@ -1106,6 +1106,18 @@ const walletStore = {
         commit("SET_SINGLE_HISTORICAL_DATA_LOADING", false);
       });
     },
+    removeHistoricalData({ commit, state }, { timestamps, wallet }) {
+      const historicalData = state.historicalData[0].data.filter((data) => {
+        return !timestamps.includes(data._id);
+      });
+
+      commit("SET_HISTORICAL_DATA", [
+        {
+          wallet,
+          data: historicalData,
+        },
+      ]);
+    },
     async loadProfile(
       { dispatch, commit, rootState },
       { profile, type = "profile" }

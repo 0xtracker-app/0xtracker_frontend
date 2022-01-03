@@ -45,27 +45,65 @@
               </span>
             </v-tooltip>
           </div>
-          <v-tooltip bottom>
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                depressed
-                outlined
-                icon
-                @click="showHistoricalData = !showHistoricalData"
-                class="rounded-lg"
-                small
-                :ripple="false"
-              >
-                <v-icon v-bind="attrs" v-on="on" class="show-button" size="15">
-                  {{
-                    showHistoricalData ? "mdi-minus-thick" : "mdi-plus-thick"
-                  }}
-                </v-icon>
-              </v-btn>
-            </template>
-            <span v-if="showHistoricalData">Hide Historical Data</span>
-            <span v-else>Show Historical Data</span>
-          </v-tooltip>
+          <div>
+            <v-tooltip
+              bottom
+              v-if="
+                $vuetify.breakpoint.mdAndDown &&
+                connectedWallet &&
+                historicalData.length > 0 &&
+                showHistoricalData
+              "
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  depressed
+                  outlined
+                  icon
+                  @click="$router.push('cleaner')"
+                  class="rounded-lg mr-2"
+                  small
+                  :ripple="false"
+                >
+                  <v-icon
+                    v-bind="attrs"
+                    v-on="on"
+                    class="show-button"
+                    size="15"
+                  >
+                    mdi-broom
+                  </v-icon>
+                </v-btn>
+              </template>
+              <span>Select Data To Remove (Clean)</span>
+            </v-tooltip>
+            <v-tooltip bottom v-if="$vuetify.breakpoint.mdAndDown">
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  depressed
+                  outlined
+                  icon
+                  @click="showHistoricalData = !showHistoricalData"
+                  class="rounded-lg"
+                  small
+                  :ripple="false"
+                >
+                  <v-icon
+                    v-bind="attrs"
+                    v-on="on"
+                    class="show-button"
+                    size="15"
+                  >
+                    {{
+                      showHistoricalData ? "mdi-minus-thick" : "mdi-plus-thick"
+                    }}
+                  </v-icon>
+                </v-btn>
+              </template>
+              <span v-if="showHistoricalData">Hide Historical Data</span>
+              <span v-else>Show Historical Data</span>
+            </v-tooltip>
+          </div>
         </div>
         <v-btn-toggle
           v-if="historicalData.length > 0 && showHistoricalData"
@@ -91,6 +129,52 @@
             </span>
           </v-btn>
         </v-btn-toggle>
+        <v-tooltip
+          bottom
+          v-if="
+            $vuetify.breakpoint.lgAndUp &&
+            connectedWallet &&
+            historicalData.length > 0 &&
+            showHistoricalData
+          "
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              depressed
+              outlined
+              icon
+              @click="$router.push('cleaner')"
+              class="rounded-lg ml-2"
+              style="text-decoration: none"
+              small
+              :ripple="false"
+            >
+              <v-icon v-bind="attrs" v-on="on" class="show-button" size="15">
+                mdi-broom
+              </v-icon>
+            </v-btn>
+          </template>
+          <span>Select Data To Remove (Clean)</span>
+        </v-tooltip>
+        <v-tooltip bottom v-if="$vuetify.breakpoint.lgAndUp">
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              depressed
+              outlined
+              icon
+              @click="showHistoricalData = !showHistoricalData"
+              class="rounded-lg ml-2"
+              small
+              :ripple="false"
+            >
+              <v-icon v-bind="attrs" v-on="on" class="show-button" size="15">
+                {{ showHistoricalData ? "mdi-minus-thick" : "mdi-plus-thick" }}
+              </v-icon>
+            </v-btn>
+          </template>
+          <span v-if="showHistoricalData">Hide Historical Data</span>
+          <span v-else>Show Historical Data</span>
+        </v-tooltip>
       </div>
       <v-progress-linear
         v-show="loading"
@@ -229,7 +313,7 @@ export default {
   },
   computed: {
     ...mapGetters("generalStore", ["darkmode"]),
-    ...mapGetters("walletStore", ["historicalData"]),
+    ...mapGetters("walletStore", ["historicalData", "connectedWallet"]),
     loading: function () {
       return this.$store.state.walletStore.historicalDataLoading;
     },

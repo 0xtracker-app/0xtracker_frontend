@@ -9,7 +9,7 @@ const SupportedNetworksAndFarms = () =>
 const Rev0x = () => import("../views/Dashboard/Rev0x.vue");
 const EditProfile = () => import("../views/Dashboard/Profiles.vue");
 const Settings = () => import("../views/Dashboard/Settings.vue");
-const MessageSigner = () => import("../views/Dashboard/MessageSigner.vue");
+const DataCleaner = () => import("../views/Dashboard/DataCleaner.vue");
 
 Vue.use(VueRouter);
 
@@ -51,9 +51,9 @@ const routes = [
         component: EditProfile,
       },
       {
-        path: "/signer",
-        name: "Message Signer",
-        component: MessageSigner,
+        path: "/cleaner",
+        name: "Clean Historical Data",
+        component: DataCleaner,
       },
     ],
   },

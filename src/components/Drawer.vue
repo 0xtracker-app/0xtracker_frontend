@@ -258,11 +258,6 @@ export default {
         link: "/profiles",
         title: "Profiles",
       },
-      {
-        icon: "mdi-ambulance v-icon-drawer",
-        link: "/signer",
-        title: "Message Signer",
-      },
     ],
     miniData: false,
     currency: null,

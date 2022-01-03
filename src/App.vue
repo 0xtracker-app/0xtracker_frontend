@@ -30,7 +30,6 @@ export default {
       }
     });
 
-    console.log(farmsByNetwork);
     this.userProfiles.forEach((profile, index) => {
       if (index === 0) {
         Object.entries(farmsByNetwork).forEach(([network, value]) => {
