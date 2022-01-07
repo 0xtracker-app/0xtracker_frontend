@@ -133,7 +133,7 @@
             showHistoricalData
           "
         >
-          <template v-slot:activator="{ on, attrs }">
+          <template v-slot:activator="{ on }">
             <div v-on="on">
               <v-btn
                 depressed

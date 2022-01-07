@@ -10,6 +10,7 @@ const Rev0x = () => import("../views/Dashboard/Rev0x.vue");
 const EditProfile = () => import("../views/Dashboard/Profiles.vue");
 const Settings = () => import("../views/Dashboard/Settings.vue");
 const DataCleaner = () => import("../views/Dashboard/DataCleaner.vue");
+const Bridge = () => import("../views/Dashboard/Bridge.vue");
 
 Vue.use(VueRouter);
 
@@ -54,6 +55,11 @@ const routes = [
         path: "/cleaner",
         name: "Clean Historical Data",
         component: DataCleaner,
+      },
+      {
+        path: "/0xbridge",
+        name: "0xBridge",
+        component: Bridge,
       },
     ],
   },

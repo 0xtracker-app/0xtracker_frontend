@@ -21,5 +21,38 @@
   "boba" : "Boba",
   "theta": "Theta",
   "terra" : "Terra",
-  "aurora" : "Aurora"
+  "aurora" : "Aurora",
+  "rangoBlockchains" : {
+    "names" : {
+      "AKASH": "Akash",
+      "ARBITRUM": "ARBITRUM",
+      "AVAX_CCHAIN": "Avax",
+      "BCH": "BCH",
+      "BNB": "BNB",
+      "BSC": "BSC",
+      "BTC": "BTC",
+      "CELO": "CELO",
+      "COSMOS": "Cosmos",
+      "CRYPTO_ORG": "Crypto.org",
+      "DOGE": "DOGE",
+      "ETH": "ETH",
+      "FANTOM": "Fantom",
+      "HARMONY": "Harmony",
+      "IRIS": "Iris",
+      "LTC": "LTC",
+      "MOONRIVER": "Moonriver",
+      "OPTIMISM": "Optimism",
+      "OSMOSIS": "Osmosis",
+      "PERSISTENCE": "Persist.",
+      "POLKADOT": "Polkadot",
+      "POLYGON": "Polygon",
+      "REGEN": "Regen",
+      "SENTINEL": "Sentinel",
+      "SIF": "Sifchain",
+      "TERRA": "Terra",
+      "THOR": "Thor",
+      "TRON": "Tron",
+      "XDAI": "xDai"
+    }
+  }
 }
