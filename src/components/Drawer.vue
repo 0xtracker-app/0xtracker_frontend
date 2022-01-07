@@ -77,6 +77,13 @@
                     :class="{ 'text-white': darkmode }"
                     class="font-weight-600"
                   />
+                  <div
+                    v-if="item.subtitle"
+                    style="font-size: 12px"
+                    :class="{ 'text-white': darkmode }"
+                  >
+                    {{ item.subtitle }}
+                  </div>
                 </v-list-item-content>
               </v-list-item>
             </v-list-item-group>
@@ -257,6 +264,12 @@ export default {
         icon: "mdi-account-search-outline v-icon-drawer",
         link: "/profiles",
         title: "Profiles",
+      },
+      {
+        icon: "mdi-bridge v-icon-drawer",
+        link: "/0xbridge",
+        title: "0xBridge",
+        subtitle: "Powered by: Rango",
       },
     ],
     miniData: false,

@@ -255,6 +255,9 @@ const generalStore = {
     toggleMini({ commit }, value) {
       commit("TOGGLE_MINI", value);
     },
+    addAlert({ commit }, alert) {
+      commit("ADD_ALERT", alert);
+    },
   },
 };
 
