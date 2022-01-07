@@ -46,6 +46,7 @@
                 flat
                 v-model="amount"
                 @keypress="onlyForCurrency"
+                @keydown="handleKeydown"
               />
               <span> ≈ ${{ fromAmount }} </span>
             </div>
@@ -631,6 +632,7 @@ import { generateColors } from "@/util/helpers";
 import { interpolateRainbow } from "d3";
 import Chance from "chance";
 import axios from "axios";
+import _ from "lodash";
 
 export default {
   name: "Bridge",
@@ -785,17 +787,13 @@ export default {
     this.blockchains.forEach((blockchain) => {
       blocks[blockchain.name] = blockchain.name;
     });
+
+    this.stoppedTyping = _.debounce(this.stoppedTyping, 1500, {
+      leading: false,
+      trailing: true,
+    });
   },
   watch: {
-    amount: {
-      immediate: true,
-      deep: true,
-      async handler(value) {
-        if (value) {
-          await this.getBestRoute();
-        }
-      },
-    },
     from: {
       immediate: true,
       deep: true,
@@ -941,6 +939,14 @@ export default {
       }/?a=${this.amount}&ref=${process.env.VUE_APP_RANGO_REFERRAL_ID}`;
 
       window.open(link, "_blank");
+    },
+    handleKeydown() {
+      this.stoppedTyping();
+    },
+    async stoppedTyping() {
+      if (this.amount) {
+        await this.getBestRoute();
+      }
     },
   },
 };
