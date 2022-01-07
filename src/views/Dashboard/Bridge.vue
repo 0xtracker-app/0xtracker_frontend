@@ -47,6 +47,7 @@
                 v-model="amount"
                 @keypress="onlyForCurrency"
                 @keydown="handleKeydown"
+                :disabled="loading"
               />
               <span> ≈ ${{ fromAmount }} </span>
             </div>
@@ -788,7 +789,7 @@ export default {
       blocks[blockchain.name] = blockchain.name;
     });
 
-    this.stoppedTyping = _.debounce(this.stoppedTyping, 1500, {
+    this.stoppedTyping = _.debounce(this.stoppedTyping, 2000, {
       leading: false,
       trailing: true,
     });
