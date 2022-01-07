@@ -239,7 +239,7 @@
             <v-icon size="24" v-if="!loading"> mdi-swap-vertical </v-icon>
             <v-progress-circular
               indeterminate
-              color="purple"
+              color="indigo lighten-1"
               size="24"
               v-else
             ></v-progress-circular>
