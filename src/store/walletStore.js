@@ -322,6 +322,7 @@ const walletStore = {
       "boba",
       "theta",
       "aurora",
+      "metis",
     ],
     walletNetworks: [
       "bsc",
@@ -346,6 +347,7 @@ const walletStore = {
       "cosmos",
       "solana",
       "terra",
+      "metis",
     ],
     walletRules: [
       (value) => !!value || "Required.",
