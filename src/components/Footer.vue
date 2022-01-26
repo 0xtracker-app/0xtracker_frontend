@@ -103,7 +103,7 @@
           <v-card-title
             class="text-h4 font-weight-bold flex justify-center lighten-2"
           >
-            Donate Manually
+            Donate
           </v-card-title>
           <v-divider></v-divider>
 
@@ -150,7 +150,6 @@
                   :text="selectedWallet.value"
                   :margin="5"
                   :size="150"
-                  logoSrc="./logo.png"
                   class="my-6"
                 ></vue-qr>
 
