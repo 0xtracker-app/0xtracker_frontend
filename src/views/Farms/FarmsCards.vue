@@ -68,7 +68,7 @@
                 </div>
               </div>
               <div class="d-flex align-center">
-                <v-icon
+                <!-- <v-icon
                   class="mr-4"
                   :ripple="false"
                   @click.stop="
@@ -83,7 +83,7 @@
                   size="25"
                 >
                   mdi-refresh
-                </v-icon>
+                </v-icon> -->
                 <v-btn
                   dense
                   outlined
