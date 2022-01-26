@@ -27,6 +27,7 @@
           :style="{ backgroundColor: darkmode ? '#232228' : '#f3f4fd' }"
           @click="executeRecentQuery()"
           :dark="darkmode"
+          v-view="handleView"
         >
           <v-icon
             size=".875rem"
@@ -152,6 +153,43 @@
     </v-row>
 
     <slot></slot>
+    <div
+      style="
+        position: fixed;
+        bottom: 20px;
+        right: 25px;
+        z-index: 2;
+        background: linear-gradient(87deg, #8965e0 0, #bc65e0 100%);
+      "
+      class="rounded-circle"
+      v-if="
+        !isVisible &&
+        !Object.values(recentQuery).every((x) => x === null || x === '')
+      "
+    >
+      <v-btn
+        :disabled="
+          loading ||
+          Object.values(recentQuery).every((x) => x === null || x === '')
+        "
+        small
+        min-width="50"
+        height="50"
+        :ripple="false"
+        color=""
+        class="py-1 font-weight-600 text-capitalize rounded-pill"
+        style="
+          box-shadow: 0px 2px 15px rgba(0, 0, 0, 0.5);
+          background: linear-gradient(87deg, #8965e0 0, #bc65e0 100%);
+        "
+        @click="executeRecentQuery()"
+        :dark="darkmode"
+      >
+        <v-icon size=".875rem" color="primary">
+          fas fa-redo {{ loading ? "fa-spin" : "" }}
+        </v-icon>
+      </v-btn>
+    </div>
   </v-container>
 </template>
 <script>
@@ -178,6 +216,7 @@ export default {
       filterDialog: false,
       networks: [],
       selectedAll: true,
+      isVisible: true,
     };
   },
   mounted() {
@@ -193,6 +232,13 @@ export default {
         } else {
           this.selectedAll = true;
         }
+      },
+    },
+    isVisible: {
+      immediate: true,
+      deep: true,
+      handler(value) {
+        console.log(value);
       },
     },
   },
@@ -218,6 +264,9 @@ export default {
     handleChange(e) {
       if (e) this.networks = this.walletNetworks;
       else this.networks = [];
+    },
+    handleView(e) {
+      this.isVisible = e.percentInView !== 0;
     },
   },
 };
