@@ -162,7 +162,10 @@
         background: linear-gradient(87deg, #8965e0 0, #bc65e0 100%);
       "
       class="rounded-circle"
-      v-if="!isVisible"
+      v-if="
+        !isVisible &&
+        !Object.values(recentQuery).every((x) => x === null || x === '')
+      "
     >
       <v-btn
         :disabled="
