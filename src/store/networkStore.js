@@ -21,6 +21,7 @@ const networkStore = {
       333999: "polis",
       288: "boba",
       1088: "metis",
+      1284: "moonbeam",
     },
   },
   getters: {
