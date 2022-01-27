@@ -323,6 +323,7 @@ const walletStore = {
       "theta",
       "aurora",
       "metis",
+      "moonbeam",
     ],
     walletNetworks: [
       "bsc",
@@ -348,6 +349,7 @@ const walletStore = {
       "solana",
       "terra",
       "metis",
+      "moonbeam",
     ],
     walletRules: [
       (value) => !!value || "Required.",
