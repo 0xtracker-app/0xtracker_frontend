@@ -23,6 +23,13 @@
   "terra" : "Terra",
   "aurora" : "Aurora",
   "metis" : "Metis",
+  "fuse" : "Fuse",
+  "iotex" : "Iotex",
+  "elastos" : "Elastos",
+  "velas" : "Velas",
+  "smartbch": "SmartBCH",
+  "oasis" : "Oasis",
+  "telos" : "Telos",
   "moonbeam" : "Moonbeam",
   "rangoBlockchains" : {
     "names" : {

@@ -22,6 +22,13 @@ const networkStore = {
       288: "boba",
       1088: "metis",
       1284: "moonbeam",
+      122: "fuse",
+      4689: "iotex",
+      20: "elastos",
+      106: "velas",
+      10000: "smartbch",
+      42262: "oasis",
+      40: "telos",
     },
   },
   getters: {
