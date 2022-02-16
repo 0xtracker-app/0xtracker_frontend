@@ -31,6 +31,7 @@
   "oasis" : "Oasis",
   "telos" : "Telos",
   "moonbeam" : "Moonbeam",
+  "rsk" : "RSK",
   "rangoBlockchains" : {
     "names" : {
       "AKASH": "Akash",

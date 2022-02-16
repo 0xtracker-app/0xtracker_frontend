@@ -29,6 +29,7 @@ const networkStore = {
       10000: "smartbch",
       42262: "oasis",
       40: "telos",
+      30: "rsk",
     },
   },
   getters: {
