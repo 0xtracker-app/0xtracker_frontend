@@ -331,6 +331,7 @@ const walletStore = {
       "smartbch",
       "oasis",
       "telos",
+      "rsk",
     ],
     walletNetworks: [
       "bsc",
@@ -364,6 +365,7 @@ const walletStore = {
       "smartbch",
       "oasis",
       "telos",
+      "rsk",
     ],
     walletRules: [
       (value) => !!value || "Required.",
