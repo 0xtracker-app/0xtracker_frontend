@@ -31,7 +31,7 @@ export default {
       slide: 0,
       slides: [
         {
-          src: require("@/assets/images/sponsors-header/thorus.png"),
+          src: require("@/assets/images/sponsors-header/thorus.gif"),
           href: "https://thorus.fi/",
         },
         {
@@ -57,7 +57,7 @@ export default {
       if (self.slide + 1 === self.slides.length) {
         self.slide = 0;
       } else self.slide++;
-    }, 8000);
+    }, 9000);
   },
   beforeDestroy() {
     clearInterval(this.interval);
