@@ -30,6 +30,7 @@ const networkStore = {
       42262: "oasis",
       40: "telos",
       30: "rsk",
+      592: "astar",
     },
   },
   getters: {
