@@ -332,6 +332,7 @@ const walletStore = {
       "oasis",
       "telos",
       "rsk",
+      "astar",
     ],
     walletNetworks: [
       "bsc",
@@ -366,6 +367,7 @@ const walletStore = {
       "oasis",
       "telos",
       "rsk",
+      "astar",
     ],
     walletRules: [
       (value) => !!value || "Required.",
