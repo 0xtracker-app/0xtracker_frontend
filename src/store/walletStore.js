@@ -333,6 +333,7 @@ const walletStore = {
       "telos",
       "rsk",
       "astar",
+      "optimism",
     ],
     walletNetworks: [
       "bsc",
@@ -368,6 +369,7 @@ const walletStore = {
       "telos",
       "rsk",
       "astar",
+      "optimism",
     ],
     walletRules: [
       (value) => !!value || "Required.",
