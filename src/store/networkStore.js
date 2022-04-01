@@ -31,6 +31,7 @@ const networkStore = {
       40: "telos",
       30: "rsk",
       592: "astar",
+      53935: "dfk",
     },
   },
   getters: {
