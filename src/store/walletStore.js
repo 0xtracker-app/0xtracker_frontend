@@ -335,6 +335,7 @@ const walletStore = {
       "astar",
       "optimism",
       "dfk",
+      "evmos",
     ],
     walletNetworks: [
       "bsc",
@@ -372,6 +373,7 @@ const walletStore = {
       "astar",
       "optimism",
       "dfk",
+      "evmos",
     ],
     walletRules: [
       (value) => !!value || "Required.",

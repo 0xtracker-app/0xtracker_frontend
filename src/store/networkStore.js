@@ -32,6 +32,7 @@ const networkStore = {
       30: "rsk",
       592: "astar",
       53935: "dfk",
+      9001: "evmos",
     },
   },
   getters: {

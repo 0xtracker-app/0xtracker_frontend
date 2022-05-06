@@ -35,6 +35,7 @@
   "rsk" : "RSK",
   "astar" : "Astar",
   "dfk" : "Defi Kingdoms Chain",
+  "evmos" : "EVMOS",
   "rangoBlockchains" : {
     "names" : {
       "AKASH": "Akash",
