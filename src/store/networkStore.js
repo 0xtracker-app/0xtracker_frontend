@@ -33,6 +33,7 @@ const networkStore = {
       592: "astar",
       53935: "dfk",
       9001: "evmos",
+      19: "songbird",
     },
   },
   getters: {
