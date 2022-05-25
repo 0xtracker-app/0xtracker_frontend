@@ -337,6 +337,7 @@ const walletStore = {
       "dfk",
       "evmos",
       "songbird",
+      "klaytn",
     ],
     walletNetworks: [
       "bsc",
@@ -376,6 +377,7 @@ const walletStore = {
       "dfk",
       "evmos",
       "songbird",
+      "klaytn",
     ],
     walletRules: [
       (value) => !!value || "Required.",

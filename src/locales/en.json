@@ -37,6 +37,7 @@
   "dfk" : "Defi Kingdoms Chain",
   "evmos" : "EVMOS",
   "songbird" : "Songbird Canary",
+  "klaytn" : "Klaytn",
   "rangoBlockchains" : {
     "names" : {
       "AKASH": "Akash",

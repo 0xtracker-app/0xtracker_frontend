@@ -34,6 +34,7 @@ const networkStore = {
       53935: "dfk",
       9001: "evmos",
       19: "songbird",
+      8217: "klaytn",
     },
   },
   getters: {
