@@ -38,6 +38,7 @@
   "evmos" : "EVMOS",
   "songbird" : "Songbird Canary",
   "klaytn" : "Klaytn",
+  "doge" : "Doge Chain",
   "rangoBlockchains" : {
     "names" : {
       "AKASH": "Akash",
