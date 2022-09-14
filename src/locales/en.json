@@ -39,6 +39,7 @@
   "songbird" : "Songbird Canary",
   "klaytn" : "Klaytn",
   "doge" : "Doge Chain",
+  "kardia" : "KardiaChain",
   "rangoBlockchains" : {
     "names" : {
       "AKASH": "Akash",

@@ -339,6 +339,7 @@ const walletStore = {
       "songbird",
       "klaytn",
       "doge",
+      "kardia",
     ],
     walletNetworks: [
       "bsc",
@@ -380,6 +381,7 @@ const walletStore = {
       "songbird",
       "klaytn",
       "doge",
+      "kardia",
     ],
     walletRules: [
       (value) => !!value || "Required.",
