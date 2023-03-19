@@ -11,9 +11,15 @@ import { interpolateRainbow } from "d3";
  * @param {string} wallet // wallet address
  * @returns {string} walletType
  */
+
 export const detectWalletType = (wallet) => {
+  const ALLOWED_CHARS = "qpzry9x8gf2tvdw0s3jn54khce6mua7l";
+
+  var cosmos_regexp = new RegExp("^(cosmos)1([" + ALLOWED_CHARS + "]+)$");
+  var osmos_regexp = new RegExp("^(osmo)1([" + ALLOWED_CHARS + "]+)$");
+
   let isTypeEVM = ethers.utils.isAddress(wallet);
-  let isTypeCosmos = WAValidator.validate(wallet, "cosmos");
+  let isTypeCosmos = cosmos_regexp.exec(wallet) || osmos_regexp.exec(wallet);
   let isTypeTerra = AccAddress.validate(wallet);
   let isTypeSolana;
   try {
