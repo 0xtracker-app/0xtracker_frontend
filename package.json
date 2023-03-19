@@ -2,6 +2,9 @@
   "name": "vuetify-argon-dashboard-pro",
   "version": "1.0.0",
   "private": true,
+  "engines": {
+    "node": "10.13.0"
+  },
   "scripts": {
     "serve": "vue-cli-service serve --open",
     "build": "vue-cli-service build",
