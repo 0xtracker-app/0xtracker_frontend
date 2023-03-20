@@ -13,7 +13,7 @@ import { interpolateRainbow } from "d3";
  */
 
 export const detectWalletType = (wallet) => {
-  // const ALLOWED_CHARS = "qpzry9x8gf2tvdw0s3jn54khce6mua7l";
+  const ALLOWED_CHARS = "qpzry9x8gf2tvdw0s3jn54khce6mua7l";
 
   var cosmos_regexp = new RegExp("^(cosmos)1([" + ALLOWED_CHARS + "]+)$");
   var osmos_regexp = new RegExp("^(osmo)1([" + ALLOWED_CHARS + "]+)$");
