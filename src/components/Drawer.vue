@@ -27,15 +27,18 @@
             >
               <div class="v-navigation-drawer-brand pa-5 d-flex align-center">
                 <h1 class="font-weight-regular text-h1 d-flex">
-                  <div :style="{ color: darkmode ? 'white' : '#15121D' }">
-                    <span class="font-serif">0</span>
-                    <span class="font-weight-600">x</span>
-                  </div>
+                  <div :style="{ color: darkmode ? 'white' : '#15121D' }"></div>
+                  <v-img
+                    max-height="30px"
+                    max-width="30px"
+                    class="my-auto"
+                    src="@/assets/optical.svg"
+                  />
                   <span
                     class="font-weight-bold indigo--text text--lighten-1"
                     style="letter-spacing: -2px !important"
                   >
-                    Tracker
+                    ptical
                   </span>
                 </h1>
               </div>

@@ -13,40 +13,6 @@
         <fade-transition :duration="200" origin="center top" mode="out-in">
           <div style="margin-top: 65px" id="scroll-reference">
             <div
-              v-if="showAnnouncement"
-              class="pa-12 pa-md-6 py-4 mb-4 text-subtitle-2 text-center announcement-banner"
-              style="border-radius: 8px; position: relative"
-            >
-              <span class="mr-2">
-                0xTracker.app &#38; Optical.finance announce strategic
-                partnership. More info soon
-              </span>
-              <v-btn
-                class="text-subtitle-2 text-none font-weight-regular black--text"
-                elevation="0"
-                href="https://t.me/bsc0xtracker"
-                small
-                :dark="darkmode"
-                target="_blank"
-                color="white"
-              >
-                Learn more
-              </v-btn>
-              <v-btn
-                @click="closeAnnouncement()"
-                icon
-                class="text-caption text-none font-weight-bold ml-auto white--text"
-                elevation="0"
-                small
-                :dark="darkmode"
-                outlined
-                circle
-                style="position: absolute; top: 8px; right: 6px"
-              >
-                <v-icon size="16"> mdi-close-thick </v-icon>
-              </v-btn>
-            </div>
-            <div
               style="border-radius: 28px; min-height: 90vh"
               :style="{ backgroundColor: darkmode ? '#232228' : '#f3f4fd' }"
               class="pa-xl-12 pa-md-6 pa-2"

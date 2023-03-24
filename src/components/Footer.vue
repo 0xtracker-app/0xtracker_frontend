@@ -20,15 +20,21 @@
                     <span class="mr-2 text-subtitle-2 font-weight-bold">
                       &copy; {{ new Date().getFullYear() }}
                     </span>
-                    <div :style="{ color: darkmode ? 'white' : '#15121D' }">
-                      <span class="font-serif">0</span>
-                      <span class="font-weight-600">x</span>
-                    </div>
+                    <div
+                      :style="{ color: darkmode ? 'white' : '#15121D' }"
+                    ></div>
+                    <v-img
+                      max-height="12px"
+                      max-width="12px"
+                      src="@/assets/optical.svg"
+                      class="my-auto"
+                    />
+
                     <span
                       class="font-weight-bold indigo--text text--lighten-1"
                       style="letter-spacing: -2px !important"
                     >
-                      Tracker
+                      ptical
                     </span>
                   </span>
                 </div>
@@ -215,7 +221,7 @@ export default {
       footer: [
         {
           linkIcon: "mdi-twitter",
-          link: "https://twitter.com/0x_tracker/",
+          link: "https://twitter.com/opticalfinance/",
         },
         {
           linkIcon: "fab fa-telegram-plane",
