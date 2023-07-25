@@ -11,6 +11,7 @@ const EditProfile = () => import("../views/Dashboard/Profiles.vue");
 const Settings = () => import("../views/Dashboard/Settings.vue");
 const DataCleaner = () => import("../views/Dashboard/DataCleaner.vue");
 const Bridge = () => import("../views/Dashboard/Bridge.vue");
+const Beacon = () => import("../views/Dashboard/Beacon.vue");
 
 Vue.use(VueRouter);
 
@@ -60,6 +61,11 @@ const routes = [
         path: "/0xbridge",
         name: "0xBridge",
         component: Bridge,
+      },
+      {
+        path: "/beacon",
+        name: "Beacon",
+        component: Beacon,
       },
     ],
   },
