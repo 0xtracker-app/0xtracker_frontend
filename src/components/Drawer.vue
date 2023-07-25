@@ -274,6 +274,11 @@ export default {
         title: "0xBridge",
         subtitle: "Powered by: Rango",
       },
+      // {
+      //   icon: "mdi-broadcast v-icon-drawer",
+      //   link: "/beacon",
+      //   title: "Beacon (Beta)",
+      // },
     ],
     miniData: false,
     currency: null,
