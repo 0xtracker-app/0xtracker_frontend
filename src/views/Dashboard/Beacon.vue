@@ -123,7 +123,7 @@ export default {
       dialog: false,
       valid: true,
       beaconTypes: ["Token Transfers From/To"], // Replace with your list of beacon types
-      networks: ["ETH", "BSC", "MATIC", "ARB"], // Replace with your list of networks
+      networks: ["ETH", "BSC", "MATIC", "ARB", "OSMOSIS"], // Replace with your list of networks
       deliveryMethods: ["Telegram"], // Replace with your list of delivery methods
       beaconType: "",
       network: "",
