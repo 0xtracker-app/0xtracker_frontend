@@ -382,6 +382,7 @@ const walletStore = {
       "klaytn",
       "doge",
       "kardia",
+      "osmosis",
     ],
     walletRules: [
       (value) => !!value || "Required.",
@@ -730,6 +731,63 @@ const walletStore = {
           Promise.reject(error);
         }
       }
+    },
+    async connectKeplr({ commit, dispatch, state }, addListener = true) {
+      if (!window.getOfflineSigner || !window.keplr) {
+        alert("Please install keplr extension");
+      } else {
+        if (window.keplr.experimentalSuggestChain) {
+          try {
+            // Keplr v0.6.4 introduces an experimental feature that supports the feature to suggests the chain from a webpage.
+            // cosmoshub-3 is integrated to Keplr so the code should return without errors.
+            // The code below is not needed for cosmoshub-3, but may be helpful if you’re adding a custom chain.
+            // If the user approves, the chain will be added to the user's Keplr extension.
+            // If the user rejects it or the suggested chain information doesn't include the required fields, it will throw an error.
+            // If the same chain id is already registered, it will resolve and not require the user interactions.
+
+            const chainId = "osmosis-1";
+            const offlineSigner = window.keplr.getOfflineSigner(chainId);
+            const accounts = await offlineSigner.getAccounts();
+            const address = accounts[0].address;
+
+            commit("SET_WALLET", address);
+            commit("SET_CONNECTED_WALLET", address);
+            commit("approvalsStore/SET_WALLET", address, { root: true });
+            commit("SET_WALLET_PROVIDER", offlineSigner);
+            commit(
+              "SET_CONNECTED_WALLET_NETWORK",
+              await dispatch("networkStore/networkNameFromID", "osmosis", {
+                root: true,
+              })
+            );
+            commit(
+              "generalStore/ADD_ALERT",
+              "Wallet connected successfully with address " +
+                state.connectedWallet +
+                ' and network "' +
+                state.connectedWalletNetwork +
+                '".',
+              { root: true }
+            );
+            if (addListener) {
+              await dispatch("addWalletListener", addListener);
+            }
+            return Promise.resolve(true);
+          } catch (error) {
+            commit(
+              "generalStore/ADD_ALERT",
+              "Wallet connection failed with error: " + error.message || error,
+              { root: true }
+            );
+            Promise.reject(error);
+          }
+        }
+      }
+
+      // You should request Keplr to enable the wallet.
+      // This method will ask the user whether or not to allow access if they haven't visited this website.
+      // Also, it will request user to unlock the wallet if the wallet is locked.
+      // If you don't request enabling before usage, there is no guarantee that other methods will work.
     },
     async disconnectWallet({ commit }) {
       try {
