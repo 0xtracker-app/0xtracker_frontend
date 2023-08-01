@@ -37,6 +37,7 @@ const networkStore = {
       8217: "klaytn",
       2000: "doge",
       24: "kardia",
+      osmosis: "osmosis",
     },
   },
   getters: {

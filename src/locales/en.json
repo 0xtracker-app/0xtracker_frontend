@@ -40,6 +40,7 @@
   "klaytn" : "Klaytn",
   "doge" : "Doge Chain",
   "kardia" : "KardiaChain",
+  "osmosis" : "Osmosis",
   "rangoBlockchains" : {
     "names" : {
       "AKASH": "Akash",

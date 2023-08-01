@@ -112,6 +112,31 @@
                 Trustwallet
               </span>
             </div>
+            <div
+              @click="connectKeplr()"
+              class="m-5 d-flex flex-column align-center"
+              style="cursor: pointer"
+            >
+              <div
+                style="height: 70px; width: 70px"
+                class="d-flex align-center justify-center"
+              >
+                <img
+                  style="
+                    filter: drop-shadow(0 0 0.75rem #5e72e4);
+                    height: 60px;
+                    width: 60px;
+                  "
+                  src="@/assets/images/icons/keplr-wallet-logo.png"
+                />
+              </div>
+              <span
+                :class="{ 'text-white': darkmode }"
+                class="font-weight-600 mt-2"
+              >
+                Keplr
+              </span>
+            </div>
           </v-row>
         </v-card-text>
         <v-card-actions>
@@ -184,7 +209,7 @@ export default {
   },
   methods: {
     ...mapActions("generalStore", ["setWalletDialog"]),
-    ...mapActions("walletStore", ["connectWallet"]),
+    ...mapActions("walletStore", ["connectWallet", "connectKeplr"]),
   },
 };
 </script>
