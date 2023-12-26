@@ -85,6 +85,7 @@ const generalStore = {
       state.selectedCurrency = value;
     },
     SET_CURRENCY_RATES(state, value) {
+      console.log(value);
       state.currencyRates = value;
     },
     TOGGLE_DARK_MODE(state) {
@@ -137,7 +138,7 @@ const generalStore = {
 
         const matchedCurrencies = {};
 
-        if (response.status === 200 && response.data.success) {
+        if (response.status === 200) {
           for (const key in response.data.usd) {
             const currencyValue = currencies.find(
               (currency) => currency.value.toUpperCase() === key.toUpperCase()
@@ -147,9 +148,8 @@ const generalStore = {
                 response.data.usd[key.toLowerCase()];
             }
           }
-
-          commit("SET_CURRENCY_RATES", matchedCurrencies);
         }
+        commit("SET_CURRENCY_RATES", matchedCurrencies);
       } catch (error) {
         commit(
           "generalStore/ADD_ALERT",
