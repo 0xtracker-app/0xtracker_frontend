@@ -131,30 +131,24 @@ const generalStore = {
           this.dispatch("generalStore/saveSession");
         }
 
-        const cryptoCurrencies = ["BTC", "BNB", "ETH"];
-
         const response = await axios.get(
-          `${process.env.VUE_APP_RATES_API_URL}?base=USD&symbols=${currencies
-            .map((currency) => currency.value)
-            .filter((currency) => !cryptoCurrencies.includes(currency))
-            .join()}`
+          `${process.env.VUE_APP_RATES_API_URL}`
         );
 
-        const cryptoRates = await axios.get(
-          `${process.env.VUE_APP_CRYPTO_RATES_API_URL}?ids=bitcoin%2Cethereum%2Cbinancecoin&vs_currencies=usd`
-        );
-
-        const mappedCryptoRates = {
-          BTC: 1 / cryptoRates.data.bitcoin.usd,
-          ETH: 1 / cryptoRates.data.ethereum.usd,
-          BNB: 1 / cryptoRates.data.binancecoin.usd,
-        };
+        const matchedCurrencies = {};
 
         if (response.status === 200 && response.data.success) {
-          commit("SET_CURRENCY_RATES", {
-            ...response.data.rates,
-            ...mappedCryptoRates,
-          });
+          for (const key in response.data.usd) {
+            const currencyValue = currencies.find(
+              (currency) => currency.value.toUpperCase() === key.toUpperCase()
+            );
+            if (currencyValue) {
+              matchedCurrencies[key.toUpperCase()] =
+                response.data.usd[key.toLowerCase()];
+            }
+          }
+
+          commit("SET_CURRENCY_RATES", matchedCurrencies);
         }
       } catch (error) {
         commit(
