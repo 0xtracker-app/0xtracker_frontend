@@ -85,7 +85,6 @@ const generalStore = {
       state.selectedCurrency = value;
     },
     SET_CURRENCY_RATES(state, value) {
-      console.log(value);
       state.currencyRates = value;
     },
     TOGGLE_DARK_MODE(state) {
